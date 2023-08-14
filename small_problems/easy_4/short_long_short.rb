@@ -33,31 +33,22 @@ D (Data Structure) +++++++++++++++++++++++++++++++++++++++++++++++++++
   Strings
 
 A (Algorithm) ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  1. Create 'shorter_string' to hold the shorter string
-  2. Create 'longer_string' to hold the longer string
-  3. Compare the length of the first input string with second input string
+  1. Compare the length of the first input string with second input string
     a. Assign shorter_string to string with fewer characters
     b. Assign longer_string to string with more characters
-  4. Concatenate shorter_string + longer_string + shorter_string
-  5. Return the new string
+  2. Concatenate shorter_string + longer_string + shorter_string
+  3. Return the new string
 
 C (Code with Intent)  ++++++++++++++++++++++++++++++++++++++++++++++++
 =end
 
 
 def short_long_short(first_string, second_string)
-  shorter_string = ""
-  longer_string = ""
-
   if first_string.size > second_string.size
-    longer_string = first_string
-    shorter_string = second_string
+    second_string + first_string + second_string
   else
-    longer_string = second_string
-    shorter_string = first_string
+    first_string + second_string + first_string
   end
-
-  shorter_string + longer_string + shorter_string
 end
 
 p short_long_short('abc', 'defgh') == "abcdefghabc"
