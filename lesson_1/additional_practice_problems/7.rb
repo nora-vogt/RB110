@@ -43,3 +43,10 @@ end
 p result
 
 p result == frequency # => true; my hash has same value as LS solution
+
+# The LS solution creates an array of all upper and lowercase letters, iterates over every letter, and on each iteration:
+  # assigns letter_frequency to the total count (statement.count(letter)) of each letter in the given statement
+  # if the letter_frequency has a value greater than 0:
+    # creates a key in the hash for that letter (result[letter])
+    # assigns letter_frequency as the value
+  # if the letter_frequency has a value of zero (meaning the character was not present in the given statement), do nothing
