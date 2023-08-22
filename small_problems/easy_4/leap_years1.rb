@@ -73,9 +73,9 @@ Code:
 # Divisible by 4 AND evenly divisible by 100 AND evenly divisible by 400
 
 def leap_year?(year)
-  if (year % 4) == 0 && (year % 100 != 0)
+  if year % 400 == 0
     true
-  elsif (year % 4 == 0) && (year % 100 == 0) && (year % 400 == 0)
+  elsif (year % 4 == 0) && (year % 100 != 0)
     true
   else
     false
