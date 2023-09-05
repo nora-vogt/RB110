@@ -18,13 +18,21 @@ p result
 # The return value from map should be the following array:
 p result == [{a: 2}, {b: 3, c: 4}, {d: 5, e: 6, f: 7}] # true
 
-
-# LS Solution:
-[{a: 1}, {b: 2, c: 3}, {d: 4, e: 5, f: 6}].map do |hsh|
+# LS Solution - Try using #map then #each
+[{a: 1}, {b: 2, c: 3}, {d: 4, e: 5, f: 6}].map do |hash|
   incremented_hash = {}
-  hsh.each do |key, value|
+  hash.each do |key, value|
     incremented_hash[key] = value + 1
   end
   incremented_hash
 end
-# => [{:a=>2}, {:b=>3, :c=>4}, {:d=>5, :e=>6, :f=>7}]
+
+
+# Try using #each_with_object on original array
+[{a: 1}, {b: 2, c: 3}, {d: 4, e: 5, f: 6}].each_with_object([]) do |hash, array|
+  incremented_hash = {}
+  hash.each do |key, value|
+    incremented_hash[key] = value + 1
+  end
+  array << incremented_hash
+end
