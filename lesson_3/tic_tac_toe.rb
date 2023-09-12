@@ -37,6 +37,16 @@ def initialize_board
   new_board
 end
 
+def joinor(squares_array, join_str=', ', last_str='or')
+  if squares_array.size <= 2
+    squares_array.join(' or ')
+  else
+    string = squares_array.join(join_str)
+    string[-2] += "#{last_str} "
+    string
+  end
+end
+
 def empty_squares(board)
   board.keys.select { |num| board[num] == INITIAL_MARKER }
 end
@@ -44,7 +54,7 @@ end
 def player_places_piece!(board)
   square = ''
   loop do
-    prompt "Choose a square (#{empty_squares(board).join(',')}):"
+    prompt "Choose a position to play a piece: #{joinor(empty_squares(board))}"
     square = gets.chomp.to_i
 
     break if empty_squares(board).include?(square)
