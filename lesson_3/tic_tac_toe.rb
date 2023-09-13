@@ -63,17 +63,9 @@ def player_places_piece!(board)
   board[square] = PLAYER_MARKER
 end
 
-def computer_places_piece(board)
+def computer_places_piece!(board)
   square = empty_squares(board).sample
   board[square] = COMPUTER_MARKER
-end
-
-def board_full?(board)
-  empty_squares(board).empty?
-end
-
-def someone_won?(board)
-  !!detect_winner(board)
 end
 
 def detect_winner(board)
@@ -87,6 +79,14 @@ def detect_winner(board)
   nil
 end
 
+def board_full?(board)
+  empty_squares(board).empty?
+end
+
+def someone_won?(board)
+  !!detect_winner(board)
+end
+
 loop do
   board = initialize_board
 
@@ -96,7 +96,7 @@ loop do
     player_places_piece!(board)
     break if someone_won?(board) || board_full?(board)
 
-    computer_places_piece(board)
+    computer_places_piece!(board)
     break if someone_won?(board) || board_full?(board)
   end
 
@@ -104,6 +104,7 @@ loop do
 
   if someone_won?(board)
     prompt "#{detect_winner(board)} won!"
+    # increase_score(detect_winner(board))
   else
     prompt "It's a tie!"
   end
