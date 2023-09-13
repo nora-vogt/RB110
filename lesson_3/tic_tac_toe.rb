@@ -37,13 +37,12 @@ def initialize_board
   new_board
 end
 
-def joinor(squares_array, join_str=', ', last_str='or')
-  if squares_array.size <= 2
-    squares_array.join(' or ')
+def joinor(array, delimiter=', ', word='or')
+  if array.size <= 2
+    array.join(" #{word} ")
   else
-    string = squares_array.join(join_str)
-    string[-2] += "#{last_str} "
-    string
+    array[-1] = "#{word} #{array[-1]}"
+    array.join(delimiter)
   end
 end
 
