@@ -6,6 +6,9 @@ WINNING_LINES = [[1, 2, 3], [4, 5, 6], [7, 8, 9]] + # rows
 INITIAL_MARKER = ' '
 PLAYER_MARKER = 'X'
 COMPUTER_MARKER = 'O'
+PLAYER = 'Player'
+COMPUTER = 'Computer'
+SCORE = { 'Player' => 0, 'Computer' => 0 }
 
 def prompt(message)
   puts "=> #{message}"
@@ -30,6 +33,11 @@ def display_board(board)
   puts ""
 end
 # rubocop:enable Metrics/AbcSize
+
+def display_score
+  puts "====== The score is ======"
+  puts "Player: #{SCORE[PLAYER]}, Computer: #{SCORE[COMPUTER]}"
+end
 
 def initialize_board
   new_board = {}
@@ -68,12 +76,16 @@ def computer_places_piece!(board)
   board[square] = COMPUTER_MARKER
 end
 
+def update_score!(winner)
+  SCORE[winner] += 1
+end
+
 def detect_winner(board)
   WINNING_LINES.each do |line|
     if board.values_at(*line).count(PLAYER_MARKER) == 3 # * (splat) o
-      return 'Player'
+      return PLAYER
     elsif board.values_at(*line).count(COMPUTER_MARKER) == 3
-      return 'Computer'
+      return COMPUTER
     end
   end
   nil
@@ -104,7 +116,8 @@ loop do
 
   if someone_won?(board)
     prompt "#{detect_winner(board)} won!"
-    # increase_score(detect_winner(board))
+    update_score!(detect_winner(board))
+    display_score
   else
     prompt "It's a tie!"
   end
