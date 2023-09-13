@@ -6,8 +6,6 @@ WINNING_LINES = [[1, 2, 3], [4, 5, 6], [7, 8, 9]] + # rows
 INITIAL_MARKER = ' '
 PLAYER_MARKER = 'X'
 COMPUTER_MARKER = 'O'
-PLAYER = 'Player'
-COMPUTER = 'Computer'
 SCORE = { 'Player' => 0, 'Computer' => 0 }
 
 def prompt(message)
@@ -35,8 +33,8 @@ end
 # rubocop:enable Metrics/AbcSize
 
 def display_score
-  puts "====== The score is ======"
-  puts "Player: #{SCORE[PLAYER]}, Computer: #{SCORE[COMPUTER]}"
+  puts "****** The score is ******"
+  puts "Player: #{SCORE['Player']}, Computer: #{SCORE['Computer']}"
 end
 
 def initialize_board
@@ -83,9 +81,9 @@ end
 def detect_winner(board)
   WINNING_LINES.each do |line|
     if board.values_at(*line).count(PLAYER_MARKER) == 3 # * (splat) o
-      return PLAYER
+      return 'Player'
     elsif board.values_at(*line).count(COMPUTER_MARKER) == 3
-      return COMPUTER
+      return 'Computer'
     end
   end
   nil
