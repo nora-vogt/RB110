@@ -94,14 +94,36 @@ end
 #   end
 # end
 
-def string_to_signed_integer(string)
-  case string[0]
-  when '-' then string_to_integer(string.delete_prefix('-')) * -1
-  when '+' then string_to_integer(string.delete_prefix('+'))
-  else          string_to_integer(string)
-  end
-end
+# REFACTORED - CASE STATEMENT
+# def string_to_signed_integer(string)
+#   case string[0]
+#   when '-' then string_to_integer(string.delete_prefix('-')) * -1
+#   when '+' then string_to_integer(string.delete_prefix('+'))
+#   else          string_to_integer(string)
+#   end
+# end
 
+# REFACTORED - LS SOLUTION
+# def string_to_signed_integer(string)
+#   case string[0]
+#   when '-' then -string_to_integer(string[1..-1]) # can just add a - to return value of method invocation
+#   when '+' then string_to_integer(string[1..-1])
+#   else          string_to_integer(string)
+#   end
+# end
+
+# FURTHER EXPLORATION - REFACTOR
+# In our solution, we call string[1..-1] twice, and call string_to_integer three times. This is somewhat repetitive. Refactor our solution so it only makes these two calls once each.
+
+def string_to_signed_integer(string)
+  first_char = string[0]
+  if ['-', '+'].include?(first_char)
+    string = string[1..-1]
+  end
+
+  value = string_to_integer(string)
+  first_char == '-' ? -value : value
+end
 
 p string_to_signed_integer('4321') == 4321
 p string_to_signed_integer('-570') == -570
