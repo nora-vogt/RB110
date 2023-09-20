@@ -67,17 +67,28 @@ def create_digits_hash
   hash
 end
 
+# original
+# def string_to_integer(string)
+#   digits = create_digits_hash
+#   numbers = []
 
+#   string.chars.each { |char| numbers << digits[char]}
+
+#   value = 0
+#   numbers.each {|digit| value = 10 * value + digit}
+#   value
+# end
+
+# using #inject
 def string_to_integer(string)
   digits = create_digits_hash
   numbers = []
 
   string.chars.each { |char| numbers << digits[char]}
 
-  value = 0
-  numbers.each {|digit| value = 10 * value + digit}
-  value
+  numbers.inject {|sum, digit| 10 * sum + digit}
 end
+
 
 
 p string_to_integer('4321') == 4321
