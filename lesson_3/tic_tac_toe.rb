@@ -37,6 +37,19 @@ def display_score
   puts "Player: #{SCORE['Player']}, Computer: #{SCORE['Computer']}"
 end
 
+def display_welcome
+  prompt <<~HEREDOC
+    Welcome to Tic Tac Toe! In this game, you'll be playing against the computer.
+    Your goal is to place your piece in three squares in a row. 
+    Those squares can be across, up and down, or diagonally - as long a they are touching.
+
+    Each time you win a round, you get one point. The first player to 5 points wins the game.
+
+    Good luck!
+  HEREDOC
+  
+end
+
 def initialize_board
   new_board = {}
   (1..9).each { |num| new_board[num] = INITIAL_MARKER }
@@ -74,7 +87,7 @@ def computer_places_piece!(board)
   board[square] = COMPUTER_MARKER
 end
 
-def update_score!(winner)
+def update_score(winner)
   SCORE[winner] += 1
 end
 
@@ -99,6 +112,7 @@ end
 
 loop do
   board = initialize_board
+  display_welcome
 
   loop do
     display_board(board)
@@ -114,7 +128,7 @@ loop do
 
   if someone_won?(board)
     prompt "#{detect_winner(board)} won!"
-    update_score!(detect_winner(board))
+    update_score(detect_winner(board))
     display_score
   else
     prompt "It's a tie!"
