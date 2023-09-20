@@ -82,16 +82,26 @@ def string_to_integer(string)
   digits.inject {|sum, digit| 10 * sum + digit}
 end
 
+# ORIGINAL SOLUTION
+# def string_to_signed_integer(string)
+#   if string[0] == '-'
+#     value = string_to_integer(string.delete_prefix('-'))
+#     value * -1
+#   elsif string[0] == '+'
+#     string_to_integer(string.delete_prefix('+'))
+#   else
+#     string_to_integer(string)
+#   end
+# end
+
 def string_to_signed_integer(string)
-  if string[0] == '-'
-    value = string_to_integer(string.delete_prefix('-'))
-    value * -1
-  elsif string[0] == '+'
-    string_to_integer(string.delete_prefix('+'))
-  else
-    string_to_integer(string)
+  case string[0]
+  when '-' then string_to_integer(string.delete_prefix('-')) * -1
+  when '+' then string_to_integer(string.delete_prefix('+'))
+  else          string_to_integer(string)
   end
 end
+
 
 p string_to_signed_integer('4321') == 4321
 p string_to_signed_integer('-570') == -570
