@@ -1,3 +1,5 @@
+
+require 'pry'
 =begin
 Write a method that takes a String of digits, and returns the appropriate number as an integer. You may not use String#to_i or Integer()
 
@@ -89,7 +91,50 @@ def string_to_integer(string)
   numbers.inject {|sum, digit| 10 * sum + digit}
 end
 
+=begin
+- Decimal - base 10
+- Hexadecimal - base 16
+
+'4D9f' == 19871
+[4, 13, 9, 15]
+reverse = [15, 9, 13, 4]
+
+15 * 16**0 = 15
+9 * 16**1 = 144
+13 * 16**2 = 3328
+4 * 16**3 = 16384
+
+15 + 144 + 3328 + 16384 => 19871
+
+
+=end
+
+HEXADECIMAL_DIGITS = {
+  '0' => 0, '1' => 1, '2' => 2,
+  '3' => 3, '4' => 4, '5' => 5,
+  '6' => 6, '7' => 7, '8' => 8,
+  '9' => 9, 'A' => 10, 'B' => 11,
+  'C' => 12, 'D' => 13, 'E' => 14,
+  'F' => 15
+}
+
+def hexadecimal_to_integer(string)
+  digits = string.upcase.chars.map {|digit| HEXADECIMAL_DIGITS[digit]}
+  
+  exponent = 0
+  value = 0
+  digits.reverse.each do |digit|
+    value += digit * 16**exponent
+    exponent += 1
+  end
+
+  value
+end
 
 
 p string_to_integer('4321') == 4321
 p string_to_integer('570') == 570
+p hexadecimal_to_integer('4D9f') == 19871
+p hexadecimal_to_integer('DF') == 223
+p hexadecimal_to_integer('1') == 1
+p hexadecimal_to_integer('2654') == 9812
