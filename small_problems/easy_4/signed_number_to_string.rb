@@ -62,8 +62,7 @@ end
 
 def signed_integer_to_string(integer)
   return "0" if integer == 0
-  absolute_value = integer.abs
-  string = integer_to_string(absolute_value)
+  string = integer_to_string(integer.abs)
 
   integer < 0 ? string.prepend('-') : string.prepend('+')
 end
