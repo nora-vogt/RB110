@@ -124,7 +124,7 @@ def someone_won?(board)
 end
 
 def game_won?
-  true
+  ROUND_SCORES.values.any? {|score| score == 5}
 end
 
 def display_round_scores
