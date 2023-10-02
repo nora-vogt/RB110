@@ -177,9 +177,3 @@ end
 
 prompt "Thanks for playing Tic Tac Toe! Goodbye!"
 
-
-# where to put this
-# prompt "Are you ready to play again? (Y to continue, Q to quit):"
-# input = gets.chomp
-# if input == 'y'
-  
