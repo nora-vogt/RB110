@@ -8,7 +8,6 @@ WINNING_LINES = [
   [1, 4, 7], [2, 5, 8], [3, 6, 9], # cols
   [1, 5, 9], [3, 5, 7]             # diagonals
 ]
-ROUND_SCORES = { "Player" => 0, "Computer" => 0 }
 GAME_WINNING_SCORE = 5
 ONE_POINT = 1
 ZERO = 0
@@ -79,20 +78,20 @@ def detect_round_winner(board)
   nil
 end
 
-def detect_game_winner
-  if ROUND_SCORES["Player"] == GAME_WINNING_SCORE
+def detect_game_winner(scores)
+  if scores["Player"] == GAME_WINNING_SCORE
     "Player"
-  elsif ROUND_SCORES["Computer"] == GAME_WINNING_SCORE
+  elsif scores["Computer"] == GAME_WINNING_SCORE
     "Computer"
   end
 end
 
-def update_round_scores(winner)
-  ROUND_SCORES[winner] += ONE_POINT
+def update_round_scores(scores, winner)
+  scores[winner] += 1
 end
 
-def reset_round_scores
-  ROUND_SCORES.each {|k, _| ROUND_SCORES[k] = ZERO}
+def reset_round_scores(scores)
+  scores.each {|k, _| scores[k] = ZERO}
 end
 
 def player_places_piece!(board)
@@ -126,20 +125,21 @@ def someone_won?(board)
   # if there is no winner, detect_round_winner returns nil. !!nil => false
 end
 
-def game_won?
-  ROUND_SCORES.values.any? {|score| score == GAME_WINNING_SCORE}
+def game_won?(scores)
+  scores.values.any? {|score| score == GAME_WINNING_SCORE}
 end
 
-def display_round_scores
+def display_round_scores(scores)
   prompt "***** The score is: *****"
-  prompt "Player: #{ROUND_SCORES["Player"]} points; Computer: #{ROUND_SCORES["Computer"]} points"
+  prompt "Player: #{scores["Player"]} points; Computer: #{scores["Computer"]} points"
 end
 
+round_scores = { "Player" => 0, "Computer" => 0 }
 loop do
   board = initialize_board
   # board is a hash. key is space int, value is string - 'X' 'O' or ' '
 
-  loop do
+  loop do # loop for placing pieces
     display_board(board) # display the board
 
     player_places_piece!(board) # player makes move
@@ -153,16 +153,17 @@ loop do
   display_board(board) # display the board
 
   if someone_won?(board) # display winner or tie
-    prompt "#{detect_round_winner(board)} won this round!"
-    update_round_scores(detect_round_winner(board))
-    display_round_scores
+    round_winner = detect_round_winner(board)
+    prompt "#{round_winner} won this round!"
+    update_round_scores(round_scores, round_winner)
+    display_round_scores(round_scores)
   else
     prompt "It's a tie! No points are awarded."
   end
 
-  if game_won? # check if any player has reached 5 points
-    prompt "#{detect_game_winner} has won the game!"
-    reset_round_scores
+  if game_won?(round_scores) # check if any player has reached 5 points
+    prompt "#{detect_game_winner(round_scores)} has won the game!"
+    reset_round_scores(round_scores)
 
     prompt "Play again? (y or n)"
     answer = gets.chomp.downcase
