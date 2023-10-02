@@ -9,6 +9,9 @@ WINNING_LINES = [
   [1, 5, 9], [3, 5, 7]             # diagonals
 ]
 ROUND_SCORES = { "Player" => 0, "Computer" => 0 }
+GAME_WINNING_SCORE = 5
+ONE_POINT = 1
+ZERO = 0
 
 def prompt(message)
   puts "=> #{message}"
@@ -77,19 +80,19 @@ def detect_round_winner(board)
 end
 
 def detect_game_winner
-  if ROUND_SCORES["Player"] == 5
+  if ROUND_SCORES["Player"] == GAME_WINNING_SCORE
     "Player"
-  elsif ROUND_SCORES["Computer"] == 5
+  elsif ROUND_SCORES["Computer"] == GAME_WINNING_SCORE
     "Computer"
   end
 end
 
 def update_round_scores(winner)
-  ROUND_SCORES[winner] += 1
+  ROUND_SCORES[winner] += ONE_POINT
 end
 
 def reset_round_scores
-  ROUND_SCORES.each {|k, _| ROUND_SCORES[k] = 0}
+  ROUND_SCORES.each {|k, _| ROUND_SCORES[k] = ZERO}
 end
 
 def player_places_piece!(board)
@@ -124,7 +127,7 @@ def someone_won?(board)
 end
 
 def game_won?
-  ROUND_SCORES.values.any? {|score| score == 5}
+  ROUND_SCORES.values.any? {|score| score == GAME_WINNING_SCORE}
 end
 
 def display_round_scores
