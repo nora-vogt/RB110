@@ -8,6 +8,7 @@ WINNING_LINES = [
   [1, 4, 7], [2, 5, 8], [3, 6, 9], # cols
   [1, 5, 9], [3, 5, 7]             # diagonals
 ]
+ROUND_SCORES = { "Player" => 0, "Computer" => 0 }
 
 def prompt(message)
   puts "=> #{message}"
@@ -75,6 +76,10 @@ def detect_winner(board)
   nil
 end
 
+def update_score(winner)
+  ROUND_SCORES[winner] += 1
+end
+
 def player_places_piece!(board)
   square = ''
   loop do
@@ -106,6 +111,11 @@ def someone_won?(board)
   # if there is no winner, detect_winner returns nil. !!nil => false
 end
 
+def display_round_scores
+  prompt "The score is:"
+  prompt "Player: #{ROUND_SCORES["Player"]} points; Computer: #{ROUND_SCORES["Computer"]} points"
+end
+
 loop do
   board = initialize_board
   # board is a hash. key is space int, value is string - 'X' 'O' or ' '
@@ -125,8 +135,10 @@ loop do
 
   if someone_won?(board) # display winner or tie
     prompt "#{detect_winner(board)} won!"
+    update_score(detect_winner(board))
+    display_round_scores
   else
-    prompt "It's a tie!"
+    prompt "It's a tie! No points are awarded."
   end
 
   prompt "Play again? (y or n)"
