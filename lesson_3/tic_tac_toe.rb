@@ -87,7 +87,7 @@ def detect_game_winner(scores)
 end
 
 def update_round_scores(scores, winner)
-  scores[winner] += 1
+  scores[winner] += ONE_POINT
 end
 
 def reset_round_scores(scores)
