@@ -58,7 +58,7 @@ def joinor(array, delimiter=", ", word="or")
   end
 end
 
-def detect_winner(board)
+def detect_round_winner(board)
   WINNING_LINES.each do |line|
     # * splat operator - passes all elements in line as arguments
     # if board.values_at(*line).count(PLAYER_MARKER) == 3
@@ -106,9 +106,12 @@ def board_full?(board)
 end
 
 def someone_won?(board)
-  !!detect_winner(board)
-  # if player or computer wins, detect_winner returns a String. !!String => true
-  # if there is no winner, detect_winner returns nil. !!nil => false
+  !!detect_round_winner(board)
+  # if player or computer wins, detect_round_winner returns a String. !!String => true
+  # if there is no winner, detect_round_winner returns nil. !!nil => false
+end
+
+def game_won?(board)
 end
 
 def display_round_scores
@@ -134,12 +137,14 @@ loop do
   display_board(board) # display the board
 
   if someone_won?(board) # display winner or tie
-    prompt "#{detect_winner(board)} won!"
-    update_score(detect_winner(board))
+    prompt "#{detect_round_winner(board)} won!"
+    update_score(detect_round_winner(board))
     display_round_scores
   else
     prompt "It's a tie! No points are awarded."
   end
+
+  if game_won? # check if any player has reached 5 points
 
   prompt "Play again? (y or n)"
   answer = gets.chomp
