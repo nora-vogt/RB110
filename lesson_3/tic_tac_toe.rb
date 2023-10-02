@@ -131,7 +131,7 @@ def game_won?
 end
 
 def display_round_scores
-  prompt "The score is:"
+  prompt "***** The score is: *****"
   prompt "Player: #{ROUND_SCORES["Player"]} points; Computer: #{ROUND_SCORES["Computer"]} points"
 end
 
@@ -163,11 +163,22 @@ loop do
   if game_won? # check if any player has reached 5 points
     prompt "#{detect_game_winner} has won the game!"
     reset_round_scores
+
     prompt "Play again? (y or n)"
     answer = gets.chomp
     break unless answer == 'y'
+  else
+    prompt "Enter any key when you're ready to start the next round!"
+    gets.chomp
   end
 
 end
 
 prompt "Thanks for playing Tic Tac Toe! Goodbye!"
+
+
+# where to put this
+# prompt "Are you ready to play again? (Y to continue, Q to quit):"
+# input = gets.chomp
+# if input == 'y'
+  
