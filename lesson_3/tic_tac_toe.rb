@@ -153,7 +153,7 @@ loop do
   display_board(board) # display the board
 
   if someone_won?(board) # display winner or tie
-    prompt "#{detect_round_winner(board)} won!"
+    prompt "#{detect_round_winner(board)} won this round!"
     update_round_scores(detect_round_winner(board))
     display_round_scores
   else
@@ -165,11 +165,12 @@ loop do
     reset_round_scores
 
     prompt "Play again? (y or n)"
-    answer = gets.chomp
-    break unless answer == 'y'
+    answer = gets.chomp.downcase
+    break unless ['y', 'yes'].include?(answer)
   else
-    prompt "Enter any key when you're ready to start the next round!"
-    gets.chomp
+    prompt "Enter 'Y' to start the next round, or 'Q' to quit playing:"
+    input = gets.chomp.downcase
+    break if ['q', 'quit'].include?(input)
   end
 
 end
