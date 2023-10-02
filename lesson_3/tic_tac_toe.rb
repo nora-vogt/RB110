@@ -76,8 +76,20 @@ def detect_round_winner(board)
   nil
 end
 
-def update_score(winner)
+def detect_game_winner
+  if ROUND_SCORES["Player"] == 5
+    "Player"
+  elsif ROUND_SCORES["Computer"] == 5
+    "Computer"
+  end
+end
+
+def update_round_scores(winner)
   ROUND_SCORES[winner] += 1
+end
+
+def reset_round_scores
+  ROUND_SCORES.each {|k, _| ROUND_SCORES[k] = 0}
 end
 
 def player_places_piece!(board)
@@ -111,7 +123,8 @@ def someone_won?(board)
   # if there is no winner, detect_round_winner returns nil. !!nil => false
 end
 
-def game_won?(board)
+def game_won?
+  true
 end
 
 def display_round_scores
@@ -138,17 +151,20 @@ loop do
 
   if someone_won?(board) # display winner or tie
     prompt "#{detect_round_winner(board)} won!"
-    update_score(detect_round_winner(board))
+    update_round_scores(detect_round_winner(board))
     display_round_scores
   else
     prompt "It's a tie! No points are awarded."
   end
 
   if game_won? # check if any player has reached 5 points
+    prompt "#{detect_game_winner} has won the game!"
+    reset_round_scores
+    prompt "Play again? (y or n)"
+    answer = gets.chomp
+    break unless answer == 'y'
+  end
 
-  prompt "Play again? (y or n)"
-  answer = gets.chomp
-  break unless answer == 'y'
 end
 
 prompt "Thanks for playing Tic Tac Toe! Goodbye!"
