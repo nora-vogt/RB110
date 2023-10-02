@@ -46,6 +46,17 @@ def empty_squares(board)
   board.keys.select { |number| board[number] == INITIAL_MARKER }
 end
 
+def joinor(array, delimiter=", ", word="or")
+  case array.size
+  when 0 then ""
+  when 1 then array.join('')
+  when 2 then array.join(" #{word} ")
+  else
+    array[-1] = "#{word} #{array[-1]}"
+    array.join(delimiter)
+  end
+end
+
 def detect_winner(board)
   WINNING_LINES.each do |line|
     # * splat operator - passes all elements in line as arguments
@@ -67,7 +78,7 @@ end
 def player_places_piece!(board)
   square = ''
   loop do
-    prompt "Choose a square (#{empty_squares(board).join(', ')}):"
+    prompt "Choose a position to place a piece: #{joinor(empty_squares(board))}"
     square = gets.chomp.to_i
 
     break if empty_squares(board).include?(square)
