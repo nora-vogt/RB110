@@ -131,7 +131,7 @@ end
 
 def display_round_scores(scores)
   prompt "***** The score is: *****"
-  prompt "Player: #{scores["Player"]} points; Computer: #{scores["Computer"]} points"
+  prompt "Player: #{scores["Player"]}; Computer: #{scores["Computer"]}"
 end
 
 round_scores = { "Player" => 0, "Computer" => 0 }
