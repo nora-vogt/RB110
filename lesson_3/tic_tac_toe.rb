@@ -58,7 +58,7 @@ def empty_squares(board)
   board.keys.select { |num| board[num] == INITIAL_MARKER }
 end
 
-def detect_winner(board)
+def detect_round_winner(board)
   WINNING_LINES.each do |line|
     if board.values_at(*line).all?(PLAYER_MARKER)
       return 'Player'
@@ -92,7 +92,7 @@ def board_full?(board)
 end
 
 def someone_won?(board)
-  !!detect_winner(board)
+  !!detect_round_winner(board)
 end
 
 loop do # main game loop
@@ -110,7 +110,7 @@ loop do # main game loop
   display_board(board)
 
   if someone_won?(board)
-    prompt "#{detect_winner(board)} won!"
+    prompt "#{detect_round_winner(board)} won!"
   else
     prompt "It's a tie!"
   end
