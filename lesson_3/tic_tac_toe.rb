@@ -91,7 +91,7 @@ def detect_game_winner(scores)
   end
 end
 
-def update_scores(winner, scores)
+def update_scores(winner, scores) # could make this shorter if winner is passed in as a symbol, just scores[winner] += 1
   if winner == 'Player'
     scores[:player] += 1
   elsif winner == 'Computer'
@@ -139,6 +139,17 @@ def play_again?
   ['y', 'yes'].include?(answer)
 end
 
+def play_round(board, round_number)
+  loop do # player and computer turns for one round
+    display_board(board, round_number)
+    player_places_piece!(board)
+    break if round_won?(board) || board_full?(board)
+
+    computer_places_piece!(board)
+    break if round_won?(board) || board_full?(board)
+  end
+end
+
 loop do # main game loop
   scores = {player: 0, computer: 0}
   round = 1
@@ -146,14 +157,7 @@ loop do # main game loop
   loop do # playing one whole round loop
     board = initialize_board
     
-    loop do # player and computer turns for one round
-      display_board(board, round)
-      player_places_piece!(board)
-      break if round_won?(board) || board_full?(board)
-
-      computer_places_piece!(board)
-      break if round_won?(board) || board_full?(board)
-    end
+    play_round(board, round)
 
     display_board(board, round)
 
