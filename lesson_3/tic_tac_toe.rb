@@ -5,6 +5,7 @@ WINNING_LINES = [
   [1, 4, 7], [2, 5, 8], [3, 6, 9], # cols
   [1, 5, 9], [3, 5, 7]             # diagonals
 ]
+GAME_WINNING_SCORE = 5
 INITIAL_MARKER = ' '
 PLAYER_MARKER = 'X'
 COMPUTER_MARKER = 'O'
@@ -38,6 +39,13 @@ end
 def display_scores(scores)
   prompt "*** The score is ***"
   prompt "Player: #{scores[:player]}, Computer: #{scores[:computer]}"
+end
+
+def display_game_winner(game_winner)
+  puts ""
+  puts "***********************"
+  prompt "#{game_winner} has reached #{GAME_WINNING_SCORE} points and has won the game!"
+  puts "***********************"
 end
 
 def joinor(array, delimiter=", ", word="or")
@@ -75,6 +83,14 @@ def detect_round_winner(board)
   nil
 end
 
+def detect_game_winner(scores)
+  if scores[:player] == 5
+    'Player'
+  elsif scores[:computer] == 5
+    'Computer'
+  end
+end
+
 def update_scores(winner, scores)
   if winner == 'Player'
     scores[:player] += 1
@@ -109,12 +125,22 @@ def board_full?(board)
   empty_squares(board).empty?
 end
 
-def someone_won?(board)
+def round_won?(board)
   !!detect_round_winner(board)
 end
 
+def game_won?(scores)
+  scores.values.any? {|score| score == GAME_WINNING_SCORE}
+end
+
+def play_again?
+  prompt "Play again? (y or n)"
+  answer = gets.chomp.downcase
+  ['y', 'yes'].include?(answer)
+end
+
 loop do # main game loop
-  score = {player: 0, computer: 0}
+  scores = {player: 0, computer: 0}
   round = 1
 
   loop do # playing one whole round loop
@@ -123,29 +149,33 @@ loop do # main game loop
     loop do # player and computer turns for one round
       display_board(board, round)
       player_places_piece!(board)
-      break if someone_won?(board) || board_full?(board)
+      break if round_won?(board) || board_full?(board)
 
       computer_places_piece!(board)
-      break if someone_won?(board) || board_full?(board)
+      break if round_won?(board) || board_full?(board)
     end
 
     display_board(board, round)
 
-    if someone_won?(board)
+    if round_won?(board)
       round_winner = detect_round_winner(board)
-      prompt "#{round_winner} won!"
-      update_scores(round_winner, score)
-      display_scores(score)
+      prompt "#{round_winner} wins this round!"
+      update_scores(round_winner, scores)
+      display_scores(scores)
     else
       prompt "It's a tie! No points are awarded."
+    end
+
+    if game_won?(scores)
+      game_winner = detect_game_winner(scores)
+      display_game_winner(game_winner)
+      break
     end
 
     round = update_round_number(round)
   end
 
-  prompt "Play again? (y or n)"
-  answer = gets.chomp.downcase
-  break unless ['y', 'yes'].include?(answer)
+  break unless play_again?
 end
 
 prompt "Thanks for playing Tic Tac Toe! Goodbye!"
