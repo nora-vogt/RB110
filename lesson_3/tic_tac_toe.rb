@@ -139,7 +139,7 @@ def play_again?
   ['y', 'yes'].include?(answer)
 end
 
-def play_round(board, round_number)
+def play_round(board, round_number, scores)
   loop do # player and computer turns for one round
     display_board(board, round_number)
     player_places_piece!(board)
@@ -147,6 +147,17 @@ def play_round(board, round_number)
 
     computer_places_piece!(board)
     break if round_won?(board) || board_full?(board)
+  end
+
+  display_board(board, round_number)
+
+  if round_won?(board) # should this be its own helper method?
+    round_winner = detect_round_winner(board)
+    prompt "#{round_winner} wins this round!"
+    update_scores(round_winner, scores)
+    display_scores(scores)
+  else
+    prompt "It's a tie! No points are awarded."
   end
 end
 
@@ -157,18 +168,7 @@ loop do # main game loop
   loop do # playing one whole round loop
     board = initialize_board
     
-    play_round(board, round)
-
-    display_board(board, round)
-
-    if round_won?(board)
-      round_winner = detect_round_winner(board)
-      prompt "#{round_winner} wins this round!"
-      update_scores(round_winner, scores)
-      display_scores(scores)
-    else
-      prompt "It's a tie! No points are awarded."
-    end
+    play_round(board, round, scores)
 
     if game_won?(scores)
       game_winner = detect_game_winner(scores)
