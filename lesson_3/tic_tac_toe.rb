@@ -69,6 +69,14 @@ def detect_round_winner(board)
   nil
 end
 
+def update_scores(winner, scores)
+  if winner == 'Player'
+    scores[:player] += 1
+  elsif winner == 'Computer'
+    scores[:computer] += 1
+  end
+end
+
 def player_places_piece!(board)
   square = ''
   loop do
@@ -96,23 +104,30 @@ def someone_won?(board)
 end
 
 loop do # main game loop
-  board = initialize_board
+  scores = {player: 0, computer: 0}
 
-  loop do # player and computer turns
+  loop do # playing one whole round loop
+    board = initialize_board
+    
+    loop do # player and computer turns for one round
+      display_board(board)
+      player_places_piece!(board)
+      break if someone_won?(board) || board_full?(board)
+
+      computer_places_piece!(board)
+      break if someone_won?(board) || board_full?(board)
+    end
+
     display_board(board)
-    player_places_piece!(board)
-    break if someone_won?(board) || board_full?(board)
 
-    computer_places_piece!(board)
-    break if someone_won?(board) || board_full?(board)
-  end
-
-  display_board(board)
-
-  if someone_won?(board)
-    prompt "#{detect_round_winner(board)} won!"
-  else
-    prompt "It's a tie!"
+    if someone_won?(board)
+      round_winner = detect_round_winner(board)
+      prompt "#{round_winner} won!"
+      update_scores(round_winner, scores)
+      prompt "The score is Player: #{scores[:player]}, Computer: #{scores[:computer]}"
+    else
+      prompt "It's a tie! No points are awarded."
+    end
   end
 
   prompt "Play again? (y or n)"
