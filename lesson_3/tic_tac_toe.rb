@@ -162,7 +162,7 @@ def play_round(board, round_number, scores)
 end
 
 loop do # main game loop
-  scores = {player: 0, computer: 0}
+  scores = {player: 0, computer: 0} # consider moving the round to here, changing var name to "scoreboard"
   round = 1
 
   loop do # playing one whole round loop
