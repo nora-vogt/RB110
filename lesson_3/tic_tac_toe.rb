@@ -14,9 +14,10 @@ def prompt(message)
 end
 
 # rubocop:disable Metrics/AbcSize
-def display_board(board)
+def display_board(board, round)
   system "clear"
 
+  prompt "*** Round #{round} ***"
   puts "You're #{PLAYER_MARKER}. Computer is #{COMPUTER_MARKER}."
   puts ""
   puts "     |     |     "
@@ -33,6 +34,11 @@ def display_board(board)
   puts ""
 end
 # rubocop:enable Metrics/AbcSize
+
+def display_scores(scores)
+  prompt "*** The score is ***"
+  prompt "Player: #{scores[:player]}, Computer: #{scores[:computer]}"
+end
 
 def joinor(array, delimiter=", ", word="or")
   case array.size
@@ -77,6 +83,10 @@ def update_scores(winner, scores)
   end
 end
 
+def update_round_number(round)
+  round + 1
+end
+
 def player_places_piece!(board)
   square = ''
   loop do
@@ -104,13 +114,14 @@ def someone_won?(board)
 end
 
 loop do # main game loop
-  scores = {player: 0, computer: 0}
+  score = {player: 0, computer: 0}
+  round = 1
 
   loop do # playing one whole round loop
     board = initialize_board
     
     loop do # player and computer turns for one round
-      display_board(board)
+      display_board(board, round)
       player_places_piece!(board)
       break if someone_won?(board) || board_full?(board)
 
@@ -118,16 +129,18 @@ loop do # main game loop
       break if someone_won?(board) || board_full?(board)
     end
 
-    display_board(board)
+    display_board(board, round)
 
     if someone_won?(board)
       round_winner = detect_round_winner(board)
       prompt "#{round_winner} won!"
-      update_scores(round_winner, scores)
-      prompt "The score is Player: #{scores[:player]}, Computer: #{scores[:computer]}"
+      update_scores(round_winner, score)
+      display_scores(score)
     else
       prompt "It's a tie! No points are awarded."
     end
+
+    round = update_round_number(round)
   end
 
   prompt "Play again? (y or n)"
