@@ -51,7 +51,7 @@ end
 def joinor(array, delimiter=", ", word="or")
   case array.size
   when 0 then ""
-  when 1 then array.join('')
+  when 1 then array.join
   when 2 then array.join(" #{word} ")
   else
     array[-1] = "#{word} #{array[-1]}"
@@ -74,8 +74,8 @@ end
 
 def detect_at_risk_square(board)
   WINNING_LINES.each do |line|
-    if board.values_at(*line).count(PLAYER_MARKER) == 2 
-      line.each {|square| return square if board[square] == INITIAL_MARKER}
+    if board.values_at(*line).count(PLAYER_MARKER) == 2
+      line.each { |square| return square if board[square] == INITIAL_MARKER }
     end
   end
   nil
@@ -143,7 +143,7 @@ def round_won?(board)
 end
 
 def game_won?(scores)
-  scores.values.any? {|score| score == GAME_WINNING_SCORE}
+  scores.values.any? { |score| score == GAME_WINNING_SCORE }
 end
 
 def play_again?
@@ -175,12 +175,12 @@ def play_round(board, round_number, scores)
 end
 
 loop do # main game loop
-  scores = {player: 0, computer: 0} # consider moving the round to here, changing var name to "scoreboard"
+  scores = { player: 0, computer: 0 } # consider moving the round to here, changing var name to "scoreboard"
   round = 1
 
   loop do # playing one whole round loop
     board = initialize_board
-    
+
     play_round(board, round, scores)
 
     if game_won?(scores)
