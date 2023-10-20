@@ -14,7 +14,7 @@ def prompt(message)
   puts "=> #{message}"
 end
 
-# rubocop:disable Metrics/AbcSize
+# rubocop:disable Metrics/AbcSize, Metrics/MethodLength
 def display_board(board, round)
   system "clear"
 
@@ -34,7 +34,7 @@ def display_board(board, round)
   puts "     |     |     "
   puts ""
 end
-# rubocop:enable Metrics/AbcSize
+# rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
 def display_scores(scores)
   prompt "*** The score is ***"
@@ -70,6 +70,15 @@ def empty_squares(board)
   # keys array.select returns a new array of all keys
   # where the value is an empty string (empty space)
   board.keys.select { |num| board[num] == INITIAL_MARKER }
+end
+
+def detect_at_risk_square(board)
+  WINNING_LINES.each do |line|
+    if board.values_at(*line).count(PLAYER_MARKER) == 2 
+      line.each {|square| return square if board[square] == INITIAL_MARKER}
+    end
+  end
+  nil
 end
 
 def detect_round_winner(board)
@@ -117,8 +126,12 @@ def player_places_piece!(board)
 end
 
 def computer_places_piece!(board)
-  square = empty_squares(board).sample
-  board[square] = COMPUTER_MARKER
+  if detect_at_risk_square(board)
+    board[detect_at_risk_square(board)] = COMPUTER_MARKER
+  else
+    random_square = empty_squares(board).sample
+    board[random_square] = COMPUTER_MARKER
+  end
 end
 
 def board_full?(board)
