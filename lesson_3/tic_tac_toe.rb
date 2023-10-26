@@ -72,10 +72,10 @@ def empty_squares(board)
   board.keys.select { |num| board[num] == INITIAL_MARKER }
 end
 
-def detect_at_risk_square(board)
+def detect_at_risk_square(board, marker)
   WINNING_LINES.each do |line|
-    if board.values_at(*line).count(PLAYER_MARKER) == 2
-      line.each { |square| return square if board[square] == INITIAL_MARKER }
+    if board.values_at(*line).count(marker) == 2
+      line.each {|square| return square if board[square] == INITIAL_MARKER}
     end
   end
   nil
@@ -126,12 +126,17 @@ def player_places_piece!(board)
 end
 
 def computer_places_piece!(board)
-  if detect_at_risk_square(board)
-    board[detect_at_risk_square(board)] = COMPUTER_MARKER
-  else
-    random_square = empty_squares(board).sample
-    board[random_square] = COMPUTER_MARKER
+  square = nil
+
+  if detect_at_risk_square(board, COMPUTER_MARKER) # offense
+    square = detect_at_risk_square(board, COMPUTER_MARKER)
+  elsif detect_at_risk_square(board, PLAYER_MARKER) # defense
+    square = detect_at_risk_square(board, PLAYER_MARKER)
+  else # pick randomly
+    square = empty_squares(board).sample
   end
+
+  board[square] = COMPUTER_MARKER
 end
 
 def board_full?(board)
