@@ -9,6 +9,7 @@ GAME_WINNING_SCORE = 5
 INITIAL_MARKER = ' '
 PLAYER_MARKER = 'X'
 COMPUTER_MARKER = 'O'
+SQUARE_FIVE = 5
 
 def prompt(message)
   puts "=> #{message}"
@@ -93,9 +94,9 @@ def detect_round_winner(board)
 end
 
 def detect_game_winner(scores)
-  if scores[:player] == 5
+  if scores[:player] == GAME_WINNING_SCORE
     'Player'
-  elsif scores[:computer] == 5
+  elsif scores[:computer] == GAME_WINNING_SCORE
     'Computer'
   end
 end
@@ -132,6 +133,8 @@ def computer_places_piece!(board)
     square = detect_at_risk_square(board, COMPUTER_MARKER)
   elsif detect_at_risk_square(board, PLAYER_MARKER) # defense
     square = detect_at_risk_square(board, PLAYER_MARKER)
+  elsif board[SQUARE_FIVE] == " "
+    square = SQUARE_FIVE
   else # pick randomly
     square = empty_squares(board).sample
   end
