@@ -133,7 +133,7 @@ def computer_places_piece!(board)
     square = detect_at_risk_square(board, COMPUTER_MARKER)
   elsif detect_at_risk_square(board, PLAYER_MARKER) # defense
     square = detect_at_risk_square(board, PLAYER_MARKER)
-  elsif board[SQUARE_FIVE] == " "
+  elsif board[SQUARE_FIVE] == INITIAL_MARKER # choose square 5 if empty
     square = SQUARE_FIVE
   else # pick randomly
     square = empty_squares(board).sample
