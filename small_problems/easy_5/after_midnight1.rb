@@ -1,3 +1,4 @@
+require 'Time'
 =begin
 Write a method that takes a time using this minute-based format and returns the time of day in 24 hour format (hh:mm). Your method should work with any integer input.
 
@@ -61,7 +62,7 @@ end: formatted string
 ** for nums greater than 1440 / less than -1440, divide by 1440 to get the days, then take the remainder (minutes) -> proceed to step 2 (divide by 60)
 
 ** Standardize Minutes - helper method**
-Given an integer greater than 1440 or less than -1440
+goal: get rid of minutes beyond 0-1439
   - Divide by 1400, get the remainder
   - The remainder is minutes, return the minutes
 
@@ -78,23 +79,82 @@ Given an integer greater than 1440 or less than -1440
 # C
 =end
 
-MINUTES_PER_HOUR = 60
-MINUTES_PER_DAY = 1440
+# MINUTES_PER_HOUR = 60
+# MINUTES_PER_DAY = 1440
 
-def normalize_minutes(minutes)
-  minutes.divmod(MINUTES_PER_DAY)[1]
-end
+# def normalize_minutes(minutes)
+#   minutes.divmod(MINUTES_PER_DAY)[1]
+# end
+
+# def time_of_day(minutes)
+#   minutes = normalize_minutes(minutes)
+#   hours, minutes = minutes.divmod(MINUTES_PER_HOUR)
+#   format('%02d:%02d', hours, minutes)
+# end
+
+# LS Solution
+MINUTES_PER_HOUR = 60
+HOURS_PER_DAY = 24
+MINUTES_PER_DAY = HOURS_PER_DAY * MINUTES_PER_HOUR
+
+# def normalize_minutes_to_0_through_1439(minutes)
+#   while minutes < 0
+#     minutes += MINUTES_PER_DAY
+#   end
+
+#   minutes % MINUTES_PER_DAY
+# end
+
+# def time_of_day(delta_minutes)
+#   delta_minutes = normalize_minutes_to_0_through_1439(delta_minutes)
+#   hours, minutes = delta_minutes.divmod(MINUTES_PER_HOUR)
+#   format('%02d:%02d', hours, minutes)
+# end
+
+# Further Exploration 1
+# def normalize_minutes_to_0_through_1439(minutes)
+#   minutes % 1440
+# end
+# this returns the same result as my original solution: minutes.divmod(MINUTES_PER_DAY)[1]
+
+# def time_of_day(delta_minutes)
+#   delta_minutes = normalize_minutes_to_0_through_1439(delta_minutes)
+#   hours, minutes = delta_minutes.divmod(MINUTES_PER_HOUR)
+#   format('%02d:%02d', hours, minutes)
+# end
+
+# Further Exploration 2
+# How would you approach this problem if you were allowed to use ruby's Date and Time classes?
+
+# Time.new(0) makes a new Time object with date 0000-01-01, time 00:00:00
+   # so we can add seconds to this object
+
+# strftime
+  # '%H:%M' gives 24 hr time, equivalent to '%R'
+
+# SECONDS_PER_MINUTE = 60
+# def time_of_day(minutes)
+#   (Time.new(0) + minutes * SECONDS_PER_MINUTE).strftime('%R')
+# end
+
+# Further Exploration 3
+  # allowed to use Date and Time, consider day of week
+  # assume delta_minutes is the number of minutes before/after the midnight between Saturday and Sunday
+  # ex: delta_minutes value of -4231 would need to produce a return value of Thursday 01:29
+
+  # 0 -> 00:00 on Sunday  
+
+SECONDS_PER_MINUTE = 60
 
 def time_of_day(minutes)
-  minutes = normalize_minutes(minutes)
-  hours, minutes = minutes.divmod(MINUTES_PER_HOUR)
-  format('%02d:%02d', hours, minutes)
+  (Time.new(2023, 11, 5) + minutes * SECONDS_PER_MINUTE).strftime('%A %R')
 end
 
-p time_of_day(0) == "00:00"
-p time_of_day(-3) == "23:57"
-p time_of_day(35) == "00:35"
-p time_of_day(-1437) == "00:03"
-p time_of_day(3000) == "02:00"
-p time_of_day(800) == "13:20"
-p time_of_day(-4231) == "01:29"
+
+p time_of_day(0) #== "00:00"
+p time_of_day(-3) #== "23:57"
+p time_of_day(35) #== "00:35"
+p time_of_day(-1437) #== "00:03"
+p time_of_day(3000) #== "02:00"
+p time_of_day(800) #== "13:20"
+p time_of_day(-4231) #== "01:29"
