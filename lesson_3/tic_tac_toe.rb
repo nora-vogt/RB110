@@ -45,6 +45,7 @@ end
 def display_scores(scores)
   prompt "*** The score is ***"
   prompt "Player: #{scores[:player]}, Computer: #{scores[:computer]}"
+  prompt "Tie Games: #{scores[:ties]}"
 end
 
 def display_game_winner(game_winner)
@@ -142,6 +143,8 @@ def update_scores(winner, scores) # could make this shorter if winner is passed 
     scores[:player] += 1
   elsif winner == 'Computer'
     scores[:computer] += 1
+  else
+    scores[:ties] += 1
   end
 end
 
@@ -230,6 +233,7 @@ def play_round(board, round_number, scores, current_player) # here
     press_enter_to_continue
   else
     prompt "It's a tie! No points are awarded."
+    update_scores(:tie, scores)
     press_enter_to_continue
   end
 end
@@ -243,7 +247,7 @@ loop do # main game loop
   display_first_player(current_player)
   sleep 2
 
-  scores = { player: 0, computer: 0 } # consider moving the round to here, changing var name to "scoreboard"
+  scores = { player: 0, computer: 0, ties: 0 } # consider moving the round to here, changing var name to "scoreboard"
   round = 1
 
   loop do # playing one whole round loop
