@@ -20,7 +20,8 @@ def display_board(board, round)
   system "clear"
 
   prompt "*** Round #{round} ***"
-  puts "You're #{PLAYER_MARKER}. Computer is #{COMPUTER_MARKER}."
+
+  #puts "You're #{PLAYER_MARKER}. Computer is #{COMPUTER_MARKER}."
   puts ""
   puts "     |     |     "
   puts "  #{board[1]}  |  #{board[2]}  |  #{board[3]}  "
@@ -36,6 +37,10 @@ def display_board(board, round)
   puts ""
 end
 # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+
+def display_first_player(first_player)
+  prompt "#{first_player} is moving first!"
+end
 
 def display_scores(scores)
   prompt "*** The score is ***"
@@ -101,6 +106,28 @@ def detect_game_winner(scores)
   end
 end
 
+def get_first_player
+  player_one = nil
+  loop do
+    puts "Who should go first? Enter a number:"
+    puts "1 - Me"
+    puts "2 - Computer"
+    puts "3 - Let the Computer choose!"
+
+    player_one = gets.chomp
+
+    break if ["1", "2", "3"].include?(player_one)
+
+    puts "Invalid answer. Enter 1 to go first, or 2 for the computer to go first."
+  end
+  
+  case player_one
+  when '1' then 'Player'
+  when '2' then 'Computer'
+  when '3' then ['Player', 'Computer'].sample
+  end
+end
+
 def update_scores(winner, scores) # could make this shorter if winner is passed in as a symbol, just scores[winner] += 1
   if winner == 'Player'
     scores[:player] += 1
@@ -160,14 +187,30 @@ def play_again?
   ['y', 'yes'].include?(answer)
 end
 
-def play_round(board, round_number, scores)
+def play_round(board, round_number, scores, first_player) # here
   loop do # player and computer turns for one round
-    display_board(board, round_number)
-    player_places_piece!(board)
-    break if round_won?(board) || board_full?(board)
+    if first_player == 'Player'
+      display_board(board, round_number)
+      prompt "#{first_player}'s turn!"
 
-    computer_places_piece!(board)
-    break if round_won?(board) || board_full?(board)
+      player_places_piece!(board)
+      break if round_won?(board) || board_full?(board)
+
+      prompt "Computer is moving now."
+      sleep 1
+
+      computer_places_piece!(board)
+      break if round_won?(board) || board_full?(board)
+    else
+      computer_places_piece!(board)
+      break if round_won?(board) || board_full?(board)
+
+      display_board(board, round_number)
+      prompt "Your turn!"
+
+      player_places_piece!(board)
+      break if round_won?(board) || board_full?(board)
+    end
   end
 
   display_board(board, round_number)
@@ -183,13 +226,21 @@ def play_round(board, round_number, scores)
 end
 
 loop do # main game loop
+  puts "Welcome to Tic Tac Toe!"
+  puts "*** here are some rules placeholder ***"
+  puts ""
+  
+  first_player = get_first_player
+  display_first_player(first_player)
+  sleep 2
+
   scores = { player: 0, computer: 0 } # consider moving the round to here, changing var name to "scoreboard"
   round = 1
 
   loop do # playing one whole round loop
     board = initialize_board
 
-    play_round(board, round, scores)
+    play_round(board, round, scores, first_player)
 
     if game_won?(scores)
       game_winner = detect_game_winner(scores)
