@@ -38,8 +38,8 @@ def display_board(board, round)
 end
 # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
-def display_first_player(first_player)
-  prompt "#{first_player} is moving first!"
+def display_first_player(player)
+  prompt "#{player} is moving first!"
 end
 
 def display_scores(scores)
@@ -63,6 +63,10 @@ def joinor(array, delimiter=", ", word="or")
     array[-1] = "#{word} #{array[-1]}"
     array.join(delimiter)
   end
+end
+
+def alternate_player(current_player)
+  current_player == 'Player' ? 'Computer' : 'Player'
 end
 
 def initialize_board
@@ -169,6 +173,15 @@ def computer_places_piece!(board)
   board[square] = COMPUTER_MARKER
 end
 
+
+def place_piece!(board, current_player)
+  if current_player == 'Player'
+    player_places_piece!(board)
+  else
+    computer_places_piece!(board)
+  end
+end
+
 def board_full?(board)
   empty_squares(board).empty?
 end
@@ -187,30 +200,19 @@ def play_again?
   ['y', 'yes'].include?(answer)
 end
 
-def play_round(board, round_number, scores, first_player) # here
+def play_round(board, round_number, scores, current_player) # here
   loop do # player and computer turns for one round
-    if first_player == 'Player'
-      display_board(board, round_number)
-      prompt "#{first_player}'s turn!"
-
-      player_places_piece!(board)
-      break if round_won?(board) || board_full?(board)
-
-      prompt "Computer is moving now."
-      sleep 1
-
-      computer_places_piece!(board)
-      break if round_won?(board) || board_full?(board)
-    else
-      computer_places_piece!(board)
-      break if round_won?(board) || board_full?(board)
-
-      display_board(board, round_number)
-      prompt "Your turn!"
-
-      player_places_piece!(board)
-      break if round_won?(board) || board_full?(board)
+    display_board(board, round_number)
+    prompt "#{current_player}'s turn!"
+    
+    if current_player == 'Computer'
+      prompt "Computer is choosing now..."
+      sleep 2
     end
+
+    place_piece!(board, current_player)
+    current_player = alternate_player(current_player)
+    break if round_won?(board) || board_full?(board)
   end
 
   display_board(board, round_number)
@@ -230,8 +232,8 @@ loop do # main game loop
   puts "*** here are some rules placeholder ***"
   puts ""
   
-  first_player = get_first_player
-  display_first_player(first_player)
+  current_player = get_first_player
+  display_first_player(current_player)
   sleep 2
 
   scores = { player: 0, computer: 0 } # consider moving the round to here, changing var name to "scoreboard"
@@ -240,7 +242,7 @@ loop do # main game loop
   loop do # playing one whole round loop
     board = initialize_board
 
-    play_round(board, round, scores, first_player)
+    play_round(board, round, scores, current_player)
 
     if game_won?(scores)
       game_winner = detect_game_winner(scores)
