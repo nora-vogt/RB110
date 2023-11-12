@@ -132,6 +132,11 @@ def get_first_player
   end
 end
 
+def press_enter_to_continue
+  prompt "Press 'Enter' to continue:"
+  gets.chomp
+end
+
 def update_scores(winner, scores) # could make this shorter if winner is passed in as a symbol, just scores[winner] += 1
   if winner == 'Player'
     scores[:player] += 1
@@ -204,10 +209,10 @@ def play_round(board, round_number, scores, current_player) # here
   loop do # player and computer turns for one round
     display_board(board, round_number)
     prompt "#{current_player}'s turn!"
-    
+
     if current_player == 'Computer'
       prompt "Computer is choosing now..."
-      sleep 2
+      sleep 1
     end
 
     place_piece!(board, current_player)
@@ -222,8 +227,10 @@ def play_round(board, round_number, scores, current_player) # here
     prompt "#{round_winner} wins this round!"
     update_scores(round_winner, scores)
     display_scores(scores)
+    press_enter_to_continue
   else
     prompt "It's a tie! No points are awarded."
+    press_enter_to_continue
   end
 end
 
