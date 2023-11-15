@@ -140,8 +140,8 @@ def get_first_player
   end
 end
 
-def press_enter_to_continue
-  prompt "Press 'Enter' to continue:"
+def press_enter_to_start_round
+  prompt "Press 'Enter' to start the next round:"
   gets.chomp
 end
 
@@ -237,11 +237,11 @@ def play_round(board, round, scores, current_player) # here
     prompt "#{round_winner} wins this round!"
     update_scores(round_winner, scores)
     display_scores(scores)
-    press_enter_to_continue unless game_won?(scores)
+    press_enter_to_start_round unless game_won?(scores)
   else
     prompt "It's a tie! No points are awarded."
     update_scores(:tie, scores)
-    press_enter_to_continue
+    press_enter_to_start_round
   end
 end
 
