@@ -56,10 +56,12 @@ def display_score(scores)
   puts "#{'-'*20}"
 end
 
-def display_game_winner(game_winner)
+def display_game_winner(scores)
+  game_winner = detect_game_winner(scores)
   puts ""
   puts "***********************"
   prompt "#{game_winner} has reached #{GAME_WINNING_SCORE} points and has won the game!"
+  prompt "Better luck next time!" if game_winner == 'Computer'
   puts "***********************"
 end
 
@@ -225,7 +227,7 @@ def play_round(board, round, scores, current_player) # here
 
     if current_player == 'Computer'
       prompt "Computer is choosing now..."
-      sleep 1.5
+      sleep 1.2
     end
 
     place_piece!(board, current_player)
@@ -267,14 +269,12 @@ loop do # main game loop
 
     play_round(board, round, scores, current_player)
 
-    if game_won?(scores)
-      game_winner = detect_game_winner(scores)
-      display_game_winner(game_winner)
-      break
-    end
-
+    break if game_won?(scores) ## See notes below
+  
     round = update_round(round)
   end
+
+  display_game_winner(scores)
 
   break unless play_again?
 end
