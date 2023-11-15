@@ -15,12 +15,14 @@ def prompt(message)
   puts "=> #{message}"
 end
 
+def clear_screen
+  system "clear"
+end
+
 # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
 def display_board(board, round)
-  system "clear"
-
-  prompt "*** Round #{round} ***"
-
+  clear_screen
+  display_round_number(round)
   #puts "You're #{PLAYER_MARKER}. Computer is #{COMPUTER_MARKER}."
   puts ""
   puts "     |     |     "
@@ -37,6 +39,11 @@ def display_board(board, round)
   puts ""
 end
 # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+
+def display_round_number(round)
+  prompt "*** Round #{round} ***"
+end
+
 
 def display_first_player(player)
   prompt "#{player} is moving first!"
@@ -114,16 +121,16 @@ end
 def get_first_player
   player_one = nil
   loop do
-    puts "Who should go first? Enter a number:"
-    puts "1 - Me"
-    puts "2 - Computer"
-    puts "3 - Let the Computer choose!"
+    prompt "Who should go first? Enter a number:"
+    prompt "1 - Me"
+    prompt "2 - Computer"
+    prompt "3 - Let the Computer choose!"
 
     player_one = gets.chomp
 
     break if ["1", "2", "3"].include?(player_one)
 
-    puts "Invalid answer. Enter 1 to go first, or 2 for the computer to go first."
+    prompt "Invalid answer. Enter 1 to go first, or 2 for the computer to go first."
   end
   
   case player_one
@@ -148,7 +155,7 @@ def update_scores(winner, scores) # could make this shorter if winner is passed 
   end
 end
 
-def update_round_number(round)
+def update_round(round)
   round + 1
 end
 
@@ -208,14 +215,14 @@ def play_again?
   ['y', 'yes'].include?(answer)
 end
 
-def play_round(board, round_number, scores, current_player) # here
+def play_round(board, round, scores, current_player) # here
   loop do # player and computer turns for one round
-    display_board(board, round_number)
-    prompt "#{current_player}'s turn!"
+    display_board(board, round)
+    prompt "#{current_player == 'Player'? 'Your' : "#{current_player}'s"} turn!"
 
     if current_player == 'Computer'
       prompt "Computer is choosing now..."
-      sleep 1
+      sleep 1.5
     end
 
     place_piece!(board, current_player)
@@ -223,7 +230,7 @@ def play_round(board, round_number, scores, current_player) # here
     break if round_won?(board) || board_full?(board)
   end
 
-  display_board(board, round_number)
+  display_board(board, round)
 
   if round_won?(board) # should this be its own helper method?
     round_winner = detect_round_winner(board)
@@ -261,10 +268,13 @@ loop do # main game loop
       break
     end
 
-    round = update_round_number(round)
+    round = update_round(round)
   end
 
   break unless play_again?
 end
 
 prompt "Thanks for playing Tic Tac Toe! Goodbye!"
+
+
+#fot line 258: display_game_outcome type method?
