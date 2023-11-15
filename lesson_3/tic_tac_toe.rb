@@ -237,8 +237,7 @@ def play_round(board, round, scores, current_player) # here
     prompt "#{round_winner} wins this round!"
     update_scores(round_winner, scores)
     display_scores(scores)
-    binding.pry
-    press_enter_to_continue
+    press_enter_to_continue unless game_won?(scores)
   else
     prompt "It's a tie! No points are awarded."
     update_scores(:tie, scores)
