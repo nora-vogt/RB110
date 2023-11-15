@@ -19,6 +19,14 @@ def clear_screen
   system "clear"
 end
 
+def display_welcome_message
+  prompt "Welcome to Tic Tac Toe!"
+end
+
+def display_rules
+  prompt "*** here are some rules placeholder ***"
+end
+
 # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
 def display_board(board, round)
   display_round_number(round)
@@ -253,9 +261,8 @@ def play_round(board, round, scores, current_player) # here
 end
 
 loop do # main game loop
-  puts "Welcome to Tic Tac Toe!"
-  puts "*** here are some rules placeholder ***"
-  puts ""
+  display_welcome_message
+  display_rules
   
   current_player = get_first_player
   display_first_player(current_player)
