@@ -48,7 +48,7 @@ end
 # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
 def display_round_number(round)
-  prompt "*** Round #{round} ***"
+  puts "**** Round #{round} ****"
 end
 
 def display_first_player(player)
@@ -56,12 +56,11 @@ def display_first_player(player)
 end
 
 def display_score(scores)
-  puts "#{'-'*20}"
-  puts "#{"Scores:".center(20)}"
-  prompt "Player: #{scores[:player]}"
-  prompt "Computer: #{scores[:computer]}"
-  prompt "Ties: #{scores[:ties]}"
-  puts "#{'-'*20}"
+  puts "---------Scores---------"
+  puts "Player: #{scores[:player]}"
+  puts "Computer: #{scores[:computer]}"
+  puts "Ties: #{scores[:ties]}"
+  puts "#{'-'*24}"
 end
 
 def display_game_winner(scores)
@@ -226,7 +225,7 @@ def play_again?
   ['y', 'yes'].include?(answer)
 end
 
-def play_round(board, round, scores, current_player) # here
+def play_round(board, round, scores, current_player) # should this be more like play_game?
   loop do # player and computer turns for one round
     clear_screen
     display_score(scores)
