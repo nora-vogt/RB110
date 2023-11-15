@@ -21,7 +21,6 @@ end
 
 # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
 def display_board(board, round)
-  clear_screen
   display_round_number(round)
   #puts "You're #{PLAYER_MARKER}. Computer is #{COMPUTER_MARKER}."
   puts ""
@@ -44,15 +43,17 @@ def display_round_number(round)
   prompt "*** Round #{round} ***"
 end
 
-
 def display_first_player(player)
   prompt "#{player} is moving first!"
 end
 
-def display_scores(scores)
-  prompt "*** The score is ***"
-  prompt "Player: #{scores[:player]}, Computer: #{scores[:computer]}"
-  prompt "Tie Games: #{scores[:ties]}"
+def display_score(scores)
+  puts "#{'-'*20}"
+  puts "#{"Scores:".center(20)}"
+  prompt "Player: #{scores[:player]}"
+  prompt "Computer: #{scores[:computer]}"
+  prompt "Ties: #{scores[:ties]}"
+  puts "#{'-'*20}"
 end
 
 def display_game_winner(game_winner)
@@ -217,6 +218,8 @@ end
 
 def play_round(board, round, scores, current_player) # here
   loop do # player and computer turns for one round
+    clear_screen
+    display_score(scores)
     display_board(board, round)
     prompt "#{current_player == 'Player'? 'Your' : "#{current_player}'s"} turn!"
 
@@ -230,13 +233,15 @@ def play_round(board, round, scores, current_player) # here
     break if round_won?(board) || board_full?(board)
   end
 
+  clear_screen
+  display_score(scores)
   display_board(board, round)
 
   if round_won?(board) # should this be its own helper method?
     round_winner = detect_round_winner(board)
     prompt "#{round_winner} wins this round!"
     update_scores(round_winner, scores)
-    display_scores(scores)
+    # display_score(scores)
     press_enter_to_start_round unless game_won?(scores)
   else
     prompt "It's a tie! No points are awarded."
