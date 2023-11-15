@@ -261,7 +261,7 @@ loop do # main game loop
   display_first_player(current_player)
   sleep 2
 
-  scores = { player: 0, computer: 0, ties: 0 } # consider moving the round to here, changing var name to "scoreboard"
+  scores = { player: 0, computer: 0, ties: 0 }
   round = 1
 
   loop do # playing one whole round loop
@@ -269,7 +269,7 @@ loop do # main game loop
 
     play_round(board, round, scores, current_player)
 
-    break if game_won?(scores) ## See notes below
+    break if game_won?(scores)
   
     round = update_round(round)
   end
@@ -280,6 +280,3 @@ loop do # main game loop
 end
 
 prompt "Thanks for playing Tic Tac Toe! Goodbye!"
-
-
-#fot line 258: display_game_outcome type method?
