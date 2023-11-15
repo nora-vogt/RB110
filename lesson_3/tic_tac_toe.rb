@@ -206,7 +206,7 @@ def round_won?(board)
 end
 
 def game_won?(scores)
-  scores.values.any? { |score| score == GAME_WINNING_SCORE }
+  scores.reject {|k, _| k == :ties}.values.any? { |score| score == GAME_WINNING_SCORE }
 end
 
 def play_again?
@@ -237,6 +237,7 @@ def play_round(board, round, scores, current_player) # here
     prompt "#{round_winner} wins this round!"
     update_scores(round_winner, scores)
     display_scores(scores)
+    binding.pry
     press_enter_to_continue
   else
     prompt "It's a tie! No points are awarded."
