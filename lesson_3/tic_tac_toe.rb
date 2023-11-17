@@ -63,6 +63,17 @@ def display_score(scores)
   puts "#{'-'*24}"
 end
 
+# def display_round_outcome(board, scores)
+#   if round_won?(board)
+#     display round winner
+#   else
+#     display tie round
+#   end
+
+#   update scores
+#   press_enter_to_start_round unless game_won?(scores)
+# end
+
 def display_game_winner(scores)
   game_winner = detect_game_winner(scores)
   puts ""
@@ -244,9 +255,15 @@ def play_round(board, round, scores, current_player) # should this be more like 
 
   clear_screen
   display_score(scores)
-  display_board(board, round)
+  display_board(board, round) # refactor these three pieces (also at start of method) -> display_game_status (scores, round, board)
 
+  # refactor this below to something like display_round_outcome
+    # display_round_winner if there is a winner
+    # display_tie_round if it's a tie
+    # update the scores
+    # then either way press_enter_to_start_round unless the game is won
   if round_won?(board) # should this be its own helper method?
+
     round_winner = detect_round_winner(board)
     prompt "#{round_winner} wins this round!"
     update_scores(round_winner, scores)
@@ -259,10 +276,10 @@ def play_round(board, round, scores, current_player) # should this be more like 
   end
 end
 
+display_welcome_message
+display_rules
+
 loop do # main game loop
-  display_welcome_message
-  display_rules
-  
   current_player = get_first_player
   display_first_player(current_player)
   sleep 2
