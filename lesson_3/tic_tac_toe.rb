@@ -63,16 +63,13 @@ def display_score(scores)
   puts "#{'-'*24}"
 end
 
-# def display_round_outcome(board, scores)
-#   if round_won?(board)
-#     display round winner
-#   else
-#     display tie round
-#   end
-
-#   update scores
-#   press_enter_to_start_round unless game_won?(scores)
-# end
+def display_round_outcome(round_winner)
+  if round_winner.nil?
+    prompt "It's a tie! No points are awarded."
+  else
+    prompt "#{round_winner} wins this round!"
+  end
+end
 
 def display_game_winner(scores)
   game_winner = detect_game_winner(scores)
@@ -161,12 +158,12 @@ def get_first_player
   end
 end
 
-def press_enter_to_start_round
+def press_enter_to_start_next_round
   prompt "Press 'Enter' to start the next round:"
   gets.chomp
 end
 
-def update_scores(winner, scores) # could make this shorter if winner is passed in as a symbol, just scores[winner] += 1
+def update_scores(winner, scores)
   if winner == 'Player'
     scores[:player] += 1
   elsif winner == 'Computer'
@@ -257,25 +254,13 @@ def play_round(board, round, scores, current_player) # should this be more like 
   display_score(scores)
   display_board(board, round) # refactor these three pieces (also at start of method) -> display_game_status (scores, round, board)
 
-  # refactor this below to something like display_round_outcome
-    # display_round_winner if there is a winner
-    # display_tie_round if it's a tie
-    # update the scores
-    # then either way press_enter_to_start_round unless the game is won
-  if round_won?(board) # should this be its own helper method?
-
-    round_winner = detect_round_winner(board)
-    prompt "#{round_winner} wins this round!"
-    update_scores(round_winner, scores)
-    # display_score(scores)
-    press_enter_to_start_round unless game_won?(scores)
-  else
-    prompt "It's a tie! No points are awarded."
-    update_scores(:tie, scores)
-    press_enter_to_start_round
-  end
+  round_winner = detect_round_winner(board)
+  display_round_outcome(round_winner)
+  update_scores(round_winner, scores)
+  press_enter_to_start_next_round unless game_won?(scores)
 end
 
+clear_screen
 display_welcome_message
 display_rules
 
