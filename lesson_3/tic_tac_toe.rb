@@ -77,8 +77,8 @@ def display_round_outcome(round_winner)
   end
 end
 
-def display_game_winner(scores)
-  game_winner = detect_game_winner(scores)
+def display_game_winner(score)
+  game_winner = detect_game_winner(score)
   puts ""
   puts "***********************"
   prompt "#{game_winner} has reached #{GAME_WINNING_SCORE} points and has won the game!"
