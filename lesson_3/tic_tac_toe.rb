@@ -179,7 +179,7 @@ def update_scores(winner, scores)
   end
 end
 
-def update_round(round)
+def update_round_number(round)
   round + 1
 end
 
@@ -239,7 +239,7 @@ def play_again?
   ['y', 'yes'].include?(answer)
 end
 
-def play_round(board, round, scores, current_player) # should this be more like play_game?
+def play_round(board, round, scores, current_player)
   loop do # player and computer turns for one round
     display_game_information(board, scores, round)
     prompt "#{current_player == 'Player'? 'Your' : "#{current_player}'s"} turn!"
@@ -274,14 +274,14 @@ loop do # main game loop
   scores = { player: 0, computer: 0, ties: 0 }
   round = 1
 
-  loop do # playing one whole round loop
+  loop do # playing rounds until the game is won
     board = initialize_board
 
     play_round(board, round, scores, current_player)
 
     break if game_won?(scores)
   
-    round = update_round(round)
+    round = update_round_number(round)
   end
 
   display_game_winner(scores)
