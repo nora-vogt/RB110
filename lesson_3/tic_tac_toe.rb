@@ -28,9 +28,7 @@ def display_rules
 end
 
 # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-def display_board(board, round)
-  display_round_number(round)
-  #puts "You're #{PLAYER_MARKER}. Computer is #{COMPUTER_MARKER}."
+def display_board(board)
   puts ""
   puts "     |     |     "
   puts "  #{board[1]}  |  #{board[2]}  |  #{board[3]}  "
@@ -61,6 +59,14 @@ def display_score(scores)
   puts "Computer: #{scores[:computer]}"
   puts "Ties: #{scores[:ties]}"
   puts "#{'-'*24}"
+end
+
+def display_game_information(board, scores, round)
+  clear_screen
+  display_score(scores)
+  display_round_number(round)
+  display_board(board)
+  prompt "You're #{PLAYER_MARKER}. Computer is #{COMPUTER_MARKER}."
 end
 
 def display_round_outcome(round_winner)
@@ -235,9 +241,7 @@ end
 
 def play_round(board, round, scores, current_player) # should this be more like play_game?
   loop do # player and computer turns for one round
-    clear_screen
-    display_score(scores)
-    display_board(board, round)
+    display_game_information(board, scores, round)
     prompt "#{current_player == 'Player'? 'Your' : "#{current_player}'s"} turn!"
 
     if current_player == 'Computer'
@@ -250,9 +254,7 @@ def play_round(board, round, scores, current_player) # should this be more like 
     break if round_won?(board) || board_full?(board)
   end
 
-  clear_screen
-  display_score(scores)
-  display_board(board, round) # refactor these three pieces (also at start of method) -> display_game_status (scores, round, board)
+  display_game_information(board, scores, round)
 
   round_winner = detect_round_winner(board)
   display_round_outcome(round_winner)
