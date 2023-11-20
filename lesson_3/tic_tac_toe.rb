@@ -280,6 +280,7 @@ loop do # main game loop
     play_round(board, round, scores, current_player)
 
     break if game_won?(scores)
+
     current_player = alternate_player(current_player)
     round = update_round_number(round)
   end
@@ -287,6 +288,7 @@ loop do # main game loop
   display_game_winner(scores)
 
   break unless play_again?
+  clear_screen
 end
 
 prompt "Thanks for playing Tic Tac Toe! Goodbye!"
