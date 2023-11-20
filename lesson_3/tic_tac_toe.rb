@@ -280,7 +280,7 @@ loop do # main game loop
     play_round(board, round, scores, current_player)
 
     break if game_won?(scores)
-  
+    current_player = alternate_player(current_player)
     round = update_round_number(round)
   end
 
