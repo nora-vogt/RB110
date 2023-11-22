@@ -154,7 +154,7 @@ def get_first_player
 
     break if ["1", "2", "3"].include?(player_one)
 
-    prompt "Invalid answer. Enter 1 to go first, or 2 for the computer to go first."
+    prompt "Invalid answer. Enter 1 to go first, 2 for the computer to go first, or 3 to let the computer choose."
   end
   
   case player_one
