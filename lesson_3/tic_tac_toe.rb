@@ -73,7 +73,7 @@ def display_round_outcome(round_winner)
   if round_winner.nil?
     prompt "It's a tie! No points are awarded."
   else
-    prompt "#{round_winner} wins this round!"
+    prompt "#{round_winner == 'Player' ? 'You win' : "#{round_winner} wins"} this round!"
   end
 end
 
@@ -81,7 +81,8 @@ def display_game_winner(score)
   game_winner = detect_game_winner(score)
   puts ""
   puts "***********************"
-  prompt "#{game_winner} has reached #{GAME_WINNING_SCORE} points and has won the game!"
+  prompt "#{GAME_WINNING_SCORE} points reached!"
+  prompt "#{game_winner == 'Player' ? 'You win' : "#{game_winner} wins"} the game!"
   prompt "Better luck next time!" if game_winner == 'Computer'
   puts "***********************"
 end
@@ -246,7 +247,7 @@ def play_round(board, round, scores, current_player)
 
     if current_player == 'Computer'
       prompt "Computer is choosing now..."
-      sleep 1.2
+      # sleep 1.2
     end
 
     place_piece!(board, current_player)
