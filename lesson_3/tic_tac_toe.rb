@@ -19,6 +19,14 @@ def clear_screen
   system "clear"
 end
 
+def alias_player(winner)
+  winner == 'Player' ? 'You' : winner
+end
+
+def pluralize(word)
+  word + 's'
+end
+
 def display_welcome_message
   prompt "Welcome to Tic Tac Toe!"
 end
@@ -255,7 +263,7 @@ def play_round(board, round, scores, current_player)
     break if round_won?(board) || board_full?(board)
   end
 
-  display_game_information(board, scores, round)
+  display_game_information(board, scores, round) # displays board again with the second player's piece
 
   round_winner = detect_round_winner(board)
   display_round_outcome(round_winner)
@@ -280,13 +288,15 @@ loop do # main game loop
 
     play_round(board, round, scores, current_player)
 
-    break if game_won?(scores)
+    if game_won?(scores)
+      display_game_information(board, scores, round)
+      display_game_winner(scores)
+      break
+    end
 
     current_player = alternate_player(current_player)
     round = update_round_number(round)
   end
-
-  display_game_winner(scores)
 
   break unless play_again?
   clear_screen
