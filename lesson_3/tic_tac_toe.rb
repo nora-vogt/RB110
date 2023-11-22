@@ -27,9 +27,33 @@ def pluralize(word)
   word + 's'
 end
 
+def display_rules
+  puts <<-HEREDOC
+    Tic-Tac-Toe is a game where you play against the computer to mark three 
+    squares in a row on a board. In order to win, squares must be in a row 
+    vertically, horizontally, or diagonally. The first player to successfully 
+    mark three squares in a row wins the round and gets one point.
+
+    The first player to win five rounds wins the game!
+    No points will be awarded for tie games.
+
+    You may choose who moves first for the first round. Subsequent rounds will 
+    alternate which player moves first.
+
+    Good luck! 
+  HEREDOC
+  
+  prompt "Press 'Enter' when you're ready to start the game!"
+  gets.chomp
+end
+
 def display_introduction
   prompt "Welcome to Tic Tac Toe!"
-  prompt "*** here are some rules placeholder ***"
+  puts ""
+  prompt "Would you like to see the rules for how to play?"
+  prompt "Enter 'yes' to see the rules or any other key to continue:"
+  input = gets.chomp.downcase
+  display_rules if ['yes', 'y'].include?(input)
 end
 
 # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
