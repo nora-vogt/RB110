@@ -29,6 +29,7 @@ end
 
 def display_rules
   puts <<-HEREDOC
+  "---------Rules---------"
     Tic-Tac-Toe is a game where you play against the computer to mark three 
     squares in a row on a board. In order to win, squares must be in a row 
     vertically, horizontally, or diagonally. The first player to successfully 
@@ -50,7 +51,7 @@ end
 def display_introduction
   prompt "Welcome to Tic Tac Toe!"
   puts ""
-  prompt "Would you like to see the rules for how to play?"
+  prompt "Would you like to see the rules for how to play? Enter 'yes' or 'no':"
   prompt "Enter 'yes' to see the rules or any other key to continue:"
   input = gets.chomp.downcase
   display_rules if ['yes', 'y'].include?(input)
@@ -288,7 +289,8 @@ def play_round(board, round, scores, current_player)
 
   round_winner = detect_round_winner(board)
   display_round_outcome(round_winner)
-  update_scores(round_winner, scores)
+  update_scores(round_winner, scores) 
+  #display board here instead?
   press_enter_to_start_next_round unless game_won?(scores)
 end
 
