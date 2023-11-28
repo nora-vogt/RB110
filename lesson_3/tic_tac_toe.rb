@@ -1,5 +1,6 @@
 require 'pry'
 
+DIVIDER_LENGTH = 30
 WINNING_LINES = [
   [1, 2, 3], [4, 5, 6], [7, 8, 9], # rows
   [1, 4, 7], [2, 5, 8], [3, 6, 9], # cols
@@ -28,7 +29,7 @@ def pluralize(word)
 end
 
 def display_divider
-  puts "************************"
+  puts "#{"*" * DIVIDER_LENGTH}"
 end
 
 def display_rules
@@ -57,7 +58,7 @@ end
 def display_introduction
   display_divider
   puts ""
-  puts "Welcome to Tic Tac Toe!"
+  puts "Welcome to Tic Tac Toe!".center(DIVIDER_LENGTH)
   puts ""
   display_divider
   puts ""
