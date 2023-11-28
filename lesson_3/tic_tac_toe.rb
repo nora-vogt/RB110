@@ -286,12 +286,6 @@ def play_round(board, round, scores, current_player)
   loop do # player and computer turns for one round
     display_game_information(board, scores, round)
     prompt "#{current_player == 'Player'? 'Your' : "#{current_player}'s"} turn!"
-
-    if current_player == 'Computer'
-      prompt "Computer is choosing now..."
-      # sleep 1.2
-    end
-
     place_piece!(board, current_player)
     current_player = alternate_player(current_player)
     break if round_won?(board) || board_full?(board)
