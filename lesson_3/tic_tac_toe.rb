@@ -291,8 +291,7 @@ def play_round(board, round, scores, current_player)
     break if round_won?(board) || board_full?(board)
   end
 
-  display_game_information(board, scores, round) # displays board again with the second player's piece - need this here to display end of round board
-
+  display_game_information(board, scores, round)
   round_winner = detect_round_winner(board)
   display_round_outcome(round_winner)
   update_scores(round_winner, scores) 
