@@ -295,7 +295,8 @@ def round_won?(board)
 end
 
 def game_won?(scores)
-  scores.reject {|k, _| k == :ties}.values.any? { |score| score == GAME_WINNING_SCORE }
+  scores_without_ties = scores.reject { |k, _| k == :ties }
+  scores_without_ties.any? { |_, v| v == GAME_WINNING_SCORE }
 end
 
 def play_again?
