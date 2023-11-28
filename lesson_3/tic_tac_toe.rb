@@ -47,7 +47,7 @@ def display_rules
     Good luck!
 
   HEREDOC
-  
+
   prompt "Press 'Enter' when you're ready to start the game!"
   gets.chomp
 end
@@ -206,7 +206,7 @@ def get_first_player
 
     prompt "Invalid choice. Enter 1, 2, or 3."
   end
-  
+
   case player_one
   when '1' then 'Player'
   when '2' then 'Computer'
@@ -284,7 +284,7 @@ def play_round(board, round, scores, current_player)
   display_game_information(board, scores, round)
   round_winner = detect_round_winner(board)
   display_round_outcome(round_winner)
-  update_scores(round_winner, scores) 
+  update_scores(round_winner, scores)
   press_enter_to_start_next_round unless game_won?(scores)
 end
 
