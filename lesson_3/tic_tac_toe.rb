@@ -28,6 +28,10 @@ def display_divider
   puts "#{"*" * DIVIDER_LENGTH}"
 end
 
+def display_empty_line
+  puts ""
+end
+
 def display_header(string)
   puts "---------#{string}---------"
 end
@@ -58,11 +62,9 @@ end
 
 def display_introduction
   display_divider
-  puts ""
   puts "Welcome to Tic-Tac-Toe!".center(DIVIDER_LENGTH)
-  puts ""
   display_divider
-  puts ""
+  display_empty_line
   prompt "Would you like to see the rules of the game?"
   prompt "Enter 'yes' to see the rules or any other key to start playing:"
   input = gets.chomp.downcase
@@ -71,13 +73,13 @@ def display_introduction
   else
     prompt "Great, you already know the rules!"
     prompt "Get ready, you'll play until winner has 5 points."
-    puts ""
+    display_empty_line
   end
 end
 
 # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
 def display_board(board)
-  puts ""
+  display_empty_line
   puts "    #{square_number(board, 1)}|    #{square_number(board, 2)}|    #{square_number(board, 3)}"
   puts "  #{board[1]}  |  #{board[2]}  |  #{board[3]}  "
   puts "     |     |     "
@@ -89,7 +91,7 @@ def display_board(board)
   puts "    #{square_number(board, 7)}|    #{square_number(board, 8)}|    #{square_number(board, 9)}"
   puts "  #{board[7]}  |  #{board[8]}  |  #{board[9]}  "
   puts "     |     |     "
-  puts ""
+  display_empty_line
 end
 # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
@@ -102,7 +104,7 @@ def display_round_number(round)
 end
 
 def display_first_player(player)
-  puts ""
+  display_empty_line
   prompt "#{player} is moving first!"
 end
 
@@ -134,7 +136,7 @@ end
 
 def display_game_winner(score)
   game_winner = detect_game_winner(score)
-  puts ""
+  display_empty_line
   display_divider
   prompt "#{GAME_WINNING_SCORE} points reached."
   if game_winner == 'Player'
