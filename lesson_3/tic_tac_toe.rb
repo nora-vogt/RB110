@@ -70,7 +70,7 @@ def display_introduction
   end
 end
 
-# rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Layout/LineLength
+# rubocop:disable Metrics/AbcSize, Layout/LineLength
 def display_board(board)
   display_empty_line
   puts "    #{square_number(board, 1)}|    #{square_number(board, 2)}|    #{square_number(board, 3)}"
@@ -86,7 +86,7 @@ def display_board(board)
   puts "     |     |     "
   display_empty_line
 end
-# rubocop:enable Metrics/AbcSize, Metrics/MethodLength, Layout/LineLength
+# rubocop:enable Metrics/AbcSize, Layout/LineLength
 
 def square_number(board, num)
   board[num] == INITIAL_MARKER ? num : ' '
@@ -193,7 +193,7 @@ def detect_game_winner(scores)
   end
 end
 
-def get_first_player
+def determine_first_player
   player_one = nil
   loop do
     prompt "Who should go first? Enter a number:"
@@ -247,17 +247,15 @@ def player_places_piece!(board)
 end
 
 def computer_places_piece!(board)
-  square = nil
-
-  if detect_at_risk_square(board, COMPUTER_MARKER) # offense
-    square = detect_at_risk_square(board, COMPUTER_MARKER)
-  elsif detect_at_risk_square(board, PLAYER_MARKER) # defense
-    square = detect_at_risk_square(board, PLAYER_MARKER)
-  elsif board[SQUARE_FIVE] == INITIAL_MARKER # choose square 5 if empty
-    square = SQUARE_FIVE
-  else # pick randomly
-    square = empty_squares(board).sample
-  end
+  square = if detect_at_risk_square(board, COMPUTER_MARKER) # offense
+             detect_at_risk_square(board, COMPUTER_MARKER)
+           elsif detect_at_risk_square(board, PLAYER_MARKER) # defense
+             detect_at_risk_square(board, PLAYER_MARKER)
+           elsif board[SQUARE_FIVE] == INITIAL_MARKER # choose square 5 if empty
+             SQUARE_FIVE
+           else # pick randomly
+             empty_squares(board).sample
+           end
 
   board[square] = COMPUTER_MARKER
 end
@@ -276,6 +274,7 @@ def play_round(board, round, scores, current_player)
     prompt "#{current_player == 'Player' ? 'Your' : "Computer's"} turn!"
     place_piece!(board, current_player)
     current_player = alternate_player(current_player)
+
     break if round_won?(board) || board_full?(board)
   end
 
@@ -283,6 +282,7 @@ def play_round(board, round, scores, current_player)
   round_winner = detect_round_winner(board)
   display_round_outcome(round_winner)
   update_scores(round_winner, scores)
+
   press_enter_to_start_next_round unless game_won?(scores)
 end
 
@@ -309,7 +309,7 @@ system "clear"
 display_introduction
 
 loop do # main game loop
-  current_player = get_first_player
+  current_player = determine_first_player
   display_first_player(current_player)
   sleep 1.5
 
