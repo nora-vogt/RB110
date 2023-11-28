@@ -140,9 +140,13 @@ def display_game_winner(score)
   game_winner = detect_game_winner(score)
   puts ""
   display_divider
-  prompt "#{GAME_WINNING_SCORE} points reached!"
-  prompt "#{game_winner == 'Player' ? 'You win' : "#{game_winner} wins"} the game!"
-  prompt "Better luck next time!" if game_winner == 'Computer'
+  prompt "#{GAME_WINNING_SCORE} points reached. " \
+         "#{game_winner == 'Player' ? 'You win' : "#{game_winner} wins"} the game!"
+  if game_winner == 'Computer'
+    prompt "Better luck next time!"
+  else
+    prompt "Congratulations!"
+  end
   display_divider
 end
 
