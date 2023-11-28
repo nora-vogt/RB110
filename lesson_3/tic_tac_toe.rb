@@ -28,6 +28,7 @@ def display_header(string)
   puts "---------#{string}---------"
 end
 
+# rubocop:disable Metrics/MethodLength
 def display_rules
   system "clear"
   display_header("Rules")
@@ -51,6 +52,7 @@ def display_rules
   prompt "Press 'Enter' when you're ready to start the game!"
   gets.chomp
 end
+# rubocop:enable Metrics/MethodLength
 
 def display_introduction
   display_divider
