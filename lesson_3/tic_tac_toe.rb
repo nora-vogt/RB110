@@ -32,10 +32,14 @@ def display_divider
   puts "#{"*" * DIVIDER_LENGTH}"
 end
 
+def display_header(string)
+  puts "---------#{string}---------"
+end
+
 def display_rules
   clear_screen
-  puts <<-HEREDOC
-    ---------Rules---------
+  display_header("Rules")
+  puts <<~HEREDOC
     Tic-Tac-Toe is a game where you play against the computer to mark three 
     squares in a row on a board. In order to win, squares must be in a row 
     vertically, horizontally, or diagonally. The first player to successfully 
@@ -95,7 +99,7 @@ def display_first_player(player)
 end
 
 def display_score(scores)
-  puts "---------Scores---------"
+  display_header("Scores")
   puts "Player: #{scores[:player]}"
   puts "Computer: #{scores[:computer]}"
   puts "Ties: #{scores[:ties]}"
