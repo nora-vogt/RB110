@@ -269,7 +269,7 @@ def place_piece!(board, current_player)
 end
 
 def play_round(board, round, scores, current_player)
-  loop do # player and computer turns for one round
+  loop do
     display_game_information(board, scores, round)
     prompt "#{current_player == 'Player' ? 'Your' : "Computer's"} turn!"
     place_piece!(board, current_player)
