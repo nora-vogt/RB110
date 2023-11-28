@@ -106,7 +106,7 @@ def display_score(scores)
   puts "Player: #{scores[:player]}"
   puts "Computer: #{scores[:computer]}"
   puts "Ties: #{scores[:ties]}"
-  puts "#{'-'*24}"
+  puts "-" * 24
 end
 
 def display_game_information(board, scores, round)
