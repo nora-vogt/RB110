@@ -28,8 +28,9 @@ def pluralize(word)
 end
 
 def display_rules
+  clear_screen
   puts <<-HEREDOC
-  "---------Rules---------"
+    ---------Rules---------
     Tic-Tac-Toe is a game where you play against the computer to mark three 
     squares in a row on a board. In order to win, squares must be in a row 
     vertically, horizontally, or diagonally. The first player to successfully 
@@ -41,7 +42,8 @@ def display_rules
     You may choose who moves first for the first round. Subsequent rounds will 
     alternate which player moves first.
 
-    Good luck! 
+    Good luck!
+     
   HEREDOC
   
   prompt "Press 'Enter' when you're ready to start the game!"
@@ -104,11 +106,13 @@ def display_game_information(board, scores, round)
 end
 
 def display_round_outcome(round_winner)
+  puts "***********************"
   if round_winner.nil?
     prompt "It's a tie! No points are awarded."
   else
     prompt "#{round_winner == 'Player' ? 'You win' : "#{round_winner} wins"} this round!"
   end
+  puts "***********************"
 end
 
 def display_game_winner(score)
