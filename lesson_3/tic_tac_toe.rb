@@ -70,7 +70,7 @@ def display_introduction
   end
 end
 
-# rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+# rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Layout/LineLength
 def display_board(board)
   display_empty_line
   puts "    #{square_number(board, 1)}|    #{square_number(board, 2)}|    #{square_number(board, 3)}"
@@ -86,7 +86,7 @@ def display_board(board)
   puts "     |     |     "
   display_empty_line
 end
-# rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+# rubocop:enable Metrics/AbcSize, Metrics/MethodLength, Layout/LineLength
 
 def square_number(board, num)
   board[num] == INITIAL_MARKER ? num : ' '
