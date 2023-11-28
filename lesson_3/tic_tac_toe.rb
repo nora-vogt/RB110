@@ -32,16 +32,16 @@ def display_rules
   system "clear"
   display_header("Rules")
   puts <<~HEREDOC
-    In Tic-Tac-Toe, you and the computer take turns marking squares on a board. 
-    In order to win, you need to mark three squares in a row either vertically, 
-    horizontally, or diagonally. The first player to successfully mark three 
+    In Tic-Tac-Toe, you and the computer take turns marking squares on a board.
+    In order to win, you need to mark three squares in a row either vertically,
+    horizontally, or diagonally. The first player to successfully mark three
     squares in a row wins the round and gets one point. The round ends either
     when someone wins or the board is filled.
 
     The first player to reach five points wins the game.
     No points will be awarded for tie games.
 
-    You may choose who moves first for the first round. Subsequent rounds will 
+    You may choose who moves first for the first round. Subsequent rounds will
     alternate which player moves first.
 
     Good luck!
