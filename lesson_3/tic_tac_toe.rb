@@ -27,6 +27,10 @@ def pluralize(word)
   word + 's'
 end
 
+def display_divider
+  puts "****************************"
+end
+
 def display_rules
   clear_screen
   puts <<-HEREDOC
@@ -43,7 +47,7 @@ def display_rules
     alternate which player moves first.
 
     Good luck!
-     
+
   HEREDOC
   
   prompt "Press 'Enter' when you're ready to start the game!"
@@ -51,11 +55,11 @@ def display_rules
 end
 
 def display_introduction
-  puts "***********************"
+  display_divider
   puts ""
   puts "Welcome to Tic Tac Toe!"
   puts ""
-  puts "***********************"
+  display_divider
   puts ""
   prompt "Would you like to see the rules of the game?"
   prompt "Enter 'yes' to see the rules or any other key to start playing:"
@@ -106,23 +110,23 @@ def display_game_information(board, scores, round)
 end
 
 def display_round_outcome(round_winner)
-  puts "***********************"
+  display_divider
   if round_winner.nil?
     prompt "It's a tie! No points are awarded."
   else
     prompt "#{round_winner == 'Player' ? 'You win' : "#{round_winner} wins"} this round!"
   end
-  puts "***********************"
+  display_divider
 end
 
 def display_game_winner(score)
   game_winner = detect_game_winner(score)
   puts ""
-  puts "***********************"
+  display_divider
   prompt "#{GAME_WINNING_SCORE} points reached!"
   prompt "#{game_winner == 'Player' ? 'You win' : "#{game_winner} wins"} the game!"
   prompt "Better luck next time!" if game_winner == 'Computer'
-  puts "***********************"
+  display_divider
 end
 
 def joinor(array, delimiter=", ", word="or")
