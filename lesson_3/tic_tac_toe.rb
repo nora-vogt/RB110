@@ -81,20 +81,24 @@ end
 # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
 def display_board(board)
   puts ""
-  puts "    1|    2|    3"
+  puts "    #{square_number(board, 1)}|    #{square_number(board, 2)}|    #{square_number(board, 3)}"
   puts "  #{board[1]}  |  #{board[2]}  |  #{board[3]}  "
   puts "     |     |     "
   puts "-----+-----+-----"
-  puts "    4|    5|    6"
+  puts "    #{square_number(board, 4)}|    #{square_number(board, 5)}|    #{square_number(board, 6)}"
   puts "  #{board[4]}  |  #{board[5]}  |  #{board[6]}  "
   puts "     |     |     "
   puts "-----+-----+-----"
-  puts "    7|    8|    9"
+  puts "    #{square_number(board, 7)}|    #{square_number(board, 8)}|    #{square_number(board, 9)}"
   puts "  #{board[7]}  |  #{board[8]}  |  #{board[9]}  "
   puts "     |     |     "
   puts ""
 end
 # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+
+def square_number(board, num)
+  board[num] == INITIAL_MARKER ? num : ' '
+end
 
 def display_round_number(round)
   puts "**** Round #{round} ****"
