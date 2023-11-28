@@ -69,21 +69,27 @@ def display_introduction
   prompt "Would you like to see the rules of the game?"
   prompt "Enter 'yes' to see the rules or any other key to start playing:"
   input = gets.chomp.downcase
-  display_rules if ['yes', 'y'].include?(input)
+  if ['yes', 'y'].include?(input)
+    display_rules
+  else
+    prompt "Great, you already know the rules! Get ready, you'll play" \
+           " until winner has 5 points."
+    puts ""
+  end
 end
 
 # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
 def display_board(board)
   puts ""
-  puts "     |     |     "
+  puts "    1|    2|    3"
   puts "  #{board[1]}  |  #{board[2]}  |  #{board[3]}  "
   puts "     |     |     "
   puts "-----+-----+-----"
-  puts "     |     |     "
+  puts "    4|    5|    6"
   puts "  #{board[4]}  |  #{board[5]}  |  #{board[6]}  "
   puts "     |     |     "
   puts "-----+-----+-----"
-  puts "     |     |     "
+  puts "    7|    8|    9"
   puts "  #{board[7]}  |  #{board[8]}  |  #{board[9]}  "
   puts "     |     |     "
   puts ""
