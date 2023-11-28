@@ -17,7 +17,7 @@ def prompt(message)
 end
 
 def display_divider
-  puts "#{"*" * DIVIDER_LENGTH}"
+  puts "*" * DIVIDER_LENGTH
 end
 
 def display_empty_line
