@@ -117,12 +117,12 @@ def display_game_information(board, scores, round)
   prompt "You're #{PLAYER_MARKER}. Computer is #{COMPUTER_MARKER}."
 end
 
-def display_round_outcome(round_winner)
+def display_round_outcome(winner)
   display_divider
-  if round_winner.nil?
+  if winner.nil?
     prompt "It's a tie! No points are awarded."
   else
-    prompt "#{round_winner == 'Player' ? 'You win' : "Computer wins"} this round!"
+    prompt "#{winner == 'Player' ? 'You win' : 'Computer wins'} this round!"
   end
   display_divider
 end
@@ -168,7 +168,7 @@ end
 def detect_at_risk_square(board, marker)
   WINNING_LINES.each do |line|
     if board.values_at(*line).count(marker) == 2
-      line.each {|square| return square if board[square] == INITIAL_MARKER}
+      line.each { |square| return square if board[square] == INITIAL_MARKER }
     end
   end
   nil
@@ -273,7 +273,7 @@ end
 def play_round(board, round, scores, current_player)
   loop do # player and computer turns for one round
     display_game_information(board, scores, round)
-    prompt "#{current_player == 'Player'? 'Your' : "#{current_player}'s"} turn!"
+    prompt "#{current_player == 'Player' ? 'Your' : "Computer's"} turn!"
     place_piece!(board, current_player)
     current_player = alternate_player(current_player)
     break if round_won?(board) || board_full?(board)
