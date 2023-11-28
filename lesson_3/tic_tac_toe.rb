@@ -68,6 +68,7 @@ def display_introduction
   prompt "Would you like to see the rules of the game?"
   prompt "Enter 'yes' to see the rules or any other key to start playing:"
   input = gets.chomp.downcase
+
   if ['yes', 'y'].include?(input)
     display_rules
   else
@@ -129,7 +130,7 @@ def display_round_outcome(round_winner)
   if round_winner.nil?
     prompt "It's a tie! No points are awarded."
   else
-    prompt "#{round_winner == 'Player' ? 'You win' : "#{round_winner} wins"} this round!"
+    prompt "#{round_winner == 'Player' ? 'You win' : "Computer wins"} this round!"
   end
   display_divider
 end
