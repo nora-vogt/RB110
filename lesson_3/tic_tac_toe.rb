@@ -28,7 +28,7 @@ def pluralize(word)
 end
 
 def display_divider
-  puts "****************************"
+  puts "************************"
 end
 
 def display_rules
@@ -256,12 +256,30 @@ def computer_places_piece!(board)
 end
 
 
+
 def place_piece!(board, current_player)
   if current_player == 'Player'
     player_places_piece!(board)
   else
     computer_places_piece!(board)
   end
+end
+
+def play_round(board, round, scores, current_player)
+  loop do # player and computer turns for one round
+    display_game_information(board, scores, round)
+    prompt "#{current_player == 'Player'? 'Your' : "#{current_player}'s"} turn!"
+    place_piece!(board, current_player)
+    current_player = alternate_player(current_player)
+    break if round_won?(board) || board_full?(board)
+  end
+
+  display_game_information(board, scores, round) # displays board again with the second player's piece - need this here to display end of round board
+
+  round_winner = detect_round_winner(board)
+  display_round_outcome(round_winner)
+  update_scores(round_winner, scores) 
+  press_enter_to_start_next_round unless game_won?(scores)
 end
 
 def board_full?(board)
@@ -282,23 +300,7 @@ def play_again?
   ['y', 'yes'].include?(answer)
 end
 
-def play_round(board, round, scores, current_player)
-  loop do # player and computer turns for one round
-    display_game_information(board, scores, round)
-    prompt "#{current_player == 'Player'? 'Your' : "#{current_player}'s"} turn!"
-    place_piece!(board, current_player)
-    current_player = alternate_player(current_player)
-    break if round_won?(board) || board_full?(board)
-  end
 
-  display_game_information(board, scores, round) # displays board again with the second player's piece - need this here to display end of round board
-
-  round_winner = detect_round_winner(board)
-  display_round_outcome(round_winner)
-  update_scores(round_winner, scores) 
-  #display board here instead?
-  press_enter_to_start_next_round unless game_won?(scores)
-end
 
 clear_screen
 display_introduction
