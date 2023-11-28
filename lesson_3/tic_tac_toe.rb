@@ -72,8 +72,8 @@ def display_introduction
   if ['yes', 'y'].include?(input)
     display_rules
   else
-    prompt "Great, you already know the rules! Get ready, you'll play" \
-           " until winner has 5 points."
+    prompt "Great, you already know the rules!"
+    prompt "Get ready, you'll play until winner has 5 points."
     puts ""
   end
 end
