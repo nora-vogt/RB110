@@ -310,7 +310,7 @@ end
 system "clear"
 display_introduction
 
-loop do # main game loop
+loop do
   current_player = determine_first_player
   display_first_player(current_player)
   sleep 1.5
@@ -318,7 +318,7 @@ loop do # main game loop
   scores = { player: 0, computer: 0, ties: 0 }
   round = 1
 
-  loop do # playing rounds until the game is won
+  loop do
     board = initialize_board
 
     play_round(board, round, scores, current_player)
