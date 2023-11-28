@@ -62,7 +62,7 @@ end
 def display_introduction
   display_divider
   puts ""
-  puts "Welcome to Tic Tac Toe!".center(DIVIDER_LENGTH)
+  puts "Welcome to Tic-Tac-Toe!".center(DIVIDER_LENGTH)
   puts ""
   display_divider
   puts ""
@@ -101,6 +101,7 @@ def display_round_number(round)
 end
 
 def display_first_player(player)
+  puts ""
   prompt "#{player} is moving first!"
 end
 
@@ -311,15 +312,13 @@ def play_again?
   ['y', 'yes'].include?(answer)
 end
 
-
-
 clear_screen
 display_introduction
 
 loop do # main game loop
   current_player = get_first_player
   display_first_player(current_player)
-  sleep 2
+  sleep 1.5
 
   scores = { player: 0, computer: 0, ties: 0 }
   round = 1
