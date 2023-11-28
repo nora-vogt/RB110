@@ -16,10 +16,6 @@ def prompt(message)
   puts "=> #{message}"
 end
 
-def clear_screen
-  system "clear"
-end
-
 def alias_player(winner)
   winner == 'Player' ? 'You' : winner
 end
@@ -37,7 +33,7 @@ def display_header(string)
 end
 
 def display_rules
-  clear_screen
+  system "clear"
   display_header("Rules")
   puts <<~HEREDOC
     In Tic-Tac-Toe, you and the computer take turns marking squares on a board. 
@@ -119,7 +115,7 @@ def display_score(scores)
 end
 
 def display_game_information(board, scores, round)
-  clear_screen
+  system "clear"
   display_score(scores)
   display_round_number(round)
   display_board(board)
@@ -316,7 +312,7 @@ def play_again?
   ['y', 'yes'].include?(answer)
 end
 
-clear_screen
+system "clear"
 display_introduction
 
 loop do # main game loop
@@ -343,7 +339,7 @@ loop do # main game loop
   end
 
   break unless play_again?
-  clear_screen
+  system "clear"
 end
 
 prompt "Thanks for playing Tic Tac Toe! Goodbye!"
