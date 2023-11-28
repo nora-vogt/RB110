@@ -40,12 +40,12 @@ def display_rules
   clear_screen
   display_header("Rules")
   puts <<~HEREDOC
-    Tic-Tac-Toe is a game where you play against the computer to mark three 
-    squares in a row on a board. In order to win, squares must be in a row 
+    Tic-Tac-Toe is a game where you and the computer take turns marking squares
+    on a board. In order to win, you need to mark three squares in a row either
     vertically, horizontally, or diagonally. The first player to successfully 
     mark three squares in a row wins the round and gets one point.
 
-    The first player to win five rounds wins the game!
+    The first player to reach five points wins the game! 
     No points will be awarded for tie games.
 
     You may choose who moves first for the first round. Subsequent rounds will 
