@@ -172,9 +172,6 @@ def initialize_board
 end
 
 def empty_squares(board)
-  # board.keys returns an array of all keys in the board Hash
-  # keys array.select returns a new array of all keys
-  # where the value is an empty string (empty space)
   board.keys.select { |num| board[num] == INITIAL_MARKER }
 end
 
