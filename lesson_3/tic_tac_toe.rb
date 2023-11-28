@@ -16,14 +16,6 @@ def prompt(message)
   puts "=> #{message}"
 end
 
-def alias_player(winner)
-  winner == 'Player' ? 'You' : winner
-end
-
-def pluralize(word)
-  word + 's'
-end
-
 def display_divider
   puts "#{"*" * DIVIDER_LENGTH}"
 end
@@ -208,7 +200,6 @@ def get_first_player
     prompt "1 - Me"
     prompt "2 - Computer"
     prompt "3 - Let the Computer choose!"
-
     player_one = gets.chomp
 
     break if ["1", "2", "3"].include?(player_one)
