@@ -262,8 +262,6 @@ def computer_places_piece!(board)
   board[square] = COMPUTER_MARKER
 end
 
-
-
 def place_piece!(board, current_player)
   if current_player == 'Player'
     player_places_piece!(board)
