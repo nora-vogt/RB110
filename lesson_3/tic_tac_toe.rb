@@ -49,10 +49,14 @@ def display_rules
 end
 
 def display_introduction
-  prompt "Welcome to Tic Tac Toe!"
+  puts "***********************"
   puts ""
-  prompt "Would you like to see the rules for how to play? Enter 'yes' or 'no':"
-  prompt "Enter 'yes' to see the rules or any other key to continue:"
+  puts "Welcome to Tic Tac Toe!"
+  puts ""
+  puts "***********************"
+  puts ""
+  prompt "Would you like to see the rules of the game?"
+  prompt "Enter 'yes' to see the rules or any other key to start playing:"
   input = gets.chomp.downcase
   display_rules if ['yes', 'y'].include?(input)
 end
