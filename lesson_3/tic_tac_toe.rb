@@ -75,24 +75,20 @@ end
 # rubocop:disable Metrics/AbcSize, Layout/LineLength
 def display_board(board)
   display_empty_line
-  puts "    #{square_number(board, 1)}|    #{square_number(board, 2)}|    #{square_number(board, 3)}"
+  puts "     |     |     "
   puts "  #{board[1]}  |  #{board[2]}  |  #{board[3]}  "
   puts "     |     |     "
   puts "-----+-----+-----"
-  puts "    #{square_number(board, 4)}|    #{square_number(board, 5)}|    #{square_number(board, 6)}"
+  puts "     |     |     "
   puts "  #{board[4]}  |  #{board[5]}  |  #{board[6]}  "
   puts "     |     |     "
   puts "-----+-----+-----"
-  puts "    #{square_number(board, 7)}|    #{square_number(board, 8)}|    #{square_number(board, 9)}"
+  puts "     |     |     "
   puts "  #{board[7]}  |  #{board[8]}  |  #{board[9]}  "
   puts "     |     |     "
   display_empty_line
 end
 # rubocop:enable Metrics/AbcSize, Layout/LineLength
-
-def square_number(board, num)
-  board[num] == INITIAL_MARKER ? num : ' '
-end
 
 def display_round_number(round)
   puts "**** Round #{round} ****"
@@ -337,4 +333,4 @@ loop do
   system "clear"
 end
 
-prompt "Thanks for playing Tic Tac Toe! Goodbye!"
+prompt "Thanks for playing Tic-Tac-Toe! Goodbye!"
