@@ -100,6 +100,14 @@ def display_first_player(player)
   sleep 1.2
 end
 
+def display_whose_turn(current_player)
+  prompt "#{current_player == 'Player' ? 'Your' : "Computer's"} turn!"
+  if current_player == 'Computer'
+    prompt "Computer is moving..."
+    sleep 1
+  end
+end
+
 def display_score(scores)
   display_header("Scores")
   puts "Player: #{scores[:player]}"
@@ -269,7 +277,7 @@ end
 def play_round(board, round, scores, current_player)
   loop do
     display_game_information(board, scores, round)
-    prompt "#{current_player == 'Player' ? 'Your' : "Computer's"} turn!"
+    display_whose_turn(current_player)
     place_piece!(board, current_player)
     current_player = alternate_player(current_player)
 
