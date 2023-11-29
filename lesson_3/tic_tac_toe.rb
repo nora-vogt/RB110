@@ -75,15 +75,15 @@ end
 # rubocop:disable Metrics/AbcSize, Layout/LineLength
 def display_board(board)
   display_empty_line
-  puts "     |     |     "
+  puts "    1|    2|    3"
   puts "  #{board[1]}  |  #{board[2]}  |  #{board[3]}  "
   puts "     |     |     "
   puts "-----+-----+-----"
-  puts "     |     |     "
+  puts "    4|    5|    6"
   puts "  #{board[4]}  |  #{board[5]}  |  #{board[6]}  "
   puts "     |     |     "
   puts "-----+-----+-----"
-  puts "     |     |     "
+  puts "    7|    8|    9"
   puts "  #{board[7]}  |  #{board[8]}  |  #{board[9]}  "
   puts "     |     |     "
   display_empty_line
