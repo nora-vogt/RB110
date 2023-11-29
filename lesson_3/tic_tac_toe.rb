@@ -297,10 +297,10 @@ def play_round(board, round, scores, current_player)
     break if round_won?(board) || board_full?(board)
   end
 
-  display_game_information(board, scores, round)
   round_winner = detect_round_winner(board)
-  display_round_outcome(round_winner)
   update_scores(round_winner, scores)
+  display_game_information(board, scores, round)
+  display_round_outcome(round_winner)
 
   press_enter_to_start_next_round unless game_won?(scores)
 end
