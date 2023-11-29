@@ -236,13 +236,12 @@ def player_places_piece!(board)
   square = ''
   loop do
     prompt "Choose a position to place a piece: #{joinor(empty_squares(board))}"
-    square = gets.chomp.to_i
-
-    break if empty_squares(board).include?(square)
+    square = gets.chomp
+    break if valid_integer?(square) && empty_squares(board).include?(square.to_i)
     prompt "Sorry, that's not a valid choice."
   end
 
-  board[square] = PLAYER_MARKER
+  board[square.to_i] = PLAYER_MARKER
 end
 
 def computer_places_piece!(board)
@@ -283,6 +282,10 @@ def play_round(board, round, scores, current_player)
   update_scores(round_winner, scores)
 
   press_enter_to_start_next_round unless game_won?(scores)
+end
+
+def valid_integer?(string)
+  string.to_i.to_s == string
 end
 
 def board_full?(board)
