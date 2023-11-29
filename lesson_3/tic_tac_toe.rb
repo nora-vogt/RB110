@@ -97,6 +97,7 @@ end
 def display_first_player(player)
   display_empty_line
   prompt "#{player} is moving first!"
+  sleep 1.2
 end
 
 def display_score(scores)
@@ -309,7 +310,6 @@ display_introduction
 loop do
   current_player = determine_first_player
   display_first_player(current_player)
-  sleep 1.2
 
   scores = { player: 0, computer: 0, ties: 0 }
   round = 1
