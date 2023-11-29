@@ -342,17 +342,16 @@ loop do
     board = initialize_board
 
     play_round(board, round, scores, current_player)
+    display_game_information(board, scores, round)
 
-    if game_won?(scores)
-      display_game_information(board, scores, round)
-      display_game_winner(scores)
-      break
-    end
-
+    break if game_won?(scores)
+ 
     current_player = alternate_player(current_player)
     round = update_round_number(round)
-  end
+  end 
 
+  display_game_winner(scores)
+  
   break unless play_again?
   system "clear"
 end
