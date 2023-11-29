@@ -181,6 +181,7 @@ def detect_at_risk_square(board, marker)
   nil
 end
 
+
 def detect_round_winner(board)
   WINNING_LINES.each do |line|
     if board.values_at(*line).all?(PLAYER_MARKER)
@@ -262,6 +263,9 @@ def player_places_piece!(board)
 end
 
 def computer_places_piece!(board)
+  # computer_winning_square = detect_at_risk_square(board, COMPUTER_MARKER)
+  # player_winning_square = detect_at_risk_square(board, PLAYER_MARKER)
+
   square = if detect_at_risk_square(board, COMPUTER_MARKER) # offense
              detect_at_risk_square(board, COMPUTER_MARKER)
            elsif detect_at_risk_square(board, PLAYER_MARKER) # defense
