@@ -59,13 +59,13 @@ def display_introduction
   puts "Welcome to Tic-Tac-Toe!".center(DIVIDER_LENGTH)
   display_divider
   display_empty_line
-  prompt "Would you like to see the rules of the game?"
-  prompt "Enter 'yes' to see the rules or any other key to start playing:"
-  input = gets.chomp.downcase
+  prompt "Would you like to see the rules of the game? Enter 'y' or 'n':"
+  input = determine_rules_display_choice
 
   if ['yes', 'y'].include?(input)
     display_rules
-  else
+  elsif ['no', 'n'].include?(input)
+    system "clear"
     prompt "Great, you already know the rules!"
     prompt "Get ready, you'll play until winner has 5 points."
     display_empty_line
@@ -197,6 +197,14 @@ def detect_game_winner(scores)
     'Player'
   elsif scores[:computer] == GAME_WINNING_SCORE
     'Computer'
+  end
+end
+
+def determine_rules_display_choice
+  loop do
+    input = gets.chomp.downcase
+    return input if ['yes', 'y', 'no', 'n'].include?(input)
+    prompt "Invalid choice. Enter 'y' or 'n':"
   end
 end
 
