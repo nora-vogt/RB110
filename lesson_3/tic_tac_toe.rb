@@ -249,11 +249,12 @@ def update_round_number(round)
 end
 
 def player_places_piece!(board)
+  empty_squares = empty_squares(board)
   square = ''
   loop do
-    prompt "Choose a position to place a piece: #{joinor(empty_squares(board))}"
+    prompt "Choose a position to place a piece: #{joinor(empty_squares)}"
     square = gets.chomp
-    break if valid_integer?(square) && empty_squares(board).include?(square.to_i)
+    break if valid_integer?(square) && empty_squares.include?(square.to_i)
     prompt "Sorry, that's not a valid choice."
   end
 
