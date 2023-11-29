@@ -253,7 +253,7 @@ def computer_places_piece!(board)
              detect_at_risk_square(board, COMPUTER_MARKER)
            elsif detect_at_risk_square(board, PLAYER_MARKER) # defense
              detect_at_risk_square(board, PLAYER_MARKER)
-           elsif board[SQUARE_FIVE] == INITIAL_MARKER # choose square 5 if empty
+           elsif board[SQUARE_FIVE] == INITIAL_MARKER # choose square 5
              SQUARE_FIVE
            else # pick randomly
              empty_squares(board).sample
@@ -313,7 +313,7 @@ display_introduction
 loop do
   current_player = determine_first_player
   display_first_player(current_player)
-  sleep 1.5
+  sleep 1.2
 
   scores = { player: 0, computer: 0, ties: 0 }
   round = 1
