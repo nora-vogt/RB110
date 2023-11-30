@@ -342,7 +342,7 @@ loop do
     board = initialize_board
 
     play_round(board, round, scores, current_player)
-    display_game_information(board, scores, round)
+   #display_game_information(board, scores, round)
 
     break if game_won?(scores)
  
