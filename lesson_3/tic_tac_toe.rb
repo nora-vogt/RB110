@@ -181,7 +181,6 @@ def detect_at_risk_square(board, marker)
   nil
 end
 
-
 def detect_round_winner(board)
   WINNING_LINES.each do |line|
     if board.values_at(*line).all?(PLAYER_MARKER)
@@ -343,13 +342,13 @@ loop do
     play_round(board, round, scores, current_player)
 
     break if game_won?(scores)
- 
+
     current_player = alternate_player(current_player)
     round = update_round_number(round)
-  end 
+  end
 
   display_game_winner(scores)
-  
+
   break unless play_again?
   system "clear"
 end
