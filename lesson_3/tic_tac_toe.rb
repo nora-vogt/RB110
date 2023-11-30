@@ -253,7 +253,8 @@ def player_places_piece!(board)
   loop do
     prompt "Choose a position to place a piece: #{joinor(empty_squares(board))}"
     square = gets.chomp
-    break if valid_integer?(square) && empty_squares(board).include?(square.to_i)
+    break if valid_integer?(square) &&
+             empty_squares(board).include?(square.to_i)
     prompt "Sorry, that's not a valid choice."
   end
 
