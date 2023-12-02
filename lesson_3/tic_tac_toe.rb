@@ -50,6 +50,7 @@ def display_rules
 
   prompt "Press 'Enter' when you're ready to start the game!"
   gets.chomp
+  system "clear"
 end
 # rubocop:enable Metrics/MethodLength
 
