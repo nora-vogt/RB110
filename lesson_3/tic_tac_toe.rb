@@ -7,7 +7,7 @@ WINNING_LINES = [
   [1, 5, 9], [3, 5, 7]             # diagonals
 ]
 GAME_WINNING_SCORE = 5
-INITIAL_MARKER = ' '
+# INITIAL_MARKER = ' '
 PLAYER_MARKER = 'X'
 COMPUTER_MARKER = 'O'
 SQUARE_FIVE = 5
@@ -75,15 +75,15 @@ end
 # rubocop:disable Metrics/AbcSize
 def display_board(board)
   display_empty_line
-  puts "    1|    2|    3"
+  puts "     |     |     "
   puts "  #{board[1]}  |  #{board[2]}  |  #{board[3]}  "
   puts "     |     |     "
   puts "-----+-----+-----"
-  puts "    4|    5|    6"
+  puts "     |     |     "
   puts "  #{board[4]}  |  #{board[5]}  |  #{board[6]}  "
   puts "     |     |     "
   puts "-----+-----+-----"
-  puts "    7|    8|    9"
+  puts "     |     |     "
   puts "  #{board[7]}  |  #{board[8]}  |  #{board[9]}  "
   puts "     |     |     "
   display_empty_line
@@ -164,18 +164,18 @@ end
 
 def initialize_board
   new_board = {}
-  (1..9).each { |num| new_board[num] = INITIAL_MARKER }
+  (1..9).each { |num| new_board[num] = num }
   new_board
 end
 
 def empty_squares(board)
-  board.keys.select { |num| board[num] == INITIAL_MARKER }
+  board.keys.select { |num| board[num].is_a?(Integer) }
 end
 
 def detect_at_risk_square(board, marker)
   WINNING_LINES.each do |line|
     if board.values_at(*line).count(marker) == 2
-      line.each { |square| return square if board[square] == INITIAL_MARKER }
+      line.each { |square| return square if board[square].is_a?(Integer) }
     end
   end
   nil
@@ -269,7 +269,7 @@ def computer_places_piece!(board)
              computer_square_to_win
            elsif player_square_to_win # defense
              player_square_to_win
-           elsif board[SQUARE_FIVE] == INITIAL_MARKER # choose square 5
+           elsif board[SQUARE_FIVE].is_a?(Integer) # choose square 5
              SQUARE_FIVE
            else # pick randomly
              empty_squares(board).sample
