@@ -60,7 +60,7 @@ def display_introduction
   display_divider
   display_empty_line
   prompt "Would you like to see the rules of the game? Enter 'y' or 'n':"
-  input = determine_rules_display_choice
+  input = get_rules_display_choice
 
   if ['yes', 'y'].include?(input)
     display_rules
@@ -200,7 +200,7 @@ def detect_game_winner(scores)
   end
 end
 
-def determine_rules_display_choice
+def get_rules_display_choice
   loop do
     input = gets.chomp.downcase
     return input if ['yes', 'y', 'no', 'n'].include?(input)
@@ -208,7 +208,7 @@ def determine_rules_display_choice
   end
 end
 
-def determine_first_player
+def get_first_player
   player_one = nil
   loop do
     prompt "Who should go first? Enter a number:"
@@ -331,7 +331,7 @@ system "clear"
 display_introduction
 
 loop do
-  current_player = determine_first_player
+  current_player = get_first_player
   display_first_player(current_player)
 
   scores = { player: 0, computer: 0, ties: 0 }
