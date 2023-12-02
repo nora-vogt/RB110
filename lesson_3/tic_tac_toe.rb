@@ -96,7 +96,7 @@ end
 
 def display_first_player(player)
   display_empty_line
-  prompt "#{player} is moving first!"
+  prompt "#{player == 'Player' ? 'You are' : 'Computer is'} moving first!"
   sleep 1.2
 end
 
