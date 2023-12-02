@@ -9,7 +9,7 @@ WINNING_LINES = [
 GAME_WINNING_SCORE = 5
 PLAYER_MARKER = 'X'
 COMPUTER_MARKER = 'O'
-SQUARE_FIVE = 5
+MIDDLE_SQUARE = 5
 
 def prompt(message)
   puts "=> #{message}"
@@ -268,8 +268,8 @@ def computer_places_piece!(board)
              computer_square_to_win
            elsif player_square_to_win # defense
              player_square_to_win
-           elsif board[SQUARE_FIVE].is_a?(Integer) # choose square 5
-             SQUARE_FIVE
+           elsif board[MIDDLE_SQUARE].is_a?(Integer) # choose square 5
+             MIDDLE_SQUARE
            else # pick randomly
              empty_squares(board).sample
            end
