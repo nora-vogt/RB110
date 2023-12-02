@@ -7,6 +7,7 @@ WINNING_LINES = [
   [1, 5, 9], [3, 5, 7]             # diagonals
 ]
 GAME_WINNING_SCORE = 5
+INITIAL_MARKER = ' '
 PLAYER_MARKER = 'X'
 COMPUTER_MARKER = 'O'
 MIDDLE_SQUARE = 5
@@ -164,18 +165,18 @@ end
 
 def initialize_board
   new_board = {}
-  (1..9).each { |num| new_board[num] = num }
+  (1..9).each { |num| new_board[num] = INITIAL_MARKER }
   new_board
 end
 
 def empty_squares(board)
-  board.keys.select { |num| board[num].is_a?(Integer) }
+  board.keys.select { |num| board[num] == INITIAL_MARKER }
 end
 
 def detect_at_risk_square(board, marker)
   WINNING_LINES.each do |line|
     if board.values_at(*line).count(marker) == 2
-      line.each { |square| return square if board[square].is_a?(Integer) }
+      line.each { |square| return square if board[square] == INITIAL_MARKER }
     end
   end
   nil
@@ -269,7 +270,7 @@ def computer_places_piece!(board)
              computer_square_to_win
            elsif player_square_to_win # defense
              player_square_to_win
-           elsif board[MIDDLE_SQUARE].is_a?(Integer) # choose square 5
+           elsif board[MIDDLE_SQUARE] == INITIAL_MARKER # choose square 5
              MIDDLE_SQUARE
            else # pick randomly
              empty_squares(board).sample
