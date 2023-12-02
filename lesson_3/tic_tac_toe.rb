@@ -76,15 +76,15 @@ end
 # rubocop:disable Metrics/AbcSize
 def display_board(board)
   display_empty_line
-  puts "     |     |     "
+  puts "    #{square_number(board, 1)}|    #{square_number(board, 2)}|    #{square_number(board, 3)}"
   puts "  #{board[1]}  |  #{board[2]}  |  #{board[3]}  "
   puts "     |     |     "
   puts "-----+-----+-----"
-  puts "     |     |     "
+  puts "    #{square_number(board, 4)}|    #{square_number(board, 5)}|    #{square_number(board, 6)}"
   puts "  #{board[4]}  |  #{board[5]}  |  #{board[6]}  "
   puts "     |     |     "
   puts "-----+-----+-----"
-  puts "     |     |     "
+  puts "    #{square_number(board, 7)}|    #{square_number(board, 8)}|    #{square_number(board, 9)}"
   puts "  #{board[7]}  |  #{board[8]}  |  #{board[9]}  "
   puts "     |     |     "
   display_empty_line
@@ -157,6 +157,10 @@ def joinor(array, delimiter=", ", word="or")
     array[-1] = "#{word} #{array[-1]}"
     array.join(delimiter)
   end
+end
+
+def square_number(board, number)
+  board[number] == INITIAL_MARKER ? number : " "
 end
 
 def alternate_player(current_player)
