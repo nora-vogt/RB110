@@ -7,7 +7,6 @@ WINNING_LINES = [
   [1, 5, 9], [3, 5, 7]             # diagonals
 ]
 GAME_WINNING_SCORE = 5
-# INITIAL_MARKER = ' '
 PLAYER_MARKER = 'X'
 COMPUTER_MARKER = 'O'
 SQUARE_FIVE = 5
