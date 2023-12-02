@@ -270,13 +270,13 @@ def computer_places_piece!(board)
   computer_square_to_win = detect_at_risk_square(board, COMPUTER_MARKER)
   player_square_to_win = detect_at_risk_square(board, PLAYER_MARKER)
 
-  square = if computer_square_to_win # offense
+  square = if computer_square_to_win
              computer_square_to_win
-           elsif player_square_to_win # defense
+           elsif player_square_to_win
              player_square_to_win
-           elsif board[MIDDLE_SQUARE] == INITIAL_MARKER # choose square 5
+           elsif board[MIDDLE_SQUARE] == INITIAL_MARKER
              MIDDLE_SQUARE
-           else # pick randomly
+           else
              empty_squares(board).sample
            end
 
