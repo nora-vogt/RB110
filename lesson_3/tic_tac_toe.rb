@@ -73,7 +73,7 @@ def display_introduction
   end
 end
 
-# rubocop:disable Metrics/AbcSize
+# rubocop:disable Metrics/AbcSize, Layout/LineLength
 def display_board(board)
   display_empty_line
   puts "    #{square_number(board, 1)}|    #{square_number(board, 2)}|    #{square_number(board, 3)}"
@@ -89,7 +89,7 @@ def display_board(board)
   puts "     |     |     "
   display_empty_line
 end
-# rubocop:enable Metrics/AbcSize
+# rubocop:enable Metrics/AbcSize, Layout/LineLength
 
 def display_round_number(round)
   puts "**** Round #{round} ****"
