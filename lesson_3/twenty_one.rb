@@ -48,6 +48,13 @@ def display_partial_dealer_hand(hand)
   puts "#{hand[0][0]} of #{hand[0][1]} and mystery card"
 end
 
+def get_move_choice
+  loop do
+    choice = gets.chomp.downcase
+    return choice if (['h', 'hit', 's', 'stay']).include?(choice)
+    puts "Invalid response. Please enter 'hit' or 'stay':"
+  end
+end
 
 def calculate_total(hand)
   values = hand.map {|card| card.first }
@@ -97,11 +104,10 @@ loop do # start game
     break if winner?(player_hand)
     
     puts "Would you like to hit or stay?"
-    answer = gets.chomp.downcase
+    choice = get_move_choice
+    deal_card!(deck, player_hand) if ['h', 'hit'].include?(choice)
 
-    deal_card!(deck, player_hand) if answer == "hit"
-
-    break if answer == "stay" || busted?(player_hand)
+    break if ['s', 'stay'].include?(choice) || busted?(player_hand)
   end
 
   if winner?(player_hand)
