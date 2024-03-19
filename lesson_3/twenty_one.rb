@@ -73,6 +73,29 @@ def player_turn(deck, player_hand, dealer_hand)
   end
 end
 
+def dealer_turn(deck, player_hand, dealer_hand)
+  loop do
+    system "clear"
+    blank_line
+    display_player_hand(player_hand)
+    blank_line
+    display_partial_dealer_hand(dealer_hand)
+    blank_line
+    puts "Dealer's Turn!"
+
+    break if dealer_stay?(dealer_hand) || busted?(dealer_hand)
+
+    puts "Dealer deals themself another card..."
+    blank_line
+    deal_card!(deck, dealer_hand)
+
+    break if winner?(dealer_hand)
+
+    blank_line
+    sleep 2
+  end
+end
+
 def determine_winner(player_score, dealer_score)
   if player_score > dealer_score
     'Player'
@@ -155,26 +178,7 @@ loop do
     sleep 1
   end
 
-  loop do # Dealer's Turn
-    system "clear"
-    puts "Dealer's Turn!"
-    blank_line
-    display_player_hand(player_hand)
-    blank_line
-    display_partial_dealer_hand(dealer_hand)
-    blank_line
-
-    break if dealer_stay?(dealer_hand) || busted?(dealer_hand)
-
-    puts "Dealer deals themself another card..."
-    blank_line
-    deal_card!(deck, dealer_hand)
-
-    break if winner?(dealer_hand)
-
-    blank_line
-    sleep 2
-  end
+  dealer_turn(deck, player_hand, dealer_hand)
 
   if winner?(dealer_hand)
     puts "Dealer wins with 21 points!"
