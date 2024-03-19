@@ -47,11 +47,23 @@ def display_full_dealer_hand(hand) # refactor this
   hand.each { |card| puts "#{card[0]} of #{card[1]}" }
 end
 
+display playe
+
 def get_move_choice
   loop do
     choice = gets.chomp.downcase
     return choice if (['h', 'hit', 's', 'stay']).include?(choice)
     puts "Invalid response. Please enter 'hit' or 'stay':"
+  end
+end
+
+def determine_winner(player_score, dealer_score)
+  if player_score > dealer_score
+    'Player'
+  elsif dealer_score > player_score
+    'Dealer'
+  else
+    'tie'
   end
 end
 
@@ -86,6 +98,7 @@ def busted?(hand)
 end
 
 def play_again?
+  blank_line
   puts "Would you like to play again? ('y' or 'n')"
   answer = gets.chomp.downcase
   ['y', 'yes'].include?(answer)
@@ -152,8 +165,12 @@ loop do
 
     break if dealer_stay?(dealer_hand) || busted?(dealer_hand)
 
-    puts "Dealer deals themself another card..."
+    puts "Dnealer deals themself another card..."
+    blank_line
     deal_card!(deck, dealer_hand)
+
+    break if winner?(dealer_hand)
+
     blank_line
     sleep 2
   end
@@ -167,9 +184,30 @@ loop do
   elsif busted?(dealer_hand)
     puts "Dealer bust! You win!"
     next if play_again?
+    break
   end
-  
-  break
+
+  # Both Players Stay
+  blank_line
+  puts "Both Player and Dealer stay!"
+  puts "Counting final points..."
+  blank_line
+  sleep 1
+  player_score = calculate_total(player_hand)
+  dealer_score = calculate_total(dealer_hand)
+  winner = determine_winner(player_score, dealer_score)
+
+  if winner == "tie"
+    puts "It's a tie! Player has #{player_score} points and dealer has #{dealer_score} points."
+  elsif winner == "Dealer"
+    puts "#{winner} wins with #{dealer_score} points! You have #{player_score} points."
+    puts "Better luck next time!"
+  else
+    puts "You win with #{player_score} points! Dealer has #{dealer_score}."
+    puts "Yay!"
+  end
+
+  break unless play_again?
 end
 
 puts "Thanks for playing Twenty One!"
