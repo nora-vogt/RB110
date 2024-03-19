@@ -7,6 +7,10 @@ TEN_POINTS = 10
 ELEVEN_POINTS = 11
 WINNING_SCORE = 21
 
+def blank_line
+  puts ""
+end
+
 def initialize_deck
   CARDS.product(SUITS)
 end
@@ -20,10 +24,20 @@ def deal_card!(deck, hand)
 end
 
 def initial_deal!(deck, player_hand, dealer_hand)
-  2.times do 
+  2.times do # alternates deal order, like a real card game
     deal_card!(deck, player_hand)
     deal_card!(deck, dealer_hand)
   end
+end
+
+def display_player_hand(hand)
+  puts "Your cards are:"
+  hand.each { |card| puts "#{card[0]} of #{card[1]}" }
+end
+
+def display_dealer_hand(hand)
+  puts "Dealer's hand is:"
+  puts "#{hand[0][0]} of #{hand[0][1]} and mystery card"
 end
 
 def calculate_total(hand)
@@ -54,6 +68,15 @@ loop do # start game
 
   puts "Dealer deals each player two starting cards"
   initial_deal!(deck, player_hand, dealer_hand)
+  blank_line
+
+  loop do # Player Turn
+  display_player_hand(player_hand) # player can see both cards
+  blank_line
+  display_dealer_hand(dealer_hand) # only one dealer card is visible
+  blank_line
+  break
+  end
 
   break
 end
