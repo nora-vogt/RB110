@@ -5,6 +5,7 @@ CARDS = ('2'..'10').to_a + ['Jack', 'Queen', 'King', 'Ace']
 
 TEN_POINTS = 10
 ELEVEN_POINTS = 11
+SEVENTEEN_POINTS = 17
 WINNING_SCORE = 21
 
 def blank_line
@@ -63,7 +64,7 @@ def calculate_total(hand)
     end
   end
   # Correct for Aces - per each Ace, if the sum is greater than 21, minus 10 points
-  values.count("Ace").times { sum -= 10 if sum > 21 }
+  values.count("Ace").times { sum -= TEN_POINTS if sum > WINNING_SCORE }
   sum
 end
 
