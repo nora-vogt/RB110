@@ -42,6 +42,11 @@ def display_partial_dealer_hand(hand)
   hand[1..-1].each { |card| puts "#{card[0]} of #{card[1]}" }
 end
 
+def display_full_dealer_hand(hand) # refactor this
+  puts "Dealers hand is:"
+  hand.each { |card| puts "#{card[0]} of #{card[1]}" }
+end
+
 def get_move_choice
   loop do
     choice = gets.chomp.downcase
@@ -69,7 +74,7 @@ def calculate_total(hand)
 end
 
 def dealer_stay?(hand)
-  false
+  (SEVENTEEN_POINTS...WINNING_SCORE).include?(calculate_total(hand))
 end
 
 def winner?(hand)
@@ -95,7 +100,7 @@ loop do
   puts "Shuffling the deck"
   shuffle!(deck)
 
-  puts "Dealer deals each player two starting cards"
+  puts "Dealer deals each player two starting cards..."
   initial_deal!(deck, player_hand, dealer_hand)
   blank_line
 
@@ -137,14 +142,33 @@ loop do
   end
 
   loop do # Dealer's Turn
-    break if dealer_stay?(dealer_hand) || busted?(dealer_hand)
+    system "clear"
     puts "Dealer's Turn!"
-    puts "Dealer deals themself another card"
-    deal_card!(deck, dealer_hand)
+    blank_line
+    display_player_hand(player_hand)
     blank_line
     display_partial_dealer_hand(dealer_hand)
+    blank_line
+
+    break if dealer_stay?(dealer_hand) || busted?(dealer_hand)
+
+    puts "Dealer deals themself another card..."
+    deal_card!(deck, dealer_hand)
+    blank_line
+    sleep 2
   end
 
+  if winner?(dealer_hand)
+    puts "Dealer wins with 21 points!"
+    next if play_again?
+    break
+  elsif dealer_stay?(dealer_hand)
+    puts "Dealer chose to stay."
+  elsif busted?(dealer_hand)
+    puts "Dealer bust! You win!"
+    next if play_again?
+  end
+  
   break
 end
 
