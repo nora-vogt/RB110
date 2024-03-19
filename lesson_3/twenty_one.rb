@@ -43,7 +43,7 @@ def display_player_hand(hand)
   hand.each { |card| puts "#{card[0]} of #{card[1]}" }
 end
 
-def display_dealer_hand(hand)
+def display_partial_dealer_hand(hand)
   puts "Dealer's hand is:"
   puts "#{hand[0][0]} of #{hand[0][1]} and mystery card"
 end
@@ -69,6 +69,7 @@ def calculate_total(hand)
 end
 
 loop do # start game
+  puts "Welcome to Twenty-One!"
   deck = initialize_deck
   player_hand = []
   dealer_hand = []
@@ -82,12 +83,15 @@ loop do # start game
   puts "Your turn!"
   sleep 1.5
   # need to check if dealer wins after initial deal here
+    # 1. if dealer wins, break out of this loop
+    # 2. display both full hands (both dealer cards) + winning message
+    # 3. ask to play again (1-3 will repeat on dealer's turn if they win)
 
   loop do # Player Turn
     system "clear"
     display_player_hand(player_hand) # player can see both cards
     blank_line
-    display_dealer_hand(dealer_hand) # only one dealer card is visible
+    display_partial_dealer_hand(dealer_hand) # only one dealer card is visible
     blank_line
 
     break if winner?(player_hand)
@@ -106,6 +110,10 @@ loop do # start game
     puts "You bust! Dealer wins!"
   else
     puts "You chose to stay. Dealer's Turn!"
+  end
+
+  loop do # Dealer's Turn
+    break
   end
 
   break
