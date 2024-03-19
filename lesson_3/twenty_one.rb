@@ -66,6 +66,10 @@ def calculate_total(hand)
   sum
 end
 
+def dealer_stay?(hand)
+  false
+end
+
 def winner?(hand)
   calculate_total(hand) == WINNING_SCORE
 end
@@ -126,11 +130,17 @@ loop do
     next if play_again?
     break
   else
-    puts "You chose to stay. Dealer's Turn!"
+    puts "You chose to stay."
+    sleep 1
   end
 
   loop do # Dealer's Turn
-    break
+    break if dealer_stay?(dealer_hand) || busted?(dealer_hand)
+    puts "Dealer's Turn!"
+    puts "Dealer deals themself another card"
+    deal_card!(deck, dealer_hand)
+    display_partial_dealer_hand(dealer_hand)
+    binding.pry
   end
 
   break
