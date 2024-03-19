@@ -184,12 +184,12 @@ loop do
     puts "Dealer wins with 21 points!"
     next if play_again?
     break
-  elsif dealer_stay?(dealer_hand)
-    puts "Dealer chose to stay."
   elsif busted?(dealer_hand)
     puts "Dealer bust! You win!"
     next if play_again?
     break
+  else
+    puts "Dealer chose to stay."
   end
 
   # Both Players Stay
