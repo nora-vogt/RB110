@@ -15,6 +15,17 @@ def shuffle!(deck)
   deck.shuffle!
 end
 
+def deal_card!(deck, hand)
+  hand << deck.shift
+end
+
+def initial_deal!(deck, player_hand, dealer_hand)
+  2.times do 
+    deal_card!(deck, player_hand)
+    deal_card!(deck, dealer_hand)
+  end
+end
+
 def calculate_total(hand)
   values = hand.map {|card| card.first }
   sum = 0
@@ -34,12 +45,15 @@ def calculate_total(hand)
   sum
 end
 
-deck = initialize_deck
-player_hand = []
-dealer_hand = []
-
 loop do # start game
+  deck = initialize_deck
+  player_hand = []
+  dealer_hand = []
   puts "Shuffling the deck"
   shuffle!(deck)
+
+  puts "Dealer deals each player two starting cards"
+  initial_deal!(deck, player_hand, dealer_hand)
+
   break
 end
