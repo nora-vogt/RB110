@@ -37,7 +37,8 @@ end
 
 def display_partial_dealer_hand(hand)
   puts "Dealer's hand is:"
-  puts "#{hand[0][0]} of #{hand[0][1]} and mystery card"
+  puts "Mystery card and"
+  hand[1..-1].each { |card| puts "#{card[0]} of #{card[1]}" }
 end
 
 def get_move_choice
@@ -139,8 +140,8 @@ loop do
     puts "Dealer's Turn!"
     puts "Dealer deals themself another card"
     deal_card!(deck, dealer_hand)
+    blank_line
     display_partial_dealer_hand(dealer_hand)
-    binding.pry
   end
 
   break
