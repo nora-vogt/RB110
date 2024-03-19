@@ -47,8 +47,6 @@ def display_full_dealer_hand(hand) # refactor this
   hand.each { |card| puts "#{card[0]} of #{card[1]}" }
 end
 
-display playe
-
 def get_move_choice
   loop do
     choice = gets.chomp.downcase
@@ -165,7 +163,7 @@ loop do
 
     break if dealer_stay?(dealer_hand) || busted?(dealer_hand)
 
-    puts "Dnealer deals themself another card..."
+    puts "Dealer deals themself another card..."
     blank_line
     deal_card!(deck, dealer_hand)
 
