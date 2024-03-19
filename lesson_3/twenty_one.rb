@@ -30,20 +30,6 @@ def initial_deal!(deck, player_hand, dealer_hand)
   end
 end
 
-def winner?(hand)
-  calculate_total(hand) == WINNING_SCORE
-end
-
-def busted?(hand)
-  calculate_total(hand) > WINNING_SCORE
-end
-
-def play_again?
-  puts "Would you like to play again? ('y' or 'n')"
-  answer = gets.chomp.downcase
-  ['y', 'yes'].include?(answer)
-end
-
 def display_player_hand(hand)
   puts "Your cards are:"
   hand.each { |card| puts "#{card[0]} of #{card[1]}" }
@@ -75,10 +61,23 @@ def calculate_total(hand)
       sum += TEN_POINTS
     end
   end
-
   # Correct for Aces - per each Ace, if the sum is greater than 21, minus 10 points
   values.count("Ace").times { sum -= 10 if sum > 21 }
   sum
+end
+
+def winner?(hand)
+  calculate_total(hand) == WINNING_SCORE
+end
+
+def busted?(hand)
+  calculate_total(hand) > WINNING_SCORE
+end
+
+def play_again?
+  puts "Would you like to play again? ('y' or 'n')"
+  answer = gets.chomp.downcase
+  ['y', 'yes'].include?(answer)
 end
 
 loop do
