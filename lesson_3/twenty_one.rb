@@ -11,6 +11,10 @@ def initialize_deck
   CARDS.product(SUITS)
 end
 
+def shuffle!(deck)
+  deck.shuffle!
+end
+
 def calculate_total(hand)
   values = hand.map {|card| card.first }
   sum = 0
@@ -25,10 +29,17 @@ def calculate_total(hand)
     end
   end
 
-  # Adjust for Aces - Per each Ace, if the sum is greater than 21, minus 10 points
+  # Correct for Aces - per each Ace, if the sum is greater than 21, minus 10 points
   values.count("Ace").times { sum -= 10 if sum > 21 }
-
   sum
 end
 
 deck = initialize_deck
+player_hand = []
+dealer_hand = []
+
+loop do # start game
+  puts "Shuffling the deck"
+  shuffle!(deck)
+  break
+end
