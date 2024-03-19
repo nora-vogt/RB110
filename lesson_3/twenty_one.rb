@@ -56,6 +56,14 @@ def get_move_choice
   end
 end
 
+def get_play_again_choice
+  loop do
+    answer = gets.chomp.downcase
+    return answer if ['y', 'yes', 'n', 'no'].include?(answer)
+    puts "Invalid response. Please enter 'yes' or 'no':"
+  end
+end
+
 def calculate_total(hand)
   values = hand.map {|card| card.first }
   sum = 0
@@ -75,7 +83,8 @@ def calculate_total(hand)
   sum
 end
 
-loop do # start game
+loop do
+  system "clear"
   puts "Welcome to Twenty-One!"
   deck = initialize_deck
   player_hand = []
@@ -112,6 +121,10 @@ loop do # start game
 
   if winner?(player_hand)
     puts "You win with 21 points!"
+    puts "Would you like to play again? ('yes' or 'no')"
+    answer = get_play_again_choice
+    next if ['y', 'yes'].include?(answer)
+    break
   elsif busted?(player_hand)
     puts "You bust! Dealer wins!"
   else
@@ -124,3 +137,5 @@ loop do # start game
 
   break
 end
+
+puts "Thanks for playing Twenty One!"
