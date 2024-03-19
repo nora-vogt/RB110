@@ -38,6 +38,12 @@ def busted?(hand)
   calculate_total(hand) > WINNING_SCORE
 end
 
+def play_again?
+  puts "Would you like to play again? ('y' or 'n')"
+  answer = gets.chomp.downcase
+  ['y', 'yes'].include?(answer)
+end
+
 def display_player_hand(hand)
   puts "Your cards are:"
   hand.each { |card| puts "#{card[0]} of #{card[1]}" }
@@ -53,14 +59,6 @@ def get_move_choice
     choice = gets.chomp.downcase
     return choice if (['h', 'hit', 's', 'stay']).include?(choice)
     puts "Invalid response. Please enter 'hit' or 'stay':"
-  end
-end
-
-def get_play_again_choice
-  loop do
-    answer = gets.chomp.downcase
-    return answer if ['y', 'yes', 'n', 'no'].include?(answer)
-    puts "Invalid response. Please enter 'yes' or 'no':"
   end
 end
 
@@ -105,6 +103,7 @@ loop do
 
   loop do # Player Turn
     system "clear"
+    #player_hand = [["Ace", "Clubs"], ["10", "Hearts"]] # For testing winning hand
     display_player_hand(player_hand) # player can see both cards
     blank_line
     display_partial_dealer_hand(dealer_hand) # only one dealer card is visible
@@ -121,12 +120,12 @@ loop do
 
   if winner?(player_hand)
     puts "You win with 21 points!"
-    puts "Would you like to play again? ('yes' or 'no')"
-    answer = get_play_again_choice
-    next if ['y', 'yes'].include?(answer)
+    next if play_again?
     break
   elsif busted?(player_hand)
     puts "You bust! Dealer wins!"
+    next if play_again?
+    break
   else
     puts "You chose to stay. Dealer's Turn!"
   end
