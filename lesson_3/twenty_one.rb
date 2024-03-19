@@ -55,6 +55,24 @@ def get_move_choice
   end
 end
 
+def player_turn(deck, player_hand, dealer_hand)
+  loop do # Player Turn
+    system "clear"
+    display_player_hand(player_hand) # player can see both cards
+    blank_line
+    display_partial_dealer_hand(dealer_hand) # only one dealer card is visible
+    blank_line
+
+    break if winner?(player_hand)
+    
+    puts "Would you like to hit or stay?"
+    choice = get_move_choice
+    deal_card!(deck, player_hand) if ['h', 'hit'].include?(choice)
+
+    break if ['s', 'stay'].include?(choice) || busted?(player_hand)
+  end
+end
+
 def determine_winner(player_score, dealer_score)
   if player_score > dealer_score
     'Player'
@@ -121,23 +139,8 @@ loop do
     # 1. if dealer wins, break out of this loop
     # 2. display both full hands (both dealer cards) + winning message
     # 3. ask to play again (1-3 will repeat on dealer's turn if they win)
-
-  loop do # Player Turn
-    system "clear"
-    #player_hand = [["Ace", "Clubs"], ["10", "Hearts"]] # For testing winning hand
-    display_player_hand(player_hand) # player can see both cards
-    blank_line
-    display_partial_dealer_hand(dealer_hand) # only one dealer card is visible
-    blank_line
-
-    break if winner?(player_hand)
-    
-    puts "Would you like to hit or stay?"
-    choice = get_move_choice
-    deal_card!(deck, player_hand) if ['h', 'hit'].include?(choice)
-
-    break if ['s', 'stay'].include?(choice) || busted?(player_hand)
-  end
+  # player_hand = [["Ace", "Clubs"], ["10", "Hearts"]] # For testing winning hand
+  player_turn(deck, player_hand, dealer_hand) # player turn loop
 
   if winner?(player_hand)
     puts "You win with 21 points!"
