@@ -50,6 +50,7 @@ end
 def display_full_dealer_hand(hand) # refactor this
   prompt "Dealer's hand is:"
   hand.each { |card| prompt "#{card[0]} of #{card[1]}" }
+  prompt "Dealer's total points are #{calculate_total(hand)}."
 end
 
 def get_move_choice
@@ -128,7 +129,8 @@ def display_outcome(player_hand, dealer_hand)
   when :player
     prompt "You Win! Yay!"
   when :dealer
-    prompt "The Dealer wins! Better luck next time!"
+    prompt "The Dealer wins with #{calculate_total(dealer_hand)} points!" / 
+           " Better luck next time!"
   when :tie
     prompt "It's a tie!"
   end
@@ -213,17 +215,19 @@ loop do
     play_again? ? next : break
   else
     prompt "Dealer chose to stay."
+    sleep 1
   end
 
   # Both Players Stay
   blank_line
   prompt "Both Player and Dealer stay!"
-  prompt "Counting final points..."
   blank_line
-  sleep 1
+  sleep 1.5
 
+  puts "#{"*" * 30}"
   determine_outcome(player_hand, dealer_hand)
   display_outcome(player_hand, dealer_hand)
+  puts "#{"*" * 30}"
 
   break unless play_again?
 end
