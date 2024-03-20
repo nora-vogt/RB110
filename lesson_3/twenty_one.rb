@@ -211,8 +211,6 @@ loop do
   blank_line
   sleep 1
 
-  player_score = calculate_total(player_hand)
-  dealer_score = calculate_total(dealer_hand)
   determine_outcome(player_hand, dealer_hand)
   display_outcome(player_hand, dealer_hand)
 
