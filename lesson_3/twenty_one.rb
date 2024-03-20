@@ -76,7 +76,6 @@ end
 def dealer_turn(deck, player_hand, dealer_hand)
   loop do
     system "clear"
-    blank_line
     display_player_hand(player_hand)
     blank_line
     display_partial_dealer_hand(dealer_hand)
@@ -158,7 +157,8 @@ loop do
 
   puts "Your turn!"
   sleep 1.5
-  # need to check if dealer wins after initial deal here
+  # need to check if EITHER PLAYER wins after initial deal
+    # 1. check player first
     # 1. if dealer wins, break out of this loop
     # 2. display both full hands (both dealer cards) + winning message
     # 3. ask to play again (1-3 will repeat on dealer's turn if they win)
@@ -167,12 +167,10 @@ loop do
 
   if winner?(player_hand)
     puts "You win with 21 points!"
-    next if play_again?
-    break
+    play_again? ? next : break
   elsif busted?(player_hand)
     puts "You bust! Dealer wins!"
-    next if play_again?
-    break
+    play_again? ? next : break
   else
     puts "You chose to stay."
     sleep 1
@@ -182,12 +180,10 @@ loop do
 
   if winner?(dealer_hand)
     puts "Dealer wins with 21 points!"
-    next if play_again?
-    break
+    play_again? ? next : break
   elsif busted?(dealer_hand)
     puts "Dealer bust! You win!"
-    next if play_again?
-    break
+    play_again? ? next : break
   else
     puts "Dealer chose to stay."
   end
