@@ -131,10 +131,10 @@ def display_outcome(player_hand, dealer_hand)
   when :dealer_busted
     prompt "Dealer bust! You win!"
   when :player
-    prompt "You win with #{calculate_total(player_hand)} points! "\
+    prompt "You win with #{calculate_total(player_hand)} points! " \
            "Congrats!"
   when :dealer
-    prompt "The Dealer wins with #{calculate_total(dealer_hand)} points! "\
+    prompt "The Dealer wins with #{calculate_total(dealer_hand)} points! " \
            "Better luck next time!"
   when :tie
     prompt "It's a tie!"
@@ -142,7 +142,7 @@ def display_outcome(player_hand, dealer_hand)
 end
 
 def calculate_total(hand)
-  values = hand.map {|card| card.first }
+  values = hand.map(&:first)
   sum = 0
 
   values.each do |value|
@@ -154,7 +154,7 @@ def calculate_total(hand)
       sum += TEN_POINTS
     end
   end
-  # Correct for Aces - per each Ace, if the sum is greater than 21, minus 10 points
+  # Correct for Aces - per Ace, if the sum is greater than 21, minus 10 points
   values.count("Ace").times { sum -= TEN_POINTS if sum > WINNING_SCORE }
   sum
 end
@@ -189,16 +189,9 @@ loop do
 
   prompt "Dealer deals each player two starting cards..."
   initial_deal!(deck, player_hand, dealer_hand)
-
   sleep 1.5
+
   system "clear"
-  # need to check if EITHER PLAYER wins after initial deal
-    # 0. Blackjack rules: If either dealer or player has "natural" 21 from the deal, it's a tie.
-    # 1. determine if either player has 21, if yes
-    # 2. display both full hands (both dealer cards) + winning message
-    # 3. ask to play again (1-3 will repeat on dealer's turn if they win)
-  # player_hand = [["Ace", "Clubs"], ["10", "Hearts"]] # For testing winning hand
-  
   display_initial_hands(player_hand, dealer_hand)
   player_turn(deck, player_hand, dealer_hand)
 
@@ -226,10 +219,10 @@ loop do
   blank_line
   sleep 1.5
 
-  puts "#{"*" * 30}"
+  puts '*' * 30
   determine_outcome(player_hand, dealer_hand)
   display_outcome(player_hand, dealer_hand)
-  puts "#{"*" * 30}"
+  puts '*' * 30
 
   break unless play_again?
 end
