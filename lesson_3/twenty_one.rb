@@ -200,7 +200,6 @@ loop do
 
   if busted?(player_hand)
     display_outcome(player_hand, dealer_hand)
-    #prompt "You bust! Dealer wins!" # display_outcome
     play_again? ? next : break
   else
     prompt "You chose to stay."
@@ -211,7 +210,6 @@ loop do
 
   if busted?(dealer_hand)
     display_outcome(player_hand, dealer_hand)
-    #prompt "Dealer bust! You win!" # display_outcome
     play_again? ? next : break
   else
     prompt "Dealer chose to stay."
