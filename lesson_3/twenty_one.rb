@@ -8,6 +8,10 @@ ELEVEN_POINTS = 11
 SEVENTEEN_POINTS = 17
 WINNING_SCORE = 21
 
+def prompt(message)
+  puts "=> #{message}"
+end
+
 def blank_line
   puts ""
 end
@@ -32,43 +36,43 @@ def initial_deal!(deck, player_hand, dealer_hand)
 end
 
 def display_player_hand(hand)
-  puts "Your cards are:"
-  hand.each { |card| puts "#{card[0]} of #{card[1]}" }
-  puts "Your total points are #{calculate_total(hand)}."
+  prompt "Your cards are:"
+  hand.each { |card| prompt "#{card[0]} of #{card[1]}" }
+  prompt "Your total points are #{calculate_total(hand)}."
 end
 
 def display_partial_dealer_hand(hand)
-  puts "Dealer's hand is:"
-  puts "???"
-  hand[1..-1].each { |card| puts "#{card[0]} of #{card[1]}" }
+  prompt "Dealer's hand is:"
+  prompt "???"
+  hand[1..-1].each { |card| prompt "#{card[0]} of #{card[1]}" }
 end
 
 def display_full_dealer_hand(hand) # refactor this
-  puts "Dealer's hand is:"
-  hand.each { |card| puts "#{card[0]} of #{card[1]}" }
+  prompt "Dealer's hand is:"
+  hand.each { |card| prompt "#{card[0]} of #{card[1]}" }
 end
 
 def get_move_choice
   loop do
     choice = gets.chomp.downcase
     return choice if (['h', 'hit', 's', 'stay']).include?(choice)
-    puts "Invalid response. Please enter 'hit' or 'stay':"
+    prompt "Invalid response. Please enter 'hit' or 'stay':"
   end
 end
 
 def player_turn(deck, player_hand, dealer_hand)
-  loop do # Player Turn
-    puts "Your turn!"    
-    puts "Would you like to hit or stay?"
+  loop do
+    prompt "Your turn!"    
+    prompt "Would you like to hit or stay?"
     choice = get_move_choice
     if ['h', 'hit'].include?(choice)
       system "clear"
-      puts "You chose to hit."
+      prompt "You chose to hit."
       blank_line
       deal_card!(deck, player_hand)
-      display_player_hand(player_hand) # player can see both cards
+      display_player_hand(player_hand)
       blank_line
-      display_partial_dealer_hand(dealer_hand) # only one dealer card is visible
+      display_partial_dealer_hand(dealer_hand)
       blank_line
     end
 
@@ -83,11 +87,11 @@ def dealer_turn(deck, player_hand, dealer_hand)
     blank_line
     display_partial_dealer_hand(dealer_hand)
     blank_line
-    puts "Dealer's Turn!"
+    prompt "Dealer's Turn!"
 
     break if dealer_stay?(dealer_hand) || busted?(dealer_hand)
 
-    puts "Dealer chooses to hit..."
+    prompt "Dealer chooses to hit..."
     blank_line
     deal_card!(deck, dealer_hand)
 
@@ -118,15 +122,15 @@ def display_outcome(player_hand, dealer_hand)
 
   case outcome
   when :player_busted
-    puts "You bust! Dealer wins."
+    prompt "You bust! Dealer wins."
   when :dealer_busted
-    puts "Dealer bust! You win!"
+    prompt "Dealer bust! You win!"
   when :player
-    puts "You Win! Yay!"
+    prompt "You Win! Yay!"
   when :dealer
-    puts "The Dealer wins! Better luck next time!"
+    prompt "The Dealer wins! Better luck next time!"
   when :tie
-    puts "It's a tie!"
+    prompt "It's a tie!"
   end
 end
 
@@ -162,21 +166,21 @@ end
 
 def play_again?
   blank_line
-  puts "Would you like to play again? ('y' or 'n')"
+  prompt "Would you like to play again? ('y' or 'n')"
   answer = gets.chomp.downcase
   ['y', 'yes'].include?(answer)
 end
 
 loop do
   system "clear"
-  puts "Welcome to Twenty-One!"
+  prompt "Welcome to Twenty-One!"
   deck = initialize_deck
   player_hand = []
   dealer_hand = []
-  puts "Shuffling the deck"
+  prompt "Shuffling the deck"
   shuffle_deck!(deck)
 
-  puts "Dealer deals each player two starting cards..."
+  prompt "Dealer deals each player two starting cards..."
   initial_deal!(deck, player_hand, dealer_hand)
 
   sleep 1.5
@@ -196,10 +200,10 @@ loop do
 
   if busted?(player_hand)
     display_outcome(player_hand, dealer_hand)
-    #puts "You bust! Dealer wins!" # display_outcome
+    #prompt "You bust! Dealer wins!" # display_outcome
     play_again? ? next : break
   else
-    puts "You chose to stay."
+    prompt "You chose to stay."
     sleep 1
   end
 
@@ -207,16 +211,16 @@ loop do
 
   if busted?(dealer_hand)
     display_outcome(player_hand, dealer_hand)
-    #puts "Dealer bust! You win!" # display_outcome
+    #prompt "Dealer bust! You win!" # display_outcome
     play_again? ? next : break
   else
-    puts "Dealer chose to stay."
+    prompt "Dealer chose to stay."
   end
 
   # Both Players Stay
   blank_line
-  puts "Both Player and Dealer stay!"
-  puts "Counting final points..."
+  prompt "Both Player and Dealer stay!"
+  prompt "Counting final points..."
   blank_line
   sleep 1
 
@@ -226,4 +230,4 @@ loop do
   break unless play_again?
 end
 
-puts "Thanks for playing Twenty One!"
+prompt "Thanks for playing Twenty One!"
