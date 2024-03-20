@@ -47,6 +47,9 @@ def display_full_dealer_hand(hand) # refactor this
   hand.each { |card| puts "#{card[0]} of #{card[1]}" }
 end
 
+def display_outcome(player_hand, dealer_hand)
+end
+
 def get_move_choice
   loop do
     choice = gets.chomp.downcase
@@ -62,8 +65,6 @@ def player_turn(deck, player_hand, dealer_hand)
     blank_line
     display_partial_dealer_hand(dealer_hand) # only one dealer card is visible
     blank_line
-
-    break if winner?(player_hand)
     
     puts "Would you like to hit or stay?"
     choice = get_move_choice
@@ -88,14 +89,15 @@ def dealer_turn(deck, player_hand, dealer_hand)
     blank_line
     deal_card!(deck, dealer_hand)
 
-    break if winner?(dealer_hand)
-
     blank_line
     sleep 2
   end
 end
 
-def determine_winner(player_score, dealer_score)
+def determine_outcome(player_hand, dealer_hand)
+  player_score = calculate_total(player_hand)
+  dealer_score = calculate_total(dealer_hand)
+
   if player_score > dealer_score
     'Player'
   elsif dealer_score > player_score
@@ -124,10 +126,10 @@ def calculate_total(hand)
 end
 
 def dealer_stay?(hand)
-  (SEVENTEEN_POINTS...WINNING_SCORE).include?(calculate_total(hand))
+  (SEVENTEEN_POINTS..WINNING_SCORE).include?(calculate_total(hand))
 end
 
-def winner?(hand)
+def twenty_one?(hand)
   calculate_total(hand) == WINNING_SCORE
 end
 
@@ -158,17 +160,14 @@ loop do
   puts "Your turn!"
   sleep 1.5
   # need to check if EITHER PLAYER wins after initial deal
-    # 1. check player first
-    # 1. if dealer wins, break out of this loop
+    # 0. Blackjack rules: If either dealer or player has "natural" 21 from the deal, it's a tie.
+    # 1. determine if either player has 21, if yes
     # 2. display both full hands (both dealer cards) + winning message
     # 3. ask to play again (1-3 will repeat on dealer's turn if they win)
   # player_hand = [["Ace", "Clubs"], ["10", "Hearts"]] # For testing winning hand
   player_turn(deck, player_hand, dealer_hand) # player turn loop
 
-  if winner?(player_hand)
-    puts "You win with 21 points!"
-    play_again? ? next : break
-  elsif busted?(player_hand)
+  if busted?(player_hand)
     puts "You bust! Dealer wins!"
     play_again? ? next : break
   else
@@ -178,10 +177,7 @@ loop do
 
   dealer_turn(deck, player_hand, dealer_hand)
 
-  if winner?(dealer_hand)
-    puts "Dealer wins with 21 points!"
-    play_again? ? next : break
-  elsif busted?(dealer_hand)
+  if busted?(dealer_hand)
     puts "Dealer bust! You win!"
     play_again? ? next : break
   else
@@ -194,14 +190,15 @@ loop do
   puts "Counting final points..."
   blank_line
   sleep 1
+
   player_score = calculate_total(player_hand)
   dealer_score = calculate_total(dealer_hand)
-  winner = determine_winner(player_score, dealer_score)
+  outcome = determine_outcome(player_hand, dealer_hand)
 
-  if winner == "tie"
+  if outcome == "tie"
     puts "It's a tie! Player has #{player_score} points and dealer has #{dealer_score} points."
-  elsif winner == "Dealer"
-    puts "#{winner} wins with #{dealer_score} points! You have #{player_score} points."
+  elsif outcome == "Dealer"
+    puts "Dealer wins with #{dealer_score} points! You have #{player_score} points."
     puts "Better luck next time!"
   else
     puts "You win with #{player_score} points! Dealer has #{dealer_score}."
