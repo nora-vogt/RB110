@@ -47,6 +47,13 @@ def display_partial_dealer_hand(hand)
   hand[1..-1].each { |card| prompt "#{card[0]} of #{card[1]}" }
 end
 
+def display_initial_hands(player_hand, dealer_hand)
+  display_player_hand(player_hand) # player can see both cards
+  blank_line
+  display_partial_dealer_hand(dealer_hand) # only one dealer card is visible
+  blank_line
+end
+
 def display_full_dealer_hand(hand) # refactor this
   prompt "Dealer's hand is:"
   hand.each { |card| prompt "#{card[0]} of #{card[1]}" }
@@ -63,18 +70,16 @@ end
 
 def player_turn(deck, player_hand, dealer_hand)
   loop do
-    prompt "Your turn!"    
-    prompt "Would you like to hit or stay?"
+    prompt "Your turn!"
+    prompt "Would you like to 'hit' or 'stay'?"
     choice = get_move_choice
     if ['h', 'hit'].include?(choice)
       system "clear"
-      prompt "You chose to hit."
-      blank_line
+      # prompt "You chose to hit."
+      # blank_line
       deal_card!(deck, player_hand)
-      display_player_hand(player_hand)
-      blank_line
-      display_partial_dealer_hand(dealer_hand)
-      blank_line
+      display_initial_hands(player_hand, dealer_hand)
+      prompt "You chose to hit."
     end
 
     break if ['s', 'stay'].include?(choice) || busted?(player_hand)
@@ -95,7 +100,6 @@ def dealer_turn(deck, player_hand, dealer_hand)
     prompt "Dealer chooses to hit..."
     blank_line
     deal_card!(deck, dealer_hand)
-
     blank_line
     sleep 2
   end
@@ -127,10 +131,11 @@ def display_outcome(player_hand, dealer_hand)
   when :dealer_busted
     prompt "Dealer bust! You win!"
   when :player
-    prompt "You Win! Yay!"
+    prompt "You win with #{calculate_total(player_hand)} points! "\
+           "Congrats!"
   when :dealer
-    prompt "The Dealer wins with #{calculate_total(dealer_hand)} points!" / 
-           " Better luck next time!"
+    prompt "The Dealer wins with #{calculate_total(dealer_hand)} points! "\
+           "Better luck next time!"
   when :tie
     prompt "It's a tie!"
   end
@@ -193,12 +198,9 @@ loop do
     # 2. display both full hands (both dealer cards) + winning message
     # 3. ask to play again (1-3 will repeat on dealer's turn if they win)
   # player_hand = [["Ace", "Clubs"], ["10", "Hearts"]] # For testing winning hand
-  display_player_hand(player_hand) # player can see both cards
-  blank_line
-  display_partial_dealer_hand(dealer_hand) # only one dealer card is visible
-  blank_line
-
-  player_turn(deck, player_hand, dealer_hand) # player turn loop
+  
+  display_initial_hands(player_hand, dealer_hand)
+  player_turn(deck, player_hand, dealer_hand)
 
   if busted?(player_hand)
     display_outcome(player_hand, dealer_hand)
