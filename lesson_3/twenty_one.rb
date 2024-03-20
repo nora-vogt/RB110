@@ -34,6 +34,7 @@ end
 def display_player_hand(hand)
   puts "Your cards are:"
   hand.each { |card| puts "#{card[0]} of #{card[1]}" }
+  puts "Your total points are #{calculate_total(hand)}."
 end
 
 def display_partial_dealer_hand(hand)
@@ -57,15 +58,18 @@ end
 
 def player_turn(deck, player_hand, dealer_hand)
   loop do # Player Turn
-    system "clear"
-    display_player_hand(player_hand) # player can see both cards
-    blank_line
-    display_partial_dealer_hand(dealer_hand) # only one dealer card is visible
-    blank_line
-    
+    puts "Your turn!"    
     puts "Would you like to hit or stay?"
     choice = get_move_choice
-    deal_card!(deck, player_hand) if ['h', 'hit'].include?(choice)
+    if ['h', 'hit'].include?(choice)
+      system "clear"
+      puts "You chose to hit."
+      deal_card!(deck, player_hand)
+      display_player_hand(player_hand) # player can see both cards
+      blank_line
+      display_partial_dealer_hand(dealer_hand) # only one dealer card is visible
+      blank_line
+    end
 
     break if ['s', 'stay'].include?(choice) || busted?(player_hand)
   end
@@ -173,16 +177,20 @@ loop do
 
   puts "Dealer deals each player two starting cards..."
   initial_deal!(deck, player_hand, dealer_hand)
-  blank_line
 
-  puts "Your turn!"
   sleep 1.5
+  system "clear"
   # need to check if EITHER PLAYER wins after initial deal
     # 0. Blackjack rules: If either dealer or player has "natural" 21 from the deal, it's a tie.
     # 1. determine if either player has 21, if yes
     # 2. display both full hands (both dealer cards) + winning message
     # 3. ask to play again (1-3 will repeat on dealer's turn if they win)
   # player_hand = [["Ace", "Clubs"], ["10", "Hearts"]] # For testing winning hand
+  display_player_hand(player_hand) # player can see both cards
+  blank_line
+  display_partial_dealer_hand(dealer_hand) # only one dealer card is visible
+  blank_line
+
   player_turn(deck, player_hand, dealer_hand) # player turn loop
 
   if busted?(player_hand)
