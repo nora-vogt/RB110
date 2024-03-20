@@ -39,7 +39,7 @@ end
 
 def display_partial_dealer_hand(hand)
   puts "Dealer's hand is:"
-  puts "Mystery card and"
+  puts "???"
   hand[1..-1].each { |card| puts "#{card[0]} of #{card[1]}" }
 end
 
@@ -64,6 +64,7 @@ def player_turn(deck, player_hand, dealer_hand)
     if ['h', 'hit'].include?(choice)
       system "clear"
       puts "You chose to hit."
+      blank_line
       deal_card!(deck, player_hand)
       display_player_hand(player_hand) # player can see both cards
       blank_line
@@ -86,7 +87,7 @@ def dealer_turn(deck, player_hand, dealer_hand)
 
     break if dealer_stay?(dealer_hand) || busted?(dealer_hand)
 
-    puts "Dealer deals themself another card..."
+    puts "Dealer chooses to hit..."
     blank_line
     deal_card!(deck, dealer_hand)
 
