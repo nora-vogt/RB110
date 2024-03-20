@@ -85,7 +85,7 @@ def dealer_turn(deck, player_hand, dealer_hand)
     system "clear"
     display_player_hand(player_hand)
     blank_line
-    display_partial_dealer_hand(dealer_hand)
+    display_full_dealer_hand(dealer_hand)
     blank_line
     prompt "Dealer's Turn!"
 
