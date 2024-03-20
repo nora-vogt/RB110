@@ -16,7 +16,7 @@ def initialize_deck
   CARDS.product(SUITS)
 end
 
-def shuffle!(deck)
+def shuffle_deck!(deck)
   deck.shuffle!
 end
 
@@ -43,11 +43,8 @@ def display_partial_dealer_hand(hand)
 end
 
 def display_full_dealer_hand(hand) # refactor this
-  puts "Dealers hand is:"
+  puts "Dealer's hand is:"
   hand.each { |card| puts "#{card[0]} of #{card[1]}" }
-end
-
-def display_outcome(player_hand, dealer_hand)
 end
 
 def get_move_choice
@@ -98,12 +95,33 @@ def determine_outcome(player_hand, dealer_hand)
   player_score = calculate_total(player_hand)
   dealer_score = calculate_total(dealer_hand)
 
-  if player_score > dealer_score
-    'Player'
+  if player_score > WINNING_SCORE
+    :player_busted
+  elsif dealer_score > WINNING_SCORE
+    :dealer_busted
+  elsif player_score > dealer_score
+    :player
   elsif dealer_score > player_score
-    'Dealer'
+    :dealer
   else
-    'tie'
+    :tie
+  end
+end
+
+def display_outcome(player_hand, dealer_hand)
+  outcome = determine_outcome(player_hand, dealer_hand)
+
+  case outcome
+  when :player_busted
+    puts "You bust! Dealer wins."
+  when :dealer_busted
+    puts "Dealer bust! You win!"
+  when :player
+    puts "You Win! Yay!"
+  when :dealer
+    puts "The Dealer wins! Better luck next time!"
+  when :tie
+    puts "It's a tie!"
   end
 end
 
@@ -151,7 +169,7 @@ loop do
   player_hand = []
   dealer_hand = []
   puts "Shuffling the deck"
-  shuffle!(deck)
+  shuffle_deck!(deck)
 
   puts "Dealer deals each player two starting cards..."
   initial_deal!(deck, player_hand, dealer_hand)
@@ -168,7 +186,8 @@ loop do
   player_turn(deck, player_hand, dealer_hand) # player turn loop
 
   if busted?(player_hand)
-    puts "You bust! Dealer wins!"
+    display_outcome(player_hand, dealer_hand)
+    #puts "You bust! Dealer wins!" # display_outcome
     play_again? ? next : break
   else
     puts "You chose to stay."
@@ -178,7 +197,8 @@ loop do
   dealer_turn(deck, player_hand, dealer_hand)
 
   if busted?(dealer_hand)
-    puts "Dealer bust! You win!"
+    display_outcome(player_hand, dealer_hand)
+    #puts "Dealer bust! You win!" # display_outcome
     play_again? ? next : break
   else
     puts "Dealer chose to stay."
@@ -193,17 +213,8 @@ loop do
 
   player_score = calculate_total(player_hand)
   dealer_score = calculate_total(dealer_hand)
-  outcome = determine_outcome(player_hand, dealer_hand)
-
-  if outcome == "tie"
-    puts "It's a tie! Player has #{player_score} points and dealer has #{dealer_score} points."
-  elsif outcome == "Dealer"
-    puts "Dealer wins with #{dealer_score} points! You have #{player_score} points."
-    puts "Better luck next time!"
-  else
-    puts "You win with #{player_score} points! Dealer has #{dealer_score}."
-    puts "Yay!"
-  end
+  determine_outcome(player_hand, dealer_hand)
+  display_outcome(player_hand, dealer_hand)
 
   break unless play_again?
 end
