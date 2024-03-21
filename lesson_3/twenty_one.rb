@@ -17,11 +17,7 @@ def blank_line
 end
 
 def initialize_deck
-  CARDS.product(SUITS)
-end
-
-def shuffle_deck!(deck)
-  deck.shuffle!
+  CARDS.product(SUITS).shuffle
 end
 
 def deal_card!(deck, hand)
@@ -184,8 +180,6 @@ loop do
   deck = initialize_deck
   player_hand = []
   dealer_hand = []
-  prompt "Shuffling the deck"
-  shuffle_deck!(deck)
 
   prompt "Dealer deals each player two starting cards..."
   initial_deal!(deck, player_hand, dealer_hand)
