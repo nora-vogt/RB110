@@ -64,7 +64,7 @@ def get_move_choice
   end
 end
 
-def player_turn(deck, player_hand, dealer_hand)
+def player_turn(deck, player_hand, player_total, dealer_hand)
   loop do
     prompt "Your turn!"
     prompt "Would you like to 'hit' or 'stay'?"
@@ -185,11 +185,18 @@ loop do
   initial_deal!(deck, player_hand, dealer_hand)
   sleep 1.5
 
-  system "clear"
-  display_initial_hands(player_hand, dealer_hand)
-  player_turn(deck, player_hand, dealer_hand)
+  # need to calculate the initial total here
+  player_total = calculate_total(player_hand)
+  dealer_total = calculate_total(dealer_hand)
 
-  if busted?(player_hand)
+  system "clear"
+  display_initial_hands(player_hand, player_total, dealer_hand, dealer_total)
+  player_turn(deck, player_hand, player_total, dealer_hand) # player_total can update inside of this method definition, but we can't modify the player_total variable here in the first level loop scope
+
+  # so, need to re-calculate player_total here
+  # player_total = calculate_total(player_hand)
+
+  if busted?(player_hand, )
     display_outcome(player_hand, dealer_hand)
     play_again? ? next : break
   else
