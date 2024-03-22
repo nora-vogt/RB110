@@ -76,7 +76,7 @@ def get_move_choice
   end
 end
 
-def player_turn(deck, player_hand, dealer_hand)
+def player_turn(deck, player_hand, dealer_hand, scoreboard)
   loop do
     prompt "Your turn!"
     prompt "Would you like to 'hit' or 'stay'?"
@@ -239,10 +239,10 @@ loop do # MAIN GAME LOOP
     player_total = calculate_total(player_hand)
     dealer_total = calculate_total(dealer_hand)
     
-    display_scoreboard(scoreboard)
+    # display_scoreboard(scoreboard)
 
     display_initial_hands(player_hand, player_total, dealer_hand)
-    player_turn(deck, player_hand, dealer_hand)
+    player_turn(deck, player_hand, dealer_hand, scoreboard)
     player_total = calculate_total(player_hand)
 
     if busted?(player_total)
