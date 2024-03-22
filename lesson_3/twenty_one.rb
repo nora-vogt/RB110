@@ -113,25 +113,26 @@ def dealer_turn(deck, player_hand, player_total, dealer_hand)
   end
 end
 
-def update_score(scoreboard, winner)
+def update_scoreboard(scoreboard, winner)
   scoreboard[winner] += 1
+  scoreboard[:round] += 1
 end
 
 def determine_round_outcome(player_total, dealer_total, scoreboard)
   if player_total > MAX_HAND_POINTS
-    update_score(scoreboard, :dealer)
+    update_scoreboard(scoreboard, :dealer)
     :player_busted
   elsif dealer_total > MAX_HAND_POINTS
-    update_score(scoreboard, :player)
+    update_scoreboard(scoreboard, :player)
     :dealer_busted
   elsif player_total > dealer_total
-    update_score(scoreboard, :player)
+    update_scoreboard(scoreboard, :player)
     :player
   elsif dealer_total > player_total
-    update_score(scoreboard, :dealer)
+    update_scoreboard(scoreboard, :dealer)
     :dealer
   else
-    update_score(scoreboard, :tie)
+    update_scoreboard(scoreboard, :tie)
     :tie
   end
 end
@@ -151,6 +152,14 @@ def display_round_outcome(player_total, dealer_total, scoreboard)
   when :tie
     prompt "It's a tie!"
   end
+end
+
+def display_scoreboard(scoreboard)
+  puts "---------SCORES---------"
+  puts "Player: #{scoreboard[:player]}"
+  puts "Dealer: #{scoreboard[:dealer]}"
+  puts "Ties: #{scoreboard[:ties]}"
+  puts "---------ROUND #{scoreboard[:round]}---------"
 end
 
 def determine_game_winner(scoreboard)
@@ -229,7 +238,9 @@ loop do # MAIN GAME LOOP
     initial_deal!(deck, player_hand, dealer_hand)
     player_total = calculate_total(player_hand)
     dealer_total = calculate_total(dealer_hand)
-    prompt "scoreboard - Player #{scoreboard[:player]}, Dealer #{scoreboard[:dealer]}, Ties: #{scoreboard[:tie]}"
+    
+    display_scoreboard(scoreboard)
+
     display_initial_hands(player_hand, player_total, dealer_hand)
     player_turn(deck, player_hand, dealer_hand)
     player_total = calculate_total(player_hand)
