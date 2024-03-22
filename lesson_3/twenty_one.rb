@@ -220,6 +220,9 @@ loop do
   puts '*' * 80
 
   break unless play_again?
-end
+  # This call to `play_again?` is different than the previous two. With this call, `play_again?` returning `true`` will continue to the next iteration of the game loop. Returning `false` will break out of the loop and end the game. 
+
+  # With both of the two prior calls, `play_again?` returning true executes the `next` command, which skips to the next iteration of the main game loop - skipping the subsequent code to restart the game. Returning `false` does the same as in the final invocation, executing `break` and ending the game.
+ end
 
 prompt "Thanks for playing Twenty One!"
