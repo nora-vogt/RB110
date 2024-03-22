@@ -13,7 +13,7 @@ def prompt(message)
   puts "=> #{message}"
 end
 
-def blank_line
+def display_blank_line
   puts ""
 end
 
@@ -57,9 +57,9 @@ end
 
 def display_initial_hands(player_hand, player_total, dealer_hand)
   display_player_hand(player_hand, player_total) # player can see both cards
-  blank_line
+  display_blank_line
   display_partial_dealer_hand(dealer_hand) # only one dealer card is visible
-  blank_line
+  display_blank_line
 end
 
 def display_full_dealer_hand(hand, total) # refactor this - can partial and total be one method?
@@ -98,17 +98,17 @@ def dealer_turn(deck, player_hand, player_total, dealer_hand)
     system "clear"
     dealer_total = calculate_total(dealer_hand)
     display_player_hand(player_hand, player_total)
-    blank_line
+    display_blank_line
     display_full_dealer_hand(dealer_hand, dealer_total)
-    blank_line
+    display_blank_line
   
     break if dealer_stay?(dealer_total) || busted?(dealer_total)
 
     prompt "Dealer's Turn!"
     prompt "Dealer chooses to hit..."
-    blank_line
+    display_blank_line
     deal_card!(deck, dealer_hand)
-    blank_line
+    display_blank_line
     sleep 2
   end
 end
@@ -139,7 +139,6 @@ end
 def display_round_outcome(player_total, dealer_total, scores)
   outcome = determine_round_outcome(player_total, dealer_total, scores)
 
-  puts '*' * 80
   case outcome
   when :player_busted
     prompt "You bust! Dealer wins."
@@ -151,6 +150,26 @@ def display_round_outcome(player_total, dealer_total, scores)
     prompt "The Dealer wins this round with #{dealer_total} points!"
   when :tie
     prompt "It's a tie!"
+  end
+end
+
+def determine_game_winner(scores)
+  if scores[:player] == 5
+    :player
+  elsif scores[:dealer] == 5
+    :dealer
+  end
+end
+
+def display_game_winner(scores)
+  winner = determine_game_winner(scores)
+  display_blank_line
+  puts '*' * 80
+  case winner
+  when :player
+    prompt "You win the game! Congratulations!"
+  when :dealer
+    prompt "The Dealer wins the game! Better luck next time."
   end
   puts '*' * 80
 end
@@ -190,7 +209,7 @@ def game_won?(scores)
 end
 
 def play_again?
-  blank_line
+  display_blank_line
   prompt "Would you like to play again? ('y' or 'n')"
   answer = gets.chomp.downcase
   ['y', 'yes'].include?(answer)
@@ -199,7 +218,7 @@ end
 loop do # MAIN GAME LOOP
   system "clear"
   display_introduction
-  scores = { player: 0, dealer: 0, tie: 0}
+  scores = { player: 0, dealer: 0, tie: 0 }
 
   loop do # ROUND LOOP
     system "clear"
@@ -237,9 +256,9 @@ loop do # MAIN GAME LOOP
       sleep 1
     end
 
-    blank_line
+    display_blank_line
     prompt "Both Player and Dealer stay!"
-    blank_line
+    display_blank_line
     sleep 1.5
 
     display_round_outcome(player_total, dealer_total, scores)
@@ -248,7 +267,7 @@ loop do # MAIN GAME LOOP
     display_wait_for_enter(:round)
   end # END ROUND LOOP
 
-  puts "The game is won!!"
+  display_game_winner(scores)
   break unless play_again?
 end # END MAIN GAME LOOP
 
