@@ -174,6 +174,7 @@ end
 loop do
   system "clear"
   prompt "Welcome to Twenty-One!"
+  prompt "Rules go here."
   deck = initialize_deck
   player_hand = []
   dealer_hand = []
@@ -208,16 +209,15 @@ loop do
     sleep 1
   end
 
-  # Both Players Stay
   blank_line
   prompt "Both Player and Dealer stay!"
   blank_line
   sleep 1.5
 
-  puts '*' * 30
+  puts '*' * 80
   determine_outcome(player_total, dealer_total)
   display_outcome(player_total, dealer_total)
-  puts '*' * 30
+  puts '*' * 80
 
   break unless play_again?
 end
