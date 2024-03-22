@@ -118,20 +118,21 @@ end
 def display_outcome(player_total, dealer_total)
   outcome = determine_outcome(player_total, dealer_total)
 
+  puts '*' * 80
   case outcome
   when :player_busted
     prompt "You bust! Dealer wins."
   when :dealer_busted
     prompt "Dealer bust! You win!"
   when :player
-    prompt "You win with #{player_total} points! " \
-           "Congrats!"
+    prompt "You win with #{player_total} points! Congrats!"
   when :dealer
     prompt "The Dealer wins with #{dealer_total} points! " \
            "Better luck next time!"
   when :tie
     prompt "It's a tie!"
   end
+  puts '*' * 80
 end
 
 def calculate_total(hand)
@@ -214,10 +215,7 @@ loop do
   blank_line
   sleep 1.5
 
-  puts '*' * 80
-  determine_outcome(player_total, dealer_total)
   display_outcome(player_total, dealer_total)
-  puts '*' * 80
 
   break unless play_again?
 end
@@ -225,7 +223,14 @@ end
 prompt "Thanks for playing Twenty One!"
 
 =begin
-Bonus #2: The final call to `play_again?` is different than the previous two invocations. With this call, `play_again?` returning `true` will continue to the next iteration of the game loop. Returning `false` will break out of the loop and end the game. 
+Bonus #2: The final call to `play_again?` is different than the previous two
+invocations. With this call, `play_again?` returning `true` will continue to
+the next iteration of the game loop. Returning `false` will break out of the
+loop and end the game. 
 
-With both of the two prior calls, `play_again?` returning true executes the `next` command, which skips to the next iteration of the main game loop - skipping all subsequent code to restart the game. This is necessary in order to end and restart the game "early" on a bust. `play_again?` returning `false` here performs same as the final invocation, executing `break` and ending the game.
+With both of the two prior calls, `play_again?` returning `true`` executes the
+`next` command, which skips to the next iteration of the main game loop
+skipping all subsequent code to restart the game. This is necessary in order to
+end and restart the game "early" on a bust. `play_again?` returning `false`
+performs same as the final invocation, executing `break` and ending the game.
 =end
