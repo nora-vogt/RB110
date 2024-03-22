@@ -33,7 +33,7 @@ end
 
 def display_introduction
   prompt "Welcome to Twenty-One!"
-  prompt "Rules go here."
+  prompt "Rules go here. First player to win 5 rounds wins!"
   prompt "Press enter when you're ready to play:"
   gets.chomp
 end
@@ -108,7 +108,7 @@ def dealer_turn(deck, player_hand, player_total, dealer_hand)
   end
 end
 
-def determine_outcome(player_total, dealer_total)
+def determine_round_outcome(player_total, dealer_total)
   if player_total > WINNING_SCORE
     :player_busted
   elsif dealer_total > WINNING_SCORE
@@ -122,8 +122,8 @@ def determine_outcome(player_total, dealer_total)
   end
 end
 
-def display_outcome(player_total, dealer_total)
-  outcome = determine_outcome(player_total, dealer_total)
+def display_round_outcome(player_total, dealer_total)
+  outcome = determine_round_outcome(player_total, dealer_total)
 
   puts '*' * 80
   case outcome
@@ -195,7 +195,7 @@ loop do
   player_total = calculate_total(player_hand)
 
   if busted?(player_total)
-    display_outcome(player_total, dealer_total)
+    display_round_outcome(player_total, dealer_total)
     play_again? ? next : break
   else
     prompt "You chose to stay."
@@ -206,7 +206,7 @@ loop do
   dealer_total = calculate_total(dealer_hand)
 
   if busted?(dealer_total)
-    display_outcome(player_total, dealer_total)
+    display_round_outcome(player_total, dealer_total)
     play_again? ? next : break
   else
     prompt "Dealer chose to stay."
@@ -218,7 +218,7 @@ loop do
   blank_line
   sleep 1.5
 
-  display_outcome(player_total, dealer_total)
+  display_round_outcome(player_total, dealer_total)
 
   break unless play_again?
 end
