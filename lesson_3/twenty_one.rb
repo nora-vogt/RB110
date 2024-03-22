@@ -113,31 +113,31 @@ def dealer_turn(deck, player_hand, player_total, dealer_hand)
   end
 end
 
-def update_score(scores, winner)
-  scores[winner] += 1
+def update_score(scoreboard, winner)
+  scoreboard[winner] += 1
 end
 
-def determine_round_outcome(player_total, dealer_total, scores)
+def determine_round_outcome(player_total, dealer_total, scoreboard)
   if player_total > MAX_HAND_POINTS
-    update_score(scores, :dealer)
+    update_score(scoreboard, :dealer)
     :player_busted
   elsif dealer_total > MAX_HAND_POINTS
-    update_score(scores, :player)
+    update_score(scoreboard, :player)
     :dealer_busted
   elsif player_total > dealer_total
-    update_score(scores, :player)
+    update_score(scoreboard, :player)
     :player
   elsif dealer_total > player_total
-    update_score(scores, :dealer)
+    update_score(scoreboard, :dealer)
     :dealer
   else
-    update_score(scores, :tie)
+    update_score(scoreboard, :tie)
     :tie
   end
 end
 
-def display_round_outcome(player_total, dealer_total, scores)
-  outcome = determine_round_outcome(player_total, dealer_total, scores)
+def display_round_outcome(player_total, dealer_total, scoreboard)
+  outcome = determine_round_outcome(player_total, dealer_total, scoreboard)
 
   case outcome
   when :player_busted
@@ -153,16 +153,16 @@ def display_round_outcome(player_total, dealer_total, scores)
   end
 end
 
-def determine_game_winner(scores)
-  if scores[:player] == 5
+def determine_game_winner(scoreboard)
+  if scoreboard[:player] == 5
     :player
-  elsif scores[:dealer] == 5
+  elsif scoreboard[:dealer] == 5
     :dealer
   end
 end
 
-def display_game_winner(scores)
-  winner = determine_game_winner(scores)
+def display_game_winner(scoreboard)
+  winner = determine_game_winner(scoreboard)
   display_blank_line
   puts '*' * 80
   case winner
@@ -204,8 +204,9 @@ def busted?(total)
   total > MAX_HAND_POINTS
 end
 
-def game_won?(scores)
-  scores.reject { |k, _| k == :tie }.any? { |_, v| v == GAME_WINNING_SCORE }
+def game_won?(scoreboard)
+  scores = scoreboard.select { |k, _| k == :player || k == :dealer }
+  scores.any? { |_, v| v == GAME_WINNING_SCORE }
 end
 
 def play_again?
@@ -218,7 +219,7 @@ end
 loop do # MAIN GAME LOOP
   system "clear"
   display_introduction
-  scores = { player: 0, dealer: 0, tie: 0 }
+  scoreboard = { player: 0, dealer: 0, tie: 0, round: 1 }
 
   loop do # ROUND LOOP
     system "clear"
@@ -228,14 +229,14 @@ loop do # MAIN GAME LOOP
     initial_deal!(deck, player_hand, dealer_hand)
     player_total = calculate_total(player_hand)
     dealer_total = calculate_total(dealer_hand)
-    prompt "SCORES - Player #{scores[:player]}, Dealer #{scores[:dealer]}, Ties: #{scores[:tie]}"
+    prompt "scoreboard - Player #{scoreboard[:player]}, Dealer #{scoreboard[:dealer]}, Ties: #{scoreboard[:tie]}"
     display_initial_hands(player_hand, player_total, dealer_hand)
     player_turn(deck, player_hand, dealer_hand)
     player_total = calculate_total(player_hand)
 
     if busted?(player_total)
-      display_round_outcome(player_total, dealer_total, scores)
-      break if game_won?(scores)
+      display_round_outcome(player_total, dealer_total, scoreboard)
+      break if game_won?(scoreboard)
       display_wait_for_enter(:round)
       next
     else
@@ -247,8 +248,8 @@ loop do # MAIN GAME LOOP
     dealer_total = calculate_total(dealer_hand)
 
     if busted?(dealer_total)
-      display_round_outcome(player_total, dealer_total, scores)
-      break if game_won?(scores)
+      display_round_outcome(player_total, dealer_total, scoreboard)
+      break if game_won?(scoreboard)
       display_wait_for_enter(:round)
       next
     else
@@ -261,13 +262,13 @@ loop do # MAIN GAME LOOP
     display_blank_line
     sleep 1.5
 
-    display_round_outcome(player_total, dealer_total, scores)
+    display_round_outcome(player_total, dealer_total, scoreboard)
 
-    break if game_won?(scores)
+    break if game_won?(scoreboard)
     display_wait_for_enter(:round)
   end # END ROUND LOOP
 
-  display_game_winner(scores)
+  display_game_winner(scoreboard)
   break unless play_again?
 end # END MAIN GAME LOOP
 
