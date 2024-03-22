@@ -31,6 +31,13 @@ def initial_deal!(deck, player_hand, dealer_hand)
   end
 end
 
+def display_introduction
+  prompt "Welcome to Twenty-One!"
+  prompt "Rules go here."
+  prompt "Press enter when you're ready to play:"
+  gets.chomp
+end
+
 def display_player_hand(hand, total)
   prompt "Your cards are:"
   hand.each { |card| prompt "#{card[0]} of #{card[1]}" }
@@ -91,7 +98,7 @@ def dealer_turn(deck, player_hand, player_total, dealer_hand)
     blank_line
 
     break if dealer_stay?(dealer_total) || busted?(dealer_total)
-    
+
     prompt "Dealer's Turn!"
     prompt "Dealer chooses to hit..."
     blank_line
@@ -174,17 +181,13 @@ end
 
 loop do
   system "clear"
-  prompt "Welcome to Twenty-One!"
-  prompt "Rules go here."
+  display_introduction
   deck = initialize_deck
   player_hand = []
   dealer_hand = []
-
-  prompt "Dealer deals each player two starting cards..."
   initial_deal!(deck, player_hand, dealer_hand)
   player_total = calculate_total(player_hand)
   dealer_total = calculate_total(dealer_hand)
-  sleep 1.5
 
   system "clear"
   display_initial_hands(player_hand, player_total, dealer_hand)
