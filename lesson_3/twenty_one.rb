@@ -6,7 +6,8 @@ CARDS = ('2'..'10').to_a + ['Jack', 'Queen', 'King', 'Ace']
 TEN_POINTS = 10
 ELEVEN_POINTS = 11
 SEVENTEEN_POINTS = 17
-WINNING_SCORE = 21
+MAX_HAND_POINTS = 21
+GAME_WINNING_SCORE = 5
 
 def prompt(message)
   puts "=> #{message}"
@@ -100,7 +101,7 @@ def dealer_turn(deck, player_hand, player_total, dealer_hand)
     blank_line
     display_full_dealer_hand(dealer_hand, dealer_total)
     blank_line
-
+  
     break if dealer_stay?(dealer_total) || busted?(dealer_total)
 
     prompt "Dealer's Turn!"
@@ -117,10 +118,10 @@ def update_score(scores, winner)
 end
 
 def determine_round_outcome(player_total, dealer_total, scores)
-  if player_total > WINNING_SCORE
+  if player_total > MAX_HAND_POINTS
     update_score(scores, :dealer)
     :player_busted
-  elsif dealer_total > WINNING_SCORE
+  elsif dealer_total > MAX_HAND_POINTS
     update_score(scores, :player)
     :dealer_busted
   elsif player_total > dealer_total
@@ -168,20 +169,24 @@ def calculate_total(hand)
     end
   end
   # Correct for Aces - per Ace, if the sum is greater than 21, minus 10 points
-  values.count("Ace").times { sum -= TEN_POINTS if sum > WINNING_SCORE }
+  values.count("Ace").times { sum -= TEN_POINTS if sum > MAX_HAND_POINTS }
   sum
 end
 
 def dealer_stay?(total)
-  (SEVENTEEN_POINTS..WINNING_SCORE).include?(total)
+  (SEVENTEEN_POINTS..MAX_HAND_POINTS).include?(total)
 end
 
-def twenty_one?(total)
-  total == WINNING_SCORE
-end
+# def twenty_one?(total)
+#   total == MAX_HAND_POINTS
+# end
 
 def busted?(total)
-  total > WINNING_SCORE
+  total > MAX_HAND_POINTS
+end
+
+def game_won?(scores)
+  scores.reject { |k, _| k == :tie }.any? { |_, v| v == GAME_WINNING_SCORE }
 end
 
 def play_again?
@@ -211,6 +216,7 @@ loop do # MAIN GAME LOOP
 
     if busted?(player_total)
       display_round_outcome(player_total, dealer_total, scores)
+      break if game_won?(scores)
       display_wait_for_enter(:round)
       next
     else
@@ -223,6 +229,7 @@ loop do # MAIN GAME LOOP
 
     if busted?(dealer_total)
       display_round_outcome(player_total, dealer_total, scores)
+      break if game_won?(scores)
       display_wait_for_enter(:round)
       next
     else
@@ -236,9 +243,12 @@ loop do # MAIN GAME LOOP
     sleep 1.5
 
     display_round_outcome(player_total, dealer_total, scores)
+
+    break if game_won?(scores)
     display_wait_for_enter(:round)
   end # END ROUND LOOP
 
+  puts "The game is won!!"
   break unless play_again?
 end # END MAIN GAME LOOP
 
