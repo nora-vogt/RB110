@@ -83,6 +83,7 @@ def player_turn(deck, player_hand, dealer_hand, scoreboard)
     choice = get_move_choice
     if ['h', 'hit'].include?(choice)
       system "clear"
+      display_scoreboard(scoreboard)
       deal_card!(deck, player_hand)
       player_total = calculate_total(player_hand)
       display_initial_hands(player_hand, player_total, dealer_hand)
@@ -93,9 +94,10 @@ def player_turn(deck, player_hand, dealer_hand, scoreboard)
   end
 end
 
-def dealer_turn(deck, player_hand, player_total, dealer_hand)
+def dealer_turn(deck, player_hand, player_total, dealer_hand, scoreboard)
   loop do
     system "clear"
+    display_scoreboard(scoreboard)
     dealer_total = calculate_total(dealer_hand)
     display_player_hand(player_hand, player_total)
     display_blank_line
@@ -158,7 +160,7 @@ def display_scoreboard(scoreboard)
   puts "---------SCORES---------"
   puts "Player: #{scoreboard[:player]}"
   puts "Dealer: #{scoreboard[:dealer]}"
-  puts "Ties: #{scoreboard[:ties]}"
+  puts "Ties: #{scoreboard[:tie]}"
   puts "---------ROUND #{scoreboard[:round]}---------"
 end
 
@@ -239,9 +241,9 @@ loop do # MAIN GAME LOOP
     player_total = calculate_total(player_hand)
     dealer_total = calculate_total(dealer_hand)
     
-    # display_scoreboard(scoreboard)
-
+    display_scoreboard(scoreboard)
     display_initial_hands(player_hand, player_total, dealer_hand)
+
     player_turn(deck, player_hand, dealer_hand, scoreboard)
     player_total = calculate_total(player_hand)
 
@@ -255,7 +257,7 @@ loop do # MAIN GAME LOOP
       sleep 1
     end
 
-    dealer_turn(deck, player_hand, player_total, dealer_hand)
+    dealer_turn(deck, player_hand, player_total, dealer_hand, scoreboard)
     dealer_total = calculate_total(dealer_hand)
 
     if busted?(dealer_total)
