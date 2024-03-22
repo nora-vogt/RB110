@@ -31,10 +31,10 @@ def initial_deal!(deck, player_hand, dealer_hand)
   end
 end
 
-def display_player_hand(hand)
+def display_player_hand(hand, total)
   prompt "Your cards are:"
   hand.each { |card| prompt "#{card[0]} of #{card[1]}" }
-  prompt "Your total points are #{calculate_total(hand)}."
+  prompt "Your total points are #{total}."
 end
 
 def display_partial_dealer_hand(hand)
@@ -43,17 +43,17 @@ def display_partial_dealer_hand(hand)
   hand[1..-1].each { |card| prompt "#{card[0]} of #{card[1]}" }
 end
 
-def display_initial_hands(player_hand, dealer_hand)
-  display_player_hand(player_hand) # player can see both cards
+def display_initial_hands(player_hand, player_total, dealer_hand)
+  display_player_hand(player_hand, player_total) # player can see both cards
   blank_line
   display_partial_dealer_hand(dealer_hand) # only one dealer card is visible
   blank_line
 end
 
-def display_full_dealer_hand(hand) # refactor this
+def display_full_dealer_hand(hand, total) # refactor this - can partial and total be one method?
   prompt "Dealer's hand is:"
   hand.each { |card| prompt "#{card[0]} of #{card[1]}" }
-  prompt "Dealer's total points are #{calculate_total(hand)}."
+  prompt "Dealer's total points are #{total}."
 end
 
 def get_move_choice
@@ -64,7 +64,7 @@ def get_move_choice
   end
 end
 
-def player_turn(deck, player_hand, player_total, dealer_hand)
+def player_turn(deck, player_hand, dealer_hand)
   loop do
     prompt "Your turn!"
     prompt "Would you like to 'hit' or 'stay'?"
@@ -74,24 +74,26 @@ def player_turn(deck, player_hand, player_total, dealer_hand)
       # prompt "You chose to hit."
       # blank_line
       deal_card!(deck, player_hand)
-      display_initial_hands(player_hand, dealer_hand)
+      player_total = calculate_total(player_hand)
+      display_initial_hands(player_hand, player_total, dealer_hand)
       prompt "You chose to hit."
     end
 
-    break if ['s', 'stay'].include?(choice) || busted?(player_hand)
+    break if ['s', 'stay'].include?(choice) || busted?(player_total)
   end
 end
 
-def dealer_turn(deck, player_hand, dealer_hand)
+def dealer_turn(deck, player_hand, player_total, dealer_hand)
   loop do
     system "clear"
-    display_player_hand(player_hand)
+    dealer_total = calculate_total(dealer_hand)
+    display_player_hand(player_hand, player_total)
     blank_line
-    display_full_dealer_hand(dealer_hand)
+    display_full_dealer_hand(dealer_hand, dealer_total)
     blank_line
     prompt "Dealer's Turn!"
 
-    break if dealer_stay?(dealer_hand) || busted?(dealer_hand)
+    break if dealer_stay?(dealer_total) || busted?(dealer_total)
 
     prompt "Dealer chooses to hit..."
     blank_line
@@ -101,25 +103,22 @@ def dealer_turn(deck, player_hand, dealer_hand)
   end
 end
 
-def determine_outcome(player_hand, dealer_hand)
-  player_score = calculate_total(player_hand)
-  dealer_score = calculate_total(dealer_hand)
-
-  if player_score > WINNING_SCORE
+def determine_outcome(player_total, dealer_total)
+  if player_total > WINNING_SCORE
     :player_busted
-  elsif dealer_score > WINNING_SCORE
+  elsif dealer_total > WINNING_SCORE
     :dealer_busted
-  elsif player_score > dealer_score
+  elsif player_total > dealer_total
     :player
-  elsif dealer_score > player_score
+  elsif dealer_total > player_total
     :dealer
   else
     :tie
   end
 end
 
-def display_outcome(player_hand, dealer_hand)
-  outcome = determine_outcome(player_hand, dealer_hand)
+def display_outcome(player_total, dealer_total)
+  outcome = determine_outcome(player_total, dealer_total)
 
   case outcome
   when :player_busted
@@ -127,10 +126,10 @@ def display_outcome(player_hand, dealer_hand)
   when :dealer_busted
     prompt "Dealer bust! You win!"
   when :player
-    prompt "You win with #{calculate_total(player_hand)} points! " \
+    prompt "You win with #{player_total} points! " \
            "Congrats!"
   when :dealer
-    prompt "The Dealer wins with #{calculate_total(dealer_hand)} points! " \
+    prompt "The Dealer wins with #{dealer_total} points! " \
            "Better luck next time!"
   when :tie
     prompt "It's a tie!"
@@ -155,16 +154,16 @@ def calculate_total(hand)
   sum
 end
 
-def dealer_stay?(hand)
-  (SEVENTEEN_POINTS..WINNING_SCORE).include?(calculate_total(hand))
+def dealer_stay?(total)
+  (SEVENTEEN_POINTS..WINNING_SCORE).include?(total)
 end
 
-def twenty_one?(hand)
-  calculate_total(hand) == WINNING_SCORE
+def twenty_one?(total)
+  total == WINNING_SCORE
 end
 
-def busted?(hand)
-  calculate_total(hand) > WINNING_SCORE
+def busted?(total)
+  total > WINNING_SCORE
 end
 
 def play_again?
@@ -185,29 +184,31 @@ loop do
   initial_deal!(deck, player_hand, dealer_hand)
   sleep 1.5
 
+  # Initially we have 9 total calls to calculate total
   # need to calculate the initial total here
   player_total = calculate_total(player_hand)
   dealer_total = calculate_total(dealer_hand)
 
   system "clear"
-  display_initial_hands(player_hand, player_total, dealer_hand, dealer_total)
-  player_turn(deck, player_hand, player_total, dealer_hand) # player_total can update inside of this method definition, but we can't modify the player_total variable here in the first level loop scope
+  display_initial_hands(player_hand, player_total, dealer_hand)
+  player_turn(deck, player_hand, dealer_hand) # need to re-calculate the player total after each hit inside the loop. that will be local to the method definition scope, and it won't update player_total in this first level loop scope.
 
   # so, need to re-calculate player_total here
-  # player_total = calculate_total(player_hand)
+  player_total = calculate_total(player_hand)
 
-  if busted?(player_hand, )
-    display_outcome(player_hand, dealer_hand)
+  if busted?(player_total)
+    display_outcome(player_total, dealer_total)
     play_again? ? next : break
   else
     prompt "You chose to stay."
     sleep 1
   end
+  ####### WORKING UP TO THIS POINT!!! #######
+  dealer_turn(deck, player_hand, player_total, dealer_hand)
+  dealer_total = calculate_total(dealer_hand)
 
-  dealer_turn(deck, player_hand, dealer_hand)
-
-  if busted?(dealer_hand)
-    display_outcome(player_hand, dealer_hand)
+  if busted?(dealer_total)
+    display_outcome(player_total, dealer_total)
     play_again? ? next : break
   else
     prompt "Dealer chose to stay."
@@ -221,8 +222,8 @@ loop do
   sleep 1.5
 
   puts '*' * 30
-  determine_outcome(player_hand, dealer_hand)
-  display_outcome(player_hand, dealer_hand)
+  determine_outcome(player_total, dealer_total)
+  display_outcome(player_total, dealer_total)
   puts '*' * 30
 
   break unless play_again?
