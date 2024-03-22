@@ -71,8 +71,6 @@ def player_turn(deck, player_hand, dealer_hand)
     choice = get_move_choice
     if ['h', 'hit'].include?(choice)
       system "clear"
-      # prompt "You chose to hit."
-      # blank_line
       deal_card!(deck, player_hand)
       player_total = calculate_total(player_hand)
       display_initial_hands(player_hand, player_total, dealer_hand)
@@ -182,18 +180,13 @@ loop do
 
   prompt "Dealer deals each player two starting cards..."
   initial_deal!(deck, player_hand, dealer_hand)
-  sleep 1.5
-
-  # Initially we have 9 total calls to calculate total
-  # need to calculate the initial total here
   player_total = calculate_total(player_hand)
   dealer_total = calculate_total(dealer_hand)
+  sleep 1.5
 
   system "clear"
   display_initial_hands(player_hand, player_total, dealer_hand)
-  player_turn(deck, player_hand, dealer_hand) # need to re-calculate the player total after each hit inside the loop. that will be local to the method definition scope, and it won't update player_total in this first level loop scope.
-
-  # so, need to re-calculate player_total here
+  player_turn(deck, player_hand, dealer_hand)
   player_total = calculate_total(player_hand)
 
   if busted?(player_total)
@@ -203,7 +196,7 @@ loop do
     prompt "You chose to stay."
     sleep 1
   end
-  ####### WORKING UP TO THIS POINT!!! #######
+
   dealer_turn(deck, player_hand, player_total, dealer_hand)
   dealer_total = calculate_total(dealer_hand)
 
