@@ -116,40 +116,39 @@ def update_score(scores, winner)
   scores[winner] += 1
 end
 
-def determine_round_outcome(player_total, dealer_total)
+def determine_round_outcome(player_total, dealer_total, scores)
   if player_total > WINNING_SCORE
+    update_score(scores, :dealer)
     :player_busted
   elsif dealer_total > WINNING_SCORE
+    update_score(scores, :player)
     :dealer_busted
   elsif player_total > dealer_total
+    update_score(scores, :player)
     :player
   elsif dealer_total > player_total
+    update_score(scores, :dealer)
     :dealer
   else
+    update_score(scores, :tie)
     :tie
   end
 end
 
 def display_round_outcome(player_total, dealer_total, scores)
-  outcome = determine_round_outcome(player_total, dealer_total)
+  outcome = determine_round_outcome(player_total, dealer_total, scores)
 
   puts '*' * 80
   case outcome
   when :player_busted
-    update_score(scores, :dealer)
     prompt "You bust! Dealer wins."
   when :dealer_busted
-    update_score(scores, :player)
     prompt "Dealer bust! You win!"
   when :player
-    update_score(scores, :player)
-    prompt "You win with #{player_total} points! Congrats!"
+    prompt "You win this round with #{player_total} points!"
   when :dealer
-    update_score(scores, :dealer)
-    prompt "The Dealer wins with #{dealer_total} points! " \
-           "Better luck next time!"
+    prompt "The Dealer wins this round with #{dealer_total} points!"
   when :tie
-    update_score(scores, :tie)
     prompt "It's a tie!"
   end
   puts '*' * 80
