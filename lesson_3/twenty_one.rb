@@ -31,11 +31,15 @@ def initial_deal!(deck, player_hand, dealer_hand)
   end
 end
 
+def display_wait_for_enter(play)
+  prompt "Press enter to start #{ play == :game ? "the game" : "next round" }:"
+  gets.chomp
+end
+
 def display_introduction
   prompt "Welcome to Twenty-One!"
   prompt "Rules go here. First player to win 5 rounds wins!"
-  prompt "Press enter when you're ready to play:"
-  gets.chomp
+  display_wait_for_enter(:game)
 end
 
 def display_player_hand(hand, total)
@@ -108,6 +112,10 @@ def dealer_turn(deck, player_hand, player_total, dealer_hand)
   end
 end
 
+def update_score(scores, winner)
+  scores[winner] += 1
+end
+
 def determine_round_outcome(player_total, dealer_total)
   if player_total > WINNING_SCORE
     :player_busted
@@ -122,21 +130,26 @@ def determine_round_outcome(player_total, dealer_total)
   end
 end
 
-def display_round_outcome(player_total, dealer_total)
+def display_round_outcome(player_total, dealer_total, scores)
   outcome = determine_round_outcome(player_total, dealer_total)
 
   puts '*' * 80
   case outcome
   when :player_busted
+    update_score(scores, :dealer)
     prompt "You bust! Dealer wins."
   when :dealer_busted
+    update_score(scores, :player)
     prompt "Dealer bust! You win!"
   when :player
+    update_score(scores, :player)
     prompt "You win with #{player_total} points! Congrats!"
   when :dealer
+    update_score(scores, :dealer)
     prompt "The Dealer wins with #{dealer_total} points! " \
            "Better luck next time!"
   when :tie
+    update_score(scores, :tie)
     prompt "It's a tie!"
   end
   puts '*' * 80
@@ -179,49 +192,56 @@ def play_again?
   ['y', 'yes'].include?(answer)
 end
 
-loop do
+loop do # MAIN GAME LOOP
   system "clear"
   display_introduction
-  deck = initialize_deck
-  player_hand = []
-  dealer_hand = []
-  initial_deal!(deck, player_hand, dealer_hand)
-  player_total = calculate_total(player_hand)
-  dealer_total = calculate_total(dealer_hand)
+  scores = { player: 0, dealer: 0, tie: 0}
 
-  system "clear"
-  display_initial_hands(player_hand, player_total, dealer_hand)
-  player_turn(deck, player_hand, dealer_hand)
-  player_total = calculate_total(player_hand)
+  loop do # ROUND LOOP
+    system "clear"
+    deck = initialize_deck
+    player_hand = []
+    dealer_hand = []
+    initial_deal!(deck, player_hand, dealer_hand)
+    player_total = calculate_total(player_hand)
+    dealer_total = calculate_total(dealer_hand)
+    prompt "SCORES - Player #{scores[:player]}, Dealer #{scores[:dealer]}, Ties: #{scores[:tie]}"
+    display_initial_hands(player_hand, player_total, dealer_hand)
+    player_turn(deck, player_hand, dealer_hand)
+    player_total = calculate_total(player_hand)
 
-  if busted?(player_total)
-    display_round_outcome(player_total, dealer_total)
-    play_again? ? next : break
-  else
-    prompt "You chose to stay."
-    sleep 1
-  end
+    if busted?(player_total)
+      display_round_outcome(player_total, dealer_total, scores)
+      display_wait_for_enter(:round)
+      next
+    else
+      prompt "You chose to stay."
+      sleep 1
+    end
 
-  dealer_turn(deck, player_hand, player_total, dealer_hand)
-  dealer_total = calculate_total(dealer_hand)
+    dealer_turn(deck, player_hand, player_total, dealer_hand)
+    dealer_total = calculate_total(dealer_hand)
 
-  if busted?(dealer_total)
-    display_round_outcome(player_total, dealer_total)
-    play_again? ? next : break
-  else
-    prompt "Dealer chose to stay."
-    sleep 1
-  end
+    if busted?(dealer_total)
+      display_round_outcome(player_total, dealer_total, scores)
+      display_wait_for_enter(:round)
+      next
+    else
+      prompt "Dealer chose to stay."
+      sleep 1
+    end
 
-  blank_line
-  prompt "Both Player and Dealer stay!"
-  blank_line
-  sleep 1.5
+    blank_line
+    prompt "Both Player and Dealer stay!"
+    blank_line
+    sleep 1.5
 
-  display_round_outcome(player_total, dealer_total)
+    display_round_outcome(player_total, dealer_total, scores)
+    display_wait_for_enter(:round)
+  end # END ROUND LOOP
 
   break unless play_again?
-end
+end # END MAIN GAME LOOP
 
 prompt "Thanks for playing Twenty One!"
 
