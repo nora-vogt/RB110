@@ -89,10 +89,10 @@ def dealer_turn(deck, player_hand, player_total, dealer_hand)
     blank_line
     display_full_dealer_hand(dealer_hand, dealer_total)
     blank_line
-    prompt "Dealer's Turn!"
 
     break if dealer_stay?(dealer_total) || busted?(dealer_total)
-
+    
+    prompt "Dealer's Turn!"
     prompt "Dealer chooses to hit..."
     blank_line
     deal_card!(deck, dealer_hand)
