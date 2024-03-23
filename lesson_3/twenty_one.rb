@@ -98,6 +98,8 @@ def get_hit_or_stay
 end
 
 def player_turn(deck, players, scoreboard)
+  player_stats = players[:player]
+
   loop do
     prompt "Your turn!"
     prompt "Would you like to 'hit' or 'stay'?"
@@ -105,14 +107,14 @@ def player_turn(deck, players, scoreboard)
 
     if ['h', 'hit'].include?(choice)
       system "clear"
-      deal_card!(deck, players[:player][:hand])
-      players[:player][:total] = calculate_total(players[:player][:hand])
+      deal_card!(deck, player_stats[:hand])
+      player_stats[:total] = calculate_total(player_stats[:hand])
       display_scoreboard(scoreboard)
       display_hands(players)
       prompt "You chose to hit."
     end
-
-    break if ['s', 'stay'].include?(choice) || busted?(players[:player][:total])
+  
+    break if ['s', 'stay'].include?(choice) || busted?(player_stats[:total])
   end
 end
 
@@ -264,7 +266,6 @@ loop do # MAIN GAME LOOP
     display_hands(players)
 
     player_turn(deck, players, scoreboard)
-    players[:player][:total] = calculate_total(players[:player][:hand])
 
     if busted?(players[:player][:total])
       system "clear"
