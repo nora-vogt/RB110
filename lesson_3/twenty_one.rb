@@ -298,6 +298,7 @@ loop do # MAIN GAME LOOP
       display_end_of_round(players, scoreboard, outcome)
     
       break if game_won?(scoreboard)
+
       ask_to_continue(:round)
       update_round_number!(scoreboard)
       next
@@ -316,6 +317,7 @@ loop do # MAIN GAME LOOP
     display_end_of_round(players, scoreboard, outcome)
 
     break if game_won?(scoreboard)
+    
     ask_to_continue(:round)
     update_round_number!(scoreboard)
   end # END ROUND LOOP
