@@ -86,9 +86,9 @@ def player_turn(deck, player_hand, dealer_hand, dealer_total, scoreboard)
     choice = get_move_choice
     if ['h', 'hit'].include?(choice)
       system "clear"
-      display_scoreboard(scoreboard)
       deal_card!(deck, player_hand)
       player_total = calculate_total(player_hand)
+      display_scoreboard(scoreboard)
       display_hands(player_hand, player_total, dealer_hand, dealer_total, true)
       prompt "You chose to hit."
     end
