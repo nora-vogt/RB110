@@ -66,6 +66,7 @@ def display_full_dealer_hand(hand, total) # refactor this - can partial and tota
   prompt "Dealer's hand is:"
   hand.each { |card| prompt "#{card[0]} of #{card[1]}" }
   prompt "Dealer's total points are #{total}."
+  display_blank_line
 end
 
 def get_move_choice
@@ -139,9 +140,7 @@ def determine_round_outcome(player_total, dealer_total, scoreboard)
   end
 end
 
-def display_round_outcome(player_total, dealer_total, scoreboard)
-  outcome = determine_round_outcome(player_total, dealer_total, scoreboard)
-
+def display_round_outcome(player_total, dealer_total, outcome)
   case outcome
   when :player_busted
     prompt "You bust! Dealer wins."
@@ -248,7 +247,11 @@ loop do # MAIN GAME LOOP
     player_total = calculate_total(player_hand)
 
     if busted?(player_total)
-      display_round_outcome(player_total, dealer_total, scoreboard)
+      system "clear"
+      round_outcome = determine_round_outcome(player_total, dealer_total, scoreboard)
+      display_scoreboard(scoreboard)
+      display_initial_hands(player_hand, player_total, dealer_hand)
+      display_round_outcome(player_total, dealer_total, round_outcome)
       break if game_won?(scoreboard)
       display_wait_for_enter(:round)
       next
@@ -261,7 +264,14 @@ loop do # MAIN GAME LOOP
     dealer_total = calculate_total(dealer_hand)
 
     if busted?(dealer_total)
-      display_round_outcome(player_total, dealer_total, scoreboard)
+      system "clear"
+      round_outcome = determine_round_outcome(player_total, dealer_total, scoreboard)
+      display_scoreboard(scoreboard)
+      display_player_hand(player_hand, player_total)
+      display_blank_line
+      display_full_dealer_hand(dealer_hand, dealer_total)
+      display_round_outcome(player_total, dealer_total, round_outcome)
+      #display_round_outcome(player_total, dealer_total, scoreboard)
       break if game_won?(scoreboard)
       display_wait_for_enter(:round)
       next
@@ -275,7 +285,13 @@ loop do # MAIN GAME LOOP
     display_blank_line
     sleep 1.5
 
-    display_round_outcome(player_total, dealer_total, scoreboard)
+    system "clear"
+    round_outcome = determine_round_outcome(player_total, dealer_total, scoreboard)
+    display_scoreboard(scoreboard)
+    display_player_hand(player_hand, player_total)
+    display_blank_line
+    display_full_dealer_hand(dealer_hand, dealer_total)
+    display_round_outcome(player_total, dealer_total, round_outcome)
 
     break if game_won?(scoreboard)
     display_wait_for_enter(:round)
