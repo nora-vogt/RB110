@@ -61,27 +61,27 @@ def display_cards(hand)
   hand.each { |card| prompt "#{card[0]} of #{card[1]}" }
 end
 
-def display_player_hand(hand, total)
+def display_player_hand(player_info)
   prompt "Your cards are:"
-  display_cards(hand)
-  prompt "Your total points are #{total}."
+  display_cards(player_info[:hand])
+  prompt "Your total points are #{player_info[:total]}."
 end
 
-def display_dealer_hand(hand, total, hidden = false)
+def display_dealer_hand(dealer_info)
   prompt "Dealer's hand is:"
-  if hidden
+  if dealer_info[:hidden_card]
     prompt "???"
-    hand[1..-1].each { |card| prompt "#{card[0]} of #{card[1]}" }
+    dealer_info[:hand][1..-1].each { |card| prompt "#{card[0]} of #{card[1]}" }
   else
-    display_cards(hand)
+    display_cards(dealer_info[:hand])
     prompt "Dealer's total points are #{total}."
   end
 end
 
-def display_hands(player_hand, player_total, dealer_hand, dealer_total, hidden = false)
-  display_player_hand(player_hand, player_total)
+def display_hands(players)
+  display_player_hand(players[:player])
   display_blank_line
-  display_dealer_hand(dealer_hand, dealer_total, hidden)
+  display_dealer_hand(players[:dealer])
   display_blank_line
 end
 
@@ -249,10 +249,8 @@ loop do # MAIN GAME LOOP
     deck = initialize_deck
     players = initialize_players(deck)
 
-    binding.pry
-
     display_scoreboard(scoreboard)
-    display_hands(player_hand, player_total, dealer_hand, dealer_total, true)
+    display_hands(players)
 
     player_turn(deck, player_hand, dealer_hand, dealer_total, scoreboard)
     player_total = calculate_total(player_hand)
