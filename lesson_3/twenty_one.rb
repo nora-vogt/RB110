@@ -120,7 +120,7 @@ end
 def dealer_turn(deck, players, scoreboard)
   dealer_stats = players[:dealer]
   reveal_dealer_hidden_card!(players)
-  
+
   loop do
     system "clear"
     dealer_stats[:total] = calculate_total(dealer_stats[:hand])
@@ -308,10 +308,10 @@ loop do # MAIN GAME LOOP
     sleep 2
 
     system "clear"
-    round_outcome = determine_round_outcome(player_total, dealer_total, scoreboard)
+    outcome = determine_round_outcome(players, scoreboard)
     display_scoreboard(scoreboard)
-    display_hands(player_hand, player_total, dealer_hand, dealer_total)
-    display_round_outcome(player_total, dealer_total, round_outcome)
+    display_hands(players)
+    display_round_outcome(players, outcome)
 
     break if game_won?(scoreboard)
     display_wait_for_enter(:round)
