@@ -108,8 +108,7 @@ def player_turn(deck, players, scoreboard)
       system "clear"
       deal_card!(deck, player_stats[:hand])
       player_stats[:total] = calculate_total(player_stats[:hand])
-      display_scoreboard(scoreboard)
-      display_hands(players)
+      display_game_info(players, scoreboard)
       prompt "You chose to hit."
     end
   
@@ -124,8 +123,7 @@ def dealer_turn(deck, players, scoreboard)
   loop do
     system "clear"
     dealer_stats[:total] = calculate_total(dealer_stats[:hand])
-    display_scoreboard(scoreboard)
-    display_hands(players)
+    display_game_info(players, scoreboard)
   
     break if dealer_stay?(dealer_stats[:total]) || busted?(dealer_stats[:total])
 
