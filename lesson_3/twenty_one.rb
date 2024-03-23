@@ -191,6 +191,11 @@ def display_scoreboard(scoreboard)
   puts "---------ROUND #{scoreboard[:round]}---------"
 end
 
+def display_game_info(players, scoreboard)
+  display_scoreboard(scoreboard)
+  display_hands(players)
+end
+
 def determine_game_winner(scoreboard)
   if scoreboard[:player] == 5
     :player
@@ -264,8 +269,7 @@ loop do # MAIN GAME LOOP
     deck = initialize_deck
     players = initialize_players(deck)
 
-    display_scoreboard(scoreboard)
-    display_hands(players)
+    display_game_info(players, scoreboard)
 
     player_turn(deck, players, scoreboard)
 
@@ -273,8 +277,7 @@ loop do # MAIN GAME LOOP
       system "clear"
       outcome = determine_round_outcome(players, scoreboard)
       reveal_dealer_hidden_card!(players) # could add text here
-      display_scoreboard(scoreboard)
-      display_hands(players)
+      display_game_info(players, scoreboard)
       display_round_outcome(players, outcome)
 
       break if game_won?(scoreboard)
@@ -290,8 +293,7 @@ loop do # MAIN GAME LOOP
     if busted?(players[:dealer][:total])
       system "clear"
       outcome = determine_round_outcome(players, scoreboard)
-      display_scoreboard(scoreboard)
-      display_hands(players)
+      display_game_info(players, scoreboard)
       display_round_outcome(players, outcome)
 
       break if game_won?(scoreboard)
@@ -309,8 +311,7 @@ loop do # MAIN GAME LOOP
 
     system "clear"
     outcome = determine_round_outcome(players, scoreboard)
-    display_scoreboard(scoreboard)
-    display_hands(players)
+    display_game_info(players, scoreboard)
     display_round_outcome(players, outcome)
 
     break if game_won?(scoreboard)
