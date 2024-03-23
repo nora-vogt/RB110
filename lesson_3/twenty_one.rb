@@ -240,10 +240,6 @@ def dealer_stay?(total)
   (SEVENTEEN_POINTS..MAX_HAND_POINTS).include?(total)
 end
 
-# def twenty_one?(total)
-#   total == MAX_HAND_POINTS
-# end
-
 def busted?(total)
   total > MAX_HAND_POINTS
 end
