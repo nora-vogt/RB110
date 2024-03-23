@@ -111,7 +111,7 @@ def dealer_turn(deck, player_hand, player_total, dealer_hand, scoreboard)
     display_blank_line
     deal_card!(deck, dealer_hand)
     display_blank_line
-    sleep 3
+    sleep 2
   end
 end
 
