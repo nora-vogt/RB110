@@ -116,19 +116,19 @@ def player_turn(deck, players, scoreboard)
   end
 end
 
-def dealer_turn(deck, player_hand, player_total, dealer_hand, scoreboard)
+def dealer_turn(deck, players, scoreboard)
   loop do
     system "clear"
-    dealer_total = calculate_total(dealer_hand)
+    players[:dealer][:total] = calculate_total(players[:dealer][:hand])
     display_scoreboard(scoreboard)
-    display_hands(player_hand, player_total, dealer_hand, dealer_total)
+    display_hands(players)
   
-    break if dealer_stay?(dealer_total) || busted?(dealer_total)
+    break if dealer_stay?(players[:dealer][:total]) || busted?(players[:dealer][:total])
 
     prompt "Dealer's Turn!"
     prompt "Dealer chooses to hit..."
     display_blank_line
-    deal_card!(deck, dealer_hand)
+    deal_card!(deck, players[:dealer][:hand])
     display_blank_line
     sleep 2
   end
@@ -164,7 +164,7 @@ end
 def display_round_outcome(players, outcome)
   player_total = players[:player][:total]
   dealer_total = players[:dealer][:total]
-  
+
   case outcome
   when :player_busted
     prompt "You bust! Dealer wins."
@@ -281,7 +281,7 @@ loop do # MAIN GAME LOOP
       sleep 1
     end
 
-    dealer_turn(deck, player_hand, player_total, dealer_hand, scoreboard)
+    dealer_turn(deck, players, scoreboard)
     dealer_total = calculate_total(dealer_hand)
 
     if busted?(dealer_total)
