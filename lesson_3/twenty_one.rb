@@ -85,7 +85,7 @@ def display_hands(players)
   display_blank_line
 end
 
-def get_move_choice
+def get_hit_or_stay
   loop do
     choice = gets.chomp.downcase
     return choice if (['h', 'hit', 's', 'stay']).include?(choice)
@@ -93,21 +93,22 @@ def get_move_choice
   end
 end
 
-def player_turn(deck, player_hand, dealer_hand, dealer_total, scoreboard)
+def player_turn(deck, players, scoreboard)
   loop do
     prompt "Your turn!"
     prompt "Would you like to 'hit' or 'stay'?"
-    choice = get_move_choice
+    choice = get_hit_or_stay
+
     if ['h', 'hit'].include?(choice)
       system "clear"
-      deal_card!(deck, player_hand)
-      player_total = calculate_total(player_hand)
+      deal_card!(deck, players[:player][:hand])
+      players[:player][:total] = calculate_total(players[:player][:hand])
       display_scoreboard(scoreboard)
-      display_hands(player_hand, player_total, dealer_hand, dealer_total, true)
+      display_hands(players)
       prompt "You chose to hit."
     end
 
-    break if ['s', 'stay'].include?(choice) || busted?(player_total)
+    break if ['s', 'stay'].include?(choice) || busted?(players[:player][:total])
   end
 end
 
@@ -252,7 +253,7 @@ loop do # MAIN GAME LOOP
     display_scoreboard(scoreboard)
     display_hands(players)
 
-    player_turn(deck, player_hand, dealer_hand, dealer_total, scoreboard)
+    player_turn(deck, players, scoreboard)
     player_total = calculate_total(player_hand)
 
     if busted?(player_total)
