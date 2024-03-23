@@ -25,11 +25,25 @@ def deal_card!(deck, hand)
   hand << deck.shift
 end
 
-def initial_deal!(deck, player_hand, dealer_hand)
-  2.times do # alternates deal order, like a real card game
-    deal_card!(deck, player_hand)
-    deal_card!(deck, dealer_hand)
+def initial_deal!(deck, player, dealer)
+  2.times do
+    deal_card!(deck, player)
+    deal_card!(deck, dealer)
   end
+end
+
+def initialize_players(deck)
+  player_hand = []
+  dealer_hand = []
+  initial_deal!(deck, player_hand, dealer_hand)
+
+  player_total = calculate_total(player_hand)
+  dealer_total = calculate_total(dealer_hand)
+
+  player = { hand: player_hand, total: player_total }
+  dealer = { hand: dealer_hand, total: dealer_total, hidden_card: true }
+
+  {player: player, dealer: dealer}
 end
 
 def display_wait_for_enter(play)
@@ -233,11 +247,10 @@ loop do # MAIN GAME LOOP
   loop do # ROUND LOOP
     system "clear"
     deck = initialize_deck
-    player_hand = []
-    dealer_hand = []
-    initial_deal!(deck, player_hand, dealer_hand)
-    player_total = calculate_total(player_hand)
-    dealer_total = calculate_total(dealer_hand)
+    players = initialize_players(deck)
+
+    binding.pry
+
     display_scoreboard(scoreboard)
     display_hands(player_hand, player_total, dealer_hand, dealer_total, true)
 
