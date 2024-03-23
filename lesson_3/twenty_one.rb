@@ -46,7 +46,7 @@ def initialize_players(deck)
   {player: player, dealer: dealer}
 end
 
-def display_wait_for_enter(play)
+def ask_to_continue(play)
   prompt "Press enter to start #{ play == :game ? "the game" : "next round" }:"
   gets.chomp
 end
@@ -54,7 +54,7 @@ end
 def display_introduction
   prompt "Welcome to Twenty-One!"
   prompt "Rules go here. First player to win 5 rounds wins!"
-  display_wait_for_enter(:game)
+  ask_to_continue(:game)
 end
 
 def display_cards(hand)
@@ -89,7 +89,7 @@ def reveal_dealer_hidden_card!(players)
   players[:dealer][:hidden_card] = false
 end
 
-def get_hit_or_stay
+def ask_hit_or_stay
   loop do
     choice = gets.chomp.downcase
     return choice if (['h', 'hit', 's', 'stay']).include?(choice)
@@ -102,7 +102,7 @@ def player_turn(deck, players, scoreboard)
   loop do
     prompt "Your turn!"
     prompt "Would you like to 'hit' or 'stay'?"
-    choice = get_hit_or_stay
+    choice = ask_hit_or_stay
 
     if ['h', 'hit'].include?(choice)
       system "clear"
@@ -138,8 +138,11 @@ def dealer_turn(deck, players, scoreboard)
   end
 end
 
-def update_scoreboard!(scoreboard, winner)
+def update_score!(scoreboard, winner)
   scoreboard[winner] += 1
+end
+
+def update_round_number!(scoreboard)
   scoreboard[:round] += 1
 end
 
@@ -148,19 +151,19 @@ def determine_round_outcome(players, scoreboard)
   dealer_total = players[:dealer][:total]
 
   if player_total > MAX_HAND_POINTS
-    update_scoreboard!(scoreboard, :dealer)
+    update_score!(scoreboard, :dealer)
     :player_busted
   elsif dealer_total > MAX_HAND_POINTS
-    update_scoreboard!(scoreboard, :player)
+    update_score!(scoreboard, :player)
     :dealer_busted
   elsif player_total > dealer_total
-    update_scoreboard!(scoreboard, :player)
+    update_score!(scoreboard, :player)
     :player
   elsif dealer_total > player_total
-    update_scoreboard!(scoreboard, :dealer)
+    update_score!(scoreboard, :dealer)
     :dealer
   else
-    update_scoreboard!(scoreboard, :tie)
+    update_score!(scoreboard, :tie)
     :tie
   end
 end
@@ -281,7 +284,8 @@ loop do # MAIN GAME LOOP
       display_round_outcome(players, outcome)
 
       break if game_won?(scoreboard)
-      display_wait_for_enter(:round)
+      ask_to_continue(:round)
+      update_round_number!(scoreboard)
       next
     else
       prompt "You chose to stay."
@@ -295,9 +299,10 @@ loop do # MAIN GAME LOOP
       outcome = determine_round_outcome(players, scoreboard)
       display_game_info(players, scoreboard)
       display_round_outcome(players, outcome)
-
+    
       break if game_won?(scoreboard)
-      display_wait_for_enter(:round)
+      ask_to_continue(:round)
+      update_round_number!(scoreboard)
       next
     else
       prompt "Dealer chose to stay."
@@ -315,7 +320,8 @@ loop do # MAIN GAME LOOP
     display_round_outcome(players, outcome)
 
     break if game_won?(scoreboard)
-    display_wait_for_enter(:round)
+    ask_to_continue(:round)
+    update_round_number!(scoreboard)
   end # END ROUND LOOP
 
   display_game_winner(scoreboard)
