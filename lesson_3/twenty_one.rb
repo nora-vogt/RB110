@@ -43,29 +43,31 @@ def display_introduction
   display_wait_for_enter(:game)
 end
 
+def display_cards(hand)
+  hand.each { |card| prompt "#{card[0]} of #{card[1]}" }
+end
+
 def display_player_hand(hand, total)
   prompt "Your cards are:"
-  hand.each { |card| prompt "#{card[0]} of #{card[1]}" }
+  display_cards(hand)
   prompt "Your total points are #{total}."
 end
 
-def display_partial_dealer_hand(hand)
+def display_dealer_hand(hand, total, hidden = false)
   prompt "Dealer's hand is:"
-  prompt "???"
-  hand[1..-1].each { |card| prompt "#{card[0]} of #{card[1]}" }
+  if hidden
+    prompt "???"
+    hand[1..-1].each { |card| prompt "#{card[0]} of #{card[1]}" }
+  else
+    display_cards(hand)
+    prompt "Dealer's total points are #{total}."
+  end
 end
 
-def display_initial_hands(player_hand, player_total, dealer_hand)
-  display_player_hand(player_hand, player_total) # player can see both cards
+def display_hands(player_hand, player_total, dealer_hand, dealer_total, hidden = false)
+  display_player_hand(player_hand, player_total)
   display_blank_line
-  display_partial_dealer_hand(dealer_hand) # only one dealer card is visible
-  display_blank_line
-end
-
-def display_full_dealer_hand(hand, total) # refactor this - can partial and total be one method?
-  prompt "Dealer's hand is:"
-  hand.each { |card| prompt "#{card[0]} of #{card[1]}" }
-  prompt "Dealer's total points are #{total}."
+  display_dealer_hand(dealer_hand, dealer_total, hidden)
   display_blank_line
 end
 
@@ -77,7 +79,7 @@ def get_move_choice
   end
 end
 
-def player_turn(deck, player_hand, dealer_hand, scoreboard)
+def player_turn(deck, player_hand, dealer_hand, dealer_total, scoreboard)
   loop do
     prompt "Your turn!"
     prompt "Would you like to 'hit' or 'stay'?"
@@ -87,7 +89,7 @@ def player_turn(deck, player_hand, dealer_hand, scoreboard)
       display_scoreboard(scoreboard)
       deal_card!(deck, player_hand)
       player_total = calculate_total(player_hand)
-      display_initial_hands(player_hand, player_total, dealer_hand)
+      display_hands(player_hand, player_total, dealer_hand, dealer_total, true)
       prompt "You chose to hit."
     end
 
@@ -98,12 +100,9 @@ end
 def dealer_turn(deck, player_hand, player_total, dealer_hand, scoreboard)
   loop do
     system "clear"
-    display_scoreboard(scoreboard)
     dealer_total = calculate_total(dealer_hand)
-    display_player_hand(player_hand, player_total)
-    display_blank_line
-    display_full_dealer_hand(dealer_hand, dealer_total)
-    display_blank_line
+    display_scoreboard(scoreboard)
+    display_hands(player_hand, player_total, dealer_hand, dealer_total)
   
     break if dealer_stay?(dealer_total) || busted?(dealer_total)
 
@@ -112,30 +111,30 @@ def dealer_turn(deck, player_hand, player_total, dealer_hand, scoreboard)
     display_blank_line
     deal_card!(deck, dealer_hand)
     display_blank_line
-    sleep 2
+    sleep 3
   end
 end
 
-def update_scoreboard(scoreboard, winner)
+def update_scoreboard!(scoreboard, winner)
   scoreboard[winner] += 1
   scoreboard[:round] += 1
 end
 
 def determine_round_outcome(player_total, dealer_total, scoreboard)
   if player_total > MAX_HAND_POINTS
-    update_scoreboard(scoreboard, :dealer)
+    update_scoreboard!(scoreboard, :dealer)
     :player_busted
   elsif dealer_total > MAX_HAND_POINTS
-    update_scoreboard(scoreboard, :player)
+    update_scoreboard!(scoreboard, :player)
     :dealer_busted
   elsif player_total > dealer_total
-    update_scoreboard(scoreboard, :player)
+    update_scoreboard!(scoreboard, :player)
     :player
   elsif dealer_total > player_total
-    update_scoreboard(scoreboard, :dealer)
+    update_scoreboard!(scoreboard, :dealer)
     :dealer
   else
-    update_scoreboard(scoreboard, :tie)
+    update_scoreboard!(scoreboard, :tie)
     :tie
   end
 end
@@ -197,7 +196,7 @@ def calculate_total(hand)
       sum += TEN_POINTS
     end
   end
-  # Correct for Aces - per Ace, if the sum is greater than 21, minus 10 points
+
   values.count("Ace").times { sum -= TEN_POINTS if sum > MAX_HAND_POINTS }
   sum
 end
@@ -239,18 +238,17 @@ loop do # MAIN GAME LOOP
     initial_deal!(deck, player_hand, dealer_hand)
     player_total = calculate_total(player_hand)
     dealer_total = calculate_total(dealer_hand)
-    
     display_scoreboard(scoreboard)
-    display_initial_hands(player_hand, player_total, dealer_hand)
+    display_hands(player_hand, player_total, dealer_hand, dealer_total, true)
 
-    player_turn(deck, player_hand, dealer_hand, scoreboard)
+    player_turn(deck, player_hand, dealer_hand, dealer_total, scoreboard)
     player_total = calculate_total(player_hand)
 
     if busted?(player_total)
       system "clear"
       round_outcome = determine_round_outcome(player_total, dealer_total, scoreboard)
       display_scoreboard(scoreboard)
-      display_initial_hands(player_hand, player_total, dealer_hand)
+      display_hands(player_hand, player_total, dealer_hand, dealer_total)
       display_round_outcome(player_total, dealer_total, round_outcome)
       break if game_won?(scoreboard)
       display_wait_for_enter(:round)
@@ -267,30 +265,25 @@ loop do # MAIN GAME LOOP
       system "clear"
       round_outcome = determine_round_outcome(player_total, dealer_total, scoreboard)
       display_scoreboard(scoreboard)
-      display_player_hand(player_hand, player_total)
-      display_blank_line
-      display_full_dealer_hand(dealer_hand, dealer_total)
+      display_hands(player_hand, player_total, dealer_hand, dealer_total)
       display_round_outcome(player_total, dealer_total, round_outcome)
-      #display_round_outcome(player_total, dealer_total, scoreboard)
       break if game_won?(scoreboard)
       display_wait_for_enter(:round)
       next
     else
       prompt "Dealer chose to stay."
-      sleep 1
+      sleep 2
     end
 
     display_blank_line
     prompt "Both Player and Dealer stay!"
     display_blank_line
-    sleep 1.5
+    sleep 2
 
     system "clear"
     round_outcome = determine_round_outcome(player_total, dealer_total, scoreboard)
     display_scoreboard(scoreboard)
-    display_player_hand(player_hand, player_total)
-    display_blank_line
-    display_full_dealer_hand(dealer_hand, dealer_total)
+    display_hands(player_hand, player_total, dealer_hand, dealer_total)
     display_round_outcome(player_total, dealer_total, round_outcome)
 
     break if game_won?(scoreboard)
