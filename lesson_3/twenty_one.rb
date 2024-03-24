@@ -61,19 +61,19 @@ def top_card_format(card, hidden, index)
   if card[0] == '10'
     "|#{card[0]}   |"
   else
-    "|#{hidden && index == 0 ? "~" : card[0]}    |"
+    "|#{hidden && index == 0 ? '~' : card[0]}    |"
   end
 end
 
 def middle_card_format(card, hidden, index)
-  "|  #{hidden && index == 0 ? "~" : card[1]}  |"
+  "|  #{hidden && index == 0 ? '~' : card[1]}  |"
 end
 
 def bottom_card_format(card, hidden, index)
   if card[0] == '10'
     "|___#{card[0]}|"
   else
-    "|____#{hidden && index == 0 ? "~" : card[0]}|"
+    "|____#{hidden && index == 0 ? '~' : card[0]}|"
   end
 end
 
