@@ -57,32 +57,34 @@ def display_introduction
   ask_to_continue(:game)
 end
 
+def top_number_display(card)
+  card[0] == "10" ? "|#{card[0]}   |" : "|#{card[0]}    |"
+end
+
+def bottom_number_display(card)
+  card[0] == "10" ? "|___#{card[0]}|" : "|____#{card[0]}|"
+end
+
 def display_cards(player_info)
-  #hand.each { |card| prompt "#{card[0]} of #{card[1]}" }
-  first_line = ""
-  second_line = ""
-  middle_line = ""
-  last_line = ""
+  lines = ["", "", "", "", ""]
 
   player_info[:hand].each_with_index do |card, index|
     if player_info[:hidden_card] && index == 0
-      first_line << " _____ "
-      second_line << "|~    |"
-      middle_line << "|  ~  |"
-      last_line << "|____~|"
+      lines[0] << " _____ "
+      lines[1] << "|~    |"
+      lines[2] << "|  ~  |"
+      lines[3] << "|  ~  |"
+      lines[4]<< "|____~|"
     else
-      first_line << " _____ "
-      second_line << (card[0] == '10' ? "|#{card[0]}   |" : "|#{card[0]}    |")
-      middle_line << "|  #{card[1]}  |"
-      last_line << (card[0] == '10' ? "|___#{card[0]}|" : "|____#{card[0]}|")
+      lines[0] << " _____ "
+      lines[1] << top_number_display(card)
+      lines[2] << "|  #{card[1]}  |"
+      lines[3] << "|  #{card[1]}  |"
+      lines[4] << bottom_number_display(card)
     end
   end
 
-  puts first_line
-  puts second_line
-  puts middle_line
-  puts middle_line
-  puts last_line
+  lines.each { |line| puts line }
 end
 
 def display_player_hand(player_info)
