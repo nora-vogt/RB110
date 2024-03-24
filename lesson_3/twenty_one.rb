@@ -1,7 +1,7 @@
 require 'pry'
 
-SUITS = ['Hearts', 'Diamonds', 'Clubs', 'Spades']
-CARDS = ('2'..'10').to_a + ['Jack', 'Queen', 'King', 'Ace']
+SUITS = ["\u2665", "\u2666", "\u2663", "\u2660"]
+CARDS = ('2'..'10').to_a + ['J', 'Q', 'K', 'A']
 
 TEN_POINTS = 10
 ELEVEN_POINTS = 11
@@ -57,25 +57,55 @@ def display_introduction
   ask_to_continue(:game)
 end
 
-def display_cards(hand)
-  hand.each { |card| prompt "#{card[0]} of #{card[1]}" }
+def display_cards(player_info)
+  #hand.each { |card| prompt "#{card[0]} of #{card[1]}" }
+  first_line = ""
+  second_line = ""
+  middle_line = ""
+  last_line = ""
+
+  player_info[:hand].each_with_index do |card, index|
+    if player_info[:hidden_card] && index == 0
+      first_line << " _____ "
+      second_line << "|~    |"
+      middle_line << "|  ~  |"
+      last_line << "|____~|"
+    else
+      first_line << " _____ "
+      second_line << (card[0] == '10' ? "|#{card[0]}   |" : "|#{card[0]}    |")
+      middle_line << "|  #{card[1]}  |"
+      last_line << (card[0] == '10' ? "|___#{card[0]}|" : "|____#{card[0]}|")
+    end
+  end
+
+  puts first_line
+  puts second_line
+  puts middle_line
+  puts middle_line
+  puts last_line
 end
 
 def display_player_hand(player_info)
   prompt "Your cards are:"
-  display_cards(player_info[:hand])
+  display_cards(player_info)
   prompt "Your total points are #{player_info[:total]}."
 end
 
 def display_dealer_hand(dealer_info)
   prompt "Dealer's hand is:"
-  if dealer_info[:hidden_card]
-    prompt "???"
-    dealer_info[:hand][1..-1].each { |card| prompt "#{card[0]} of #{card[1]}" }
-  else
-    display_cards(dealer_info[:hand])
+  display_cards(dealer_info)
+  
+  if dealer_info[:hidden_card] == false
     prompt "Dealer's total points are #{dealer_info[:total]}."
   end
+  # if dealer_info[:hidden_card]
+  #   prompt "???"
+  #   dealer_info[:hand][1..-1].each { |card| prompt "#{card[0]} of #{card[1]}" }
+  # else
+  #   display_cards(dealer_info[:hand])
+  #   prompt "Dealer's total points are #{dealer_info[:total]}."
+  # end
+  # IF THIS WORKS, HOW/WHEN TO PRINT DEALER TOTAL?
 end
 
 def display_hands(players)
@@ -228,7 +258,7 @@ def calculate_total(hand)
   sum = 0
 
   values.each do |value|
-    if value == 'Ace'
+    if value == 'A'
       sum += ELEVEN_POINTS
     elsif ('2'..'10').include?(value)
       sum += value.to_i
@@ -237,7 +267,7 @@ def calculate_total(hand)
     end
   end
 
-  values.count("Ace").times { sum -= TEN_POINTS if sum > MAX_HAND_POINTS }
+  values.count('A').times { sum -= TEN_POINTS if sum > MAX_HAND_POINTS }
   sum
 end
 
