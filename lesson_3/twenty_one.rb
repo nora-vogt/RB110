@@ -65,9 +65,7 @@ def bottom_number_display(card)
   card[0] == "10" ? "|___#{card[0]}|" : "|____#{card[0]}|"
 end
 
-def display_cards(player_info)
-  lines = ["", "", "", "", ""]
-
+def generate_display_cards!(player_info, lines)
   player_info[:hand].each_with_index do |card, index|
     if player_info[:hidden_card] && index == 0
       lines[0] << " _____ "
@@ -83,7 +81,11 @@ def display_cards(player_info)
       lines[4] << bottom_number_display(card)
     end
   end
+end
 
+def display_cards(player_info)
+  lines = ["", "", "", "", ""]
+  generate_display_cards!(player_info, lines)
   lines.each { |line| puts line }
 end
 
