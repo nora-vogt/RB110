@@ -167,33 +167,32 @@ def dealer_turn(deck, players, scoreboard)
   end
 end
 
-def update_score!(scoreboard, winner)
-  scoreboard[winner] += 1
-end
-
 def update_round_number!(scoreboard)
   scoreboard[:round] += 1
 end
 
-def determine_round_outcome(players, scoreboard)
+def determine_round_outcome(players)
   player_total = players[:player][:total]
   dealer_total = players[:dealer][:total]
 
   if player_total > MAX_HAND_POINTS
-    update_score!(scoreboard, :dealer)
     :player_busted
   elsif dealer_total > MAX_HAND_POINTS
-    update_score!(scoreboard, :player)
     :dealer_busted
   elsif player_total > dealer_total
-    update_score!(scoreboard, :player)
     :player
   elsif dealer_total > player_total
-    update_score!(scoreboard, :dealer)
     :dealer
   else
-    update_score!(scoreboard, :tie)
     :tie
+  end
+end
+
+def update_score!(scoreboard, outcome)
+  case outcome
+  when :player_busted, :dealer then scoreboard[:dealer] += 1
+  when :dealer_busted, :player then scoreboard[:player] += 1
+  when :tie then scoreboard[:tie] += 1
   end
 end
 
@@ -308,8 +307,9 @@ loop do # MAIN GAME LOOP
 
     if busted?(players[:player][:total])
       system "clear"
-      outcome = determine_round_outcome(players, scoreboard)
+      outcome = determine_round_outcome(players)
       reveal_dealer_hidden_card!(players)
+      update_score!(scoreboard, outcome)
       display_end_of_round(players, scoreboard, outcome)
 
       break if game_won?(scoreboard)
@@ -325,9 +325,9 @@ loop do # MAIN GAME LOOP
 
     if busted?(players[:dealer][:total])
       system "clear"
-      outcome = determine_round_outcome(players, scoreboard)
+      outcome = determine_round_outcome(players)
+      update_score!(scoreboard, outcome)
       display_end_of_round(players, scoreboard, outcome)
-
       break if game_won?(scoreboard)
 
       ask_to_continue(:round)
@@ -344,7 +344,8 @@ loop do # MAIN GAME LOOP
     sleep 2
 
     system "clear"
-    outcome = determine_round_outcome(players, scoreboard)
+    outcome = determine_round_outcome(players)
+    update_score!(scoreboard, outcome)
     display_end_of_round(players, scoreboard, outcome)
 
     break if game_won?(scoreboard)
