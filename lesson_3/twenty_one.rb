@@ -94,18 +94,10 @@ end
 def display_dealer_hand(dealer_info)
   prompt "Dealer's hand is:"
   display_cards(dealer_info)
-  
+
   if dealer_info[:hidden_card] == false
     prompt "Dealer's total points are #{dealer_info[:total]}."
   end
-  # if dealer_info[:hidden_card]
-  #   prompt "???"
-  #   dealer_info[:hand][1..-1].each { |card| prompt "#{card[0]} of #{card[1]}" }
-  # else
-  #   display_cards(dealer_info[:hand])
-  #   prompt "Dealer's total points are #{dealer_info[:total]}."
-  # end
-  # IF THIS WORKS, HOW/WHEN TO PRINT DEALER TOTAL?
 end
 
 def display_hands(players)
