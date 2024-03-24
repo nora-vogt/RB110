@@ -43,11 +43,11 @@ def initialize_players(deck)
   player = { hand: player_hand, total: player_total }
   dealer = { hand: dealer_hand, total: dealer_total, hidden_card: true }
 
-  {player: player, dealer: dealer}
+  { player: player, dealer: dealer }
 end
 
 def ask_to_continue(play)
-  prompt "Press enter to start #{ play == :game ? "the game" : "next round" }:"
+  prompt "Press enter to start #{play == :game ? 'the game' : 'next round'}:"
   gets.chomp
 end
 
@@ -57,29 +57,34 @@ def display_introduction
   ask_to_continue(:game)
 end
 
-def top_number_display(card)
-  card[0] == "10" ? "|#{card[0]}   |" : "|#{card[0]}    |"
+def top_number_display(card, hidden, index)
+  if card[0] == '10'
+    "|#{card[0]}   |"
+  else
+    "|#{hidden && index == 0 ? "~" : card[0]}    |"
+  end
 end
 
-def bottom_number_display(card)
-  card[0] == "10" ? "|___#{card[0]}|" : "|____#{card[0]}|"
+def middle_display(card, hidden, index)
+  "|  #{hidden && index == 0 ? "~" : card[1]}  |"
+end
+
+def bottom_number_display(card, hidden, index)
+  if card[0] == '10'
+    "|___#{card[0]}|"
+  else
+    "|____#{hidden && index == 0 ? "~" : card[0]}|"
+  end
 end
 
 def generate_display_cards!(player_info, lines)
+  hidden = player_info[:hidden_card]
   player_info[:hand].each_with_index do |card, index|
-    if player_info[:hidden_card] && index == 0
-      lines[0] << " _____ "
-      lines[1] << "|~    |"
-      lines[2] << "|  ~  |"
-      lines[3] << "|  ~  |"
-      lines[4]<< "|____~|"
-    else
-      lines[0] << " _____ "
-      lines[1] << top_number_display(card)
-      lines[2] << "|  #{card[1]}  |"
-      lines[3] << "|  #{card[1]}  |"
-      lines[4] << bottom_number_display(card)
-    end
+    lines[0] << " _____ "
+    lines[1] << top_number_display(card, hidden, index)
+    lines[2] << middle_display(card, hidden, index)
+    lines[3] << middle_display(card, hidden, index)
+    lines[4] << bottom_number_display(card, hidden, index)
   end
 end
 
@@ -137,7 +142,7 @@ def player_turn(deck, players, scoreboard)
       display_game_info(players, scoreboard)
       prompt "You chose to hit."
     end
-  
+
     break if ['s', 'stay'].include?(choice) || busted?(player_stats[:total])
   end
 end
@@ -150,7 +155,7 @@ def dealer_turn(deck, players, scoreboard)
     system "clear"
     dealer_stats[:total] = calculate_total(dealer_stats[:hand])
     display_game_info(players, scoreboard)
-  
+
     break if dealer_stay?(dealer_stats[:total]) || busted?(dealer_stats[:total])
 
     prompt "Dealer's Turn!"
@@ -322,7 +327,7 @@ loop do # MAIN GAME LOOP
       system "clear"
       outcome = determine_round_outcome(players, scoreboard)
       display_end_of_round(players, scoreboard, outcome)
-    
+
       break if game_won?(scoreboard)
 
       ask_to_continue(:round)
@@ -343,7 +348,7 @@ loop do # MAIN GAME LOOP
     display_end_of_round(players, scoreboard, outcome)
 
     break if game_won?(scoreboard)
-    
+
     ask_to_continue(:round)
     update_round_number!(scoreboard)
   end # END ROUND LOOP
@@ -358,7 +363,7 @@ prompt "Thanks for playing Twenty One!"
 Bonus #2: The final call to `play_again?` is different than the previous two
 invocations. With this call, `play_again?` returning `true` will continue to
 the next iteration of the game loop. Returning `false` will break out of the
-loop and end the game. 
+loop and end the game.
 
 With both of the two prior calls, `play_again?` returning `true`` executes the
 `next` command, which skips to the next iteration of the main game loop
