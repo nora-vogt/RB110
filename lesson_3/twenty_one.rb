@@ -57,7 +57,7 @@ def display_introduction
   ask_to_continue(:game)
 end
 
-def top_number_display(card, hidden, index)
+def top_card_format(card, hidden, index)
   if card[0] == '10'
     "|#{card[0]}   |"
   else
@@ -65,11 +65,11 @@ def top_number_display(card, hidden, index)
   end
 end
 
-def middle_display(card, hidden, index)
+def middle_card_format(card, hidden, index)
   "|  #{hidden && index == 0 ? "~" : card[1]}  |"
 end
 
-def bottom_number_display(card, hidden, index)
+def bottom_card_format(card, hidden, index)
   if card[0] == '10'
     "|___#{card[0]}|"
   else
@@ -81,10 +81,10 @@ def generate_display_cards!(player_info, lines)
   hidden = player_info[:hidden_card]
   player_info[:hand].each_with_index do |card, index|
     lines[0] << " _____ "
-    lines[1] << top_number_display(card, hidden, index)
-    lines[2] << middle_display(card, hidden, index)
-    lines[3] << middle_display(card, hidden, index)
-    lines[4] << bottom_number_display(card, hidden, index)
+    lines[1] << top_card_format(card, hidden, index)
+    lines[2] << middle_card_format(card, hidden, index)
+    lines[3] << middle_card_format(card, hidden, index)
+    lines[4] << bottom_card_format(card, hidden, index)
   end
 end
 
