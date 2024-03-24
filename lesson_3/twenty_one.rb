@@ -110,9 +110,9 @@ def display_dealer_hand(dealer_info)
 end
 
 def display_hands(players)
-  display_player_hand(players[:player])
-  display_blank_line
   display_dealer_hand(players[:dealer])
+  display_blank_line
+  display_player_hand(players[:player])
   display_blank_line
 end
 
