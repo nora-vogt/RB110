@@ -291,11 +291,7 @@ def play_again?
   ['y', 'yes'].include?(answer)
 end
 
-loop do # MAIN GAME LOOP
-  system "clear"
-  display_introduction
-  scoreboard = { player: 0, dealer: 0, tie: 0, round: 1 }
-
+def play_round(scoreboard)
   loop do # ROUND LOOP
     system "clear"
     deck = initialize_deck
@@ -354,6 +350,15 @@ loop do # MAIN GAME LOOP
     update_round_number!(scoreboard)
   end # END ROUND LOOP
 
+end
+
+loop do # MAIN GAME LOOP
+  system "clear"
+  display_introduction
+  scoreboard = { player: 0, dealer: 0, tie: 0, round: 1 }
+
+  play_round(scoreboard)
+  
   display_game_winner(scoreboard)
   break unless play_again?
 end # END MAIN GAME LOOP
