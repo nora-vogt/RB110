@@ -192,7 +192,7 @@ def update_score!(scoreboard, outcome)
   case outcome
   when :player_busted, :dealer then scoreboard[:dealer] += 1
   when :dealer_busted, :player then scoreboard[:player] += 1
-  when :tie then scoreboard[:tie] += 1
+  when :tie                    then scoreboard[:tie] += 1
   end
 end
 
