@@ -46,7 +46,7 @@ def initialize_players(deck)
   { player: player, dealer: dealer }
 end
 
-def ask_to_continue(play)
+def ask_to_start(play)
   prompt "Press enter to start #{play == :game ? 'the game' : 'next round'}:"
   gets.chomp
 end
@@ -54,7 +54,7 @@ end
 def display_introduction
   prompt "Welcome to Twenty-One!"
   prompt "Rules go here. First player to win 5 rounds wins!"
-  ask_to_continue(:game)
+  ask_to_start(:game)
 end
 
 def format_top_card(card, hidden, index)
@@ -309,7 +309,7 @@ def play_round(scoreboard)
       display_end_of_round(players, scoreboard, outcome)
 
       break if game_won?(scoreboard)
-      ask_to_continue(:round)
+      ask_to_start(:round)
       update_round_number!(scoreboard)
       next
     else
@@ -326,7 +326,7 @@ def play_round(scoreboard)
       display_end_of_round(players, scoreboard, outcome)
       break if game_won?(scoreboard)
 
-      ask_to_continue(:round)
+      ask_to_start(:round)
       update_round_number!(scoreboard)
       next
     else
@@ -346,7 +346,7 @@ def play_round(scoreboard)
 
     break if game_won?(scoreboard)
 
-    ask_to_continue(:round)
+    ask_to_start(:round)
     update_round_number!(scoreboard)
   end # END ROUND LOOP
 
