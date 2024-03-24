@@ -153,7 +153,6 @@ def dealer_turn(deck, players, scoreboard)
 
   loop do
     system "clear"
-    dealer_stats[:total] = calculate_total(dealer_stats[:hand])
     display_game_info(players, scoreboard)
 
     break if dealer_stay?(dealer_stats[:total]) || busted?(dealer_stats[:total])
@@ -162,6 +161,7 @@ def dealer_turn(deck, players, scoreboard)
     prompt "Dealer chooses to hit..."
     display_blank_line
     deal_card!(deck, dealer_stats[:hand])
+    dealer_stats[:total] = calculate_total(dealer_stats[:hand])
     display_blank_line
     sleep 2
   end
@@ -259,13 +259,13 @@ def calculate_total(hand)
   sum = 0
 
   values.each do |value|
-    if value == 'A'
-      sum += ELEVEN_POINTS
-    elsif ('2'..'10').include?(value)
-      sum += value.to_i
-    else # Jack, Queen, King
-      sum += TEN_POINTS
-    end
+    sum = if value == 'A'
+            sum + ELEVEN_POINTS
+          elsif ('2'..'10').include?(value)
+            sum + value.to_i
+          else # Jack, Queen, King
+            sum + TEN_POINTS
+          end
   end
 
   values.count('A').times { sum -= TEN_POINTS if sum > MAX_HAND_POINTS }
