@@ -296,6 +296,7 @@ def play_round(scoreboard)
     system "clear"
     deck = initialize_deck
     players = initialize_players(deck)
+    update_round_number!(scoreboard)
 
     display_game_info(players, scoreboard)
 
@@ -303,14 +304,13 @@ def play_round(scoreboard)
 
     if busted?(players[:player][:total])
       system "clear"
-      outcome = determine_round_outcome(players)
       reveal_dealer_hidden_card!(players)
+      outcome = determine_round_outcome(players)
       update_score!(scoreboard, outcome)
       display_end_of_round(players, scoreboard, outcome)
 
       break if game_won?(scoreboard)
       ask_to_start(:round)
-      update_round_number!(scoreboard)
       next
     else
       prompt "You chose to stay."
@@ -324,10 +324,9 @@ def play_round(scoreboard)
       outcome = determine_round_outcome(players)
       update_score!(scoreboard, outcome)
       display_end_of_round(players, scoreboard, outcome)
-      break if game_won?(scoreboard)
 
+      break if game_won?(scoreboard)
       ask_to_start(:round)
-      update_round_number!(scoreboard)
       next
     else
       prompt "Dealer chose to stay."
@@ -345,9 +344,7 @@ def play_round(scoreboard)
     display_end_of_round(players, scoreboard, outcome)
 
     break if game_won?(scoreboard)
-
     ask_to_start(:round)
-    update_round_number!(scoreboard)
   end # END ROUND LOOP
 
 end
@@ -355,11 +352,11 @@ end
 loop do # MAIN GAME LOOP
   system "clear"
   display_introduction
-  scoreboard = { player: 0, dealer: 0, tie: 0, round: 1 }
+  scoreboard = { player: 0, dealer: 0, tie: 0, round: 0 }
 
   play_round(scoreboard)
-  
   display_game_winner(scoreboard)
+
   break unless play_again?
 end # END MAIN GAME LOOP
 
