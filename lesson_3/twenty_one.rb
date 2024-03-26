@@ -108,9 +108,8 @@ def display_dealer_hand(dealer_info)
   prompt "Dealer's hand is:"
   display_cards(dealer_info)
 
-  if dealer_info[:hidden_card] == false
-    prompt "Dealer's total points are #{dealer_info[:total]}."
-  end
+  points = dealer_info[:hidden_card] ? 'hidden' : dealer_info[:total]
+  prompt "Dealer's total points are #{points}."
 end
 
 def display_hands(players)
