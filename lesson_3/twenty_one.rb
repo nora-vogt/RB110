@@ -145,13 +145,12 @@ def player_turn(deck, players, scoreboard)
       player_stats[:total] = calculate_total(player_stats[:hand])
       display_game_info(players, scoreboard)
       prompt "You chose to hit."
+      sleep 1
     end
 
     break if ['s', 'stay'].include?(choice) || busted?(player_stats[:total])
   end
-  prompt "You chose to stay." if ['s', 'stay'].include?(choice)
   reveal_dealer_hidden_card!(players)
-  sleep 2
 end
 
 def dealer_turn(deck, players, scoreboard)
@@ -170,8 +169,6 @@ def dealer_turn(deck, players, scoreboard)
     display_blank_line
     sleep 2
   end
-  prompt "Dealer chose to stay." if dealer_stay?(dealer_stats[:total])
-  sleep 2
 end
 
 def update_round_number!(scoreboard)
@@ -304,9 +301,13 @@ def play_round(players, deck, scoreboard)
 
   player_turn(deck, players, scoreboard)
   return if busted?(players[:player][:total])
+  prompt "You chose to stay."
+  sleep 2
 
   dealer_turn(deck, players, scoreboard)
   return if busted?(players[:dealer][:total])
+  prompt "Dealer chose to stay."
+  sleep 2
 
   display_blank_line
   prompt "Both you and Dealer stay!"
@@ -331,8 +332,8 @@ loop do
 
     break if game_won?(scoreboard)
 
-    ask_to_start(:round)
     update_round_number!(scoreboard)
+    ask_to_start(:round)
   end
 
   display_game_winner(scoreboard)
