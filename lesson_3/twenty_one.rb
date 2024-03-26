@@ -141,7 +141,7 @@ def player_turn(deck, players, scoreboard)
     if ['h', 'hit'].include?(choice)
       system "clear"
       deal_card!(deck, player_stats[:hand])
-      player_stats[:total] = calculate_total(player_stats[:hand])
+      update_total!(player_stats)
       display_game_info(players, scoreboard)
       prompt "You chose to hit."
       sleep 1
@@ -164,7 +164,7 @@ def dealer_turn(deck, players, scoreboard)
     prompt "Dealer chooses to hit..."
     display_blank_line
     deal_card!(deck, dealer_stats[:hand])
-    dealer_stats[:total] = calculate_total(dealer_stats[:hand])
+    update_total!(dealer_stats)
     sleep 2
   end
 end
@@ -271,6 +271,10 @@ def calculate_total(hand)
 
   values.count('A').times { sum -= TEN_POINTS if sum > MAX_HAND_POINTS }
   sum
+end
+
+def update_total!(player)
+  player[:total] = calculate_total(player[:hand])
 end
 
 def dealer_stay?(total)
