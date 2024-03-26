@@ -310,10 +310,6 @@ def play_round(players, deck, scoreboard)
   return if busted?(players[:dealer][:total])
   prompt "Dealer chose to stay."
   sleep 2
-
-  display_blank_line
-  prompt "Both you and Dealer stay!"
-  sleep 2
 end
 
 loop do
