@@ -130,8 +130,9 @@ end
 
 def player_turn(deck, players, scoreboard)
   player_stats = players[:player]
+  prompt "Your turn!"
+  choice = nil
   loop do
-    prompt "Your turn!"
     prompt "Would you like to 'hit' or 'stay'?"
     choice = ask_hit_or_stay
 
@@ -145,6 +146,8 @@ def player_turn(deck, players, scoreboard)
 
     break if ['s', 'stay'].include?(choice) || busted?(player_stats[:total])
   end
+  prompt "You chose to stay." if ['s', 'stay'].include?(choice)
+  sleep 2
 end
 
 def dealer_turn(deck, players, scoreboard)
@@ -165,6 +168,8 @@ def dealer_turn(deck, players, scoreboard)
     display_blank_line
     sleep 2
   end
+  prompt "Dealer chose to stay." if dealer_stay?(dealer_stats[:total])
+  sleep 2
 end
 
 def update_round_number!(scoreboard)
@@ -312,9 +317,6 @@ def play_round(scoreboard)
       break if game_won?(scoreboard)
       ask_to_start(:round)
       next
-    else
-      prompt "You chose to stay."
-      sleep 1
     end
 
     dealer_turn(deck, players, scoreboard)
@@ -328,9 +330,6 @@ def play_round(scoreboard)
       break if game_won?(scoreboard)
       ask_to_start(:round)
       next
-    else
-      prompt "Dealer chose to stay."
-      sleep 2
     end
 
     display_blank_line
