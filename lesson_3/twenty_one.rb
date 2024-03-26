@@ -119,8 +119,8 @@ def display_hands(players)
   display_blank_line
 end
 
-def reveal_dealer_hidden_card!(players)
-  players[:dealer][:hidden_card] = false
+def reveal_dealer_hidden_card!(dealer_stats)
+  dealer_stats[:hidden_card] = false
 end
 
 def ask_hit_or_stay
@@ -149,7 +149,6 @@ def user_turn(deck, players, scoreboard)
 
     break if ['s', 'stay'].include?(choice) || busted?(user_stats[:total])
   end
-  reveal_dealer_hidden_card!(players)
 end
 
 def dealer_turn(deck, players, scoreboard)
@@ -194,7 +193,7 @@ def update_score!(scoreboard, outcome)
   case outcome
   when :user_busted, :dealer then scoreboard[:dealer] += 1
   when :dealer_busted, :user then scoreboard[:user] += 1
-  when :tie                    then scoreboard[:tie] += 1
+  when :tie                  then scoreboard[:tie] += 1
   end
 end
 
@@ -302,6 +301,7 @@ def play_round(players, deck, scoreboard)
   display_game_info(players, scoreboard)
 
   user_turn(deck, players, scoreboard)
+  reveal_dealer_hidden_card!(players[:dealer])
   return if busted?(players[:user][:total])
   prompt "You chose to stay."
   sleep 2
