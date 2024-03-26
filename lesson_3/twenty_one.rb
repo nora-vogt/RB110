@@ -58,10 +58,12 @@ def display_introduction
 end
 
 def format_top_card(card, hidden, index)
-  if card[0] == '10'
+  if hidden && index == 0
+    "|~    |"
+  elsif card[0] == '10'
     "|#{card[0]}   |"
   else
-    "|#{hidden && index == 0 ? '~' : card[0]}    |"
+    "|#{card[0]}    |"
   end
 end
 
@@ -70,10 +72,12 @@ def format_middle_card(card, hidden, index)
 end
 
 def format_bottom_card(card, hidden, index)
-  if card[0] == '10'
+  if hidden && index == 0
+    "|____~|"
+  elsif card[0] == '10'
     "|___#{card[0]}|"
   else
-    "|____#{hidden && index == 0 ? '~' : card[0]}|"
+    "|____#{card[0]}|"
   end
 end
 
@@ -147,13 +151,12 @@ def player_turn(deck, players, scoreboard)
     break if ['s', 'stay'].include?(choice) || busted?(player_stats[:total])
   end
   prompt "You chose to stay." if ['s', 'stay'].include?(choice)
+  reveal_dealer_hidden_card!(players)
   sleep 2
 end
 
 def dealer_turn(deck, players, scoreboard)
   dealer_stats = players[:dealer]
-  reveal_dealer_hidden_card!(players)
-
   loop do
     system "clear"
     display_game_info(players, scoreboard)
@@ -309,7 +312,7 @@ def play_round(scoreboard)
 
     if busted?(players[:player][:total])
       system "clear"
-      reveal_dealer_hidden_card!(players)
+      
       outcome = determine_round_outcome(players)
       update_score!(scoreboard, outcome)
       display_end_of_round(players, scoreboard, outcome)
