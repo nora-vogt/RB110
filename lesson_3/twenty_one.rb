@@ -134,7 +134,6 @@ end
 def player_turn(deck, players, scoreboard)
   player_stats = players[:player]
   prompt "Your turn!"
-  choice = nil
   loop do
     prompt "Would you like to 'hit' or 'stay'?"
     choice = ask_hit_or_stay
@@ -166,7 +165,6 @@ def dealer_turn(deck, players, scoreboard)
     display_blank_line
     deal_card!(deck, dealer_stats[:hand])
     dealer_stats[:total] = calculate_total(dealer_stats[:hand])
-    display_blank_line
     sleep 2
   end
 end
@@ -324,7 +322,7 @@ loop do
     players = initialize_players(deck)
 
     play_round(players, deck, scoreboard)
-  
+
     system "clear"
     outcome = determine_round_outcome(players)
     update_score!(scoreboard, outcome)
