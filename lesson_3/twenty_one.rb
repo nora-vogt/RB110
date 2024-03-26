@@ -5,7 +5,7 @@ CARDS = ('2'..'10').to_a + ['J', 'Q', 'K', 'A']
 
 TEN_POINTS = 10
 ELEVEN_POINTS = 11
-SEVENTEEN_POINTS = 17
+DEALER_MIN_POINTS = 17
 MAX_HAND_POINTS = 21
 GAME_WINNING_SCORE = 5
 
@@ -299,7 +299,7 @@ def update_total!(player)
 end
 
 def dealer_stay?(total)
-  (SEVENTEEN_POINTS..MAX_HAND_POINTS).include?(total)
+  (DEALER_MIN_POINTS..MAX_HAND_POINTS).include?(total)
 end
 
 def busted?(total)
