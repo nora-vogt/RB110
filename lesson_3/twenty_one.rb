@@ -299,68 +299,46 @@ def play_again?
   ['y', 'yes'].include?(answer)
 end
 
-def play_round(scoreboard)
-  loop do # ROUND LOOP
-    system "clear"
+def play_round(players, deck, scoreboard)
+  system "clear"
+  display_game_info(players, scoreboard)
+
+  player_turn(deck, players, scoreboard)
+  return if busted?(players[:player][:total])
+
+  dealer_turn(deck, players, scoreboard)
+  return if busted?(players[:dealer][:total])
+
+  display_blank_line
+  prompt "Both you and Dealer stay!"
+  sleep 2
+end
+
+loop do
+  system "clear"
+  display_introduction
+  scoreboard = { player: 0, dealer: 0, tie: 0, round: 1 }
+
+  loop do
     deck = initialize_deck
     players = initialize_players(deck)
-    update_round_number!(scoreboard)
 
-    display_game_info(players, scoreboard)
-
-    player_turn(deck, players, scoreboard)
-
-    if busted?(players[:player][:total])
-      system "clear"
-      
-      outcome = determine_round_outcome(players)
-      update_score!(scoreboard, outcome)
-      display_end_of_round(players, scoreboard, outcome)
-
-      break if game_won?(scoreboard)
-      ask_to_start(:round)
-      next
-    end
-
-    dealer_turn(deck, players, scoreboard)
-
-    if busted?(players[:dealer][:total])
-      system "clear"
-      outcome = determine_round_outcome(players)
-      update_score!(scoreboard, outcome)
-      display_end_of_round(players, scoreboard, outcome)
-
-      break if game_won?(scoreboard)
-      ask_to_start(:round)
-      next
-    end
-
-    display_blank_line
-    prompt "Both Player and Dealer stay!"
-    display_blank_line
-    sleep 2
-
+    play_round(players, deck, scoreboard)
+  
     system "clear"
     outcome = determine_round_outcome(players)
     update_score!(scoreboard, outcome)
     display_end_of_round(players, scoreboard, outcome)
 
     break if game_won?(scoreboard)
+
     ask_to_start(:round)
-  end # END ROUND LOOP
+    update_round_number!(scoreboard)
+  end
 
-end
-
-loop do # MAIN GAME LOOP
-  system "clear"
-  display_introduction
-  scoreboard = { player: 0, dealer: 0, tie: 0, round: 0 }
-
-  play_round(scoreboard)
   display_game_winner(scoreboard)
-
   break unless play_again?
-end # END MAIN GAME LOOP
+end
 
 prompt "Thanks for playing Twenty One!"
 
