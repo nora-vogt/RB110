@@ -25,25 +25,25 @@ def deal_card!(deck, hand)
   hand << deck.shift
 end
 
-def initial_deal!(deck, player, dealer)
+def initial_deal!(deck, user, dealer)
   2.times do
-    deal_card!(deck, player)
+    deal_card!(deck, user)
     deal_card!(deck, dealer)
   end
 end
 
 def initialize_players(deck)
-  player_hand = []
+  user_hand = []
   dealer_hand = []
-  initial_deal!(deck, player_hand, dealer_hand)
+  initial_deal!(deck, user_hand, dealer_hand)
 
-  player_total = calculate_total(player_hand)
+  user_total = calculate_total(user_hand)
   dealer_total = calculate_total(dealer_hand)
 
-  player = { hand: player_hand, total: player_total }
-  dealer = { hand: dealer_hand, total: dealer_total, hidden_card: true }
+  user_stats = { hand: user_hand, total: user_total }
+  dealer_stats = { hand: dealer_hand, total: dealer_total, hidden_card: true }
 
-  { player: player, dealer: dealer }
+  { user: user_stats, dealer: dealer_stats }
 end
 
 def ask_to_start(play)
@@ -98,10 +98,10 @@ def display_cards(player_info)
   lines.each { |line| puts line }
 end
 
-def display_player_hand(player_info)
+def display_user_hand(user_info)
   prompt "Your cards are:"
-  display_cards(player_info)
-  prompt "Your total points are #{player_info[:total]}."
+  display_cards(user_info)
+  prompt "Your total points are #{user_info[:total]}."
 end
 
 def display_dealer_hand(dealer_info)
@@ -115,7 +115,7 @@ end
 def display_hands(players)
   display_dealer_hand(players[:dealer])
   display_blank_line
-  display_player_hand(players[:player])
+  display_user_hand(players[:user])
   display_blank_line
 end
 
@@ -131,8 +131,8 @@ def ask_hit_or_stay
   end
 end
 
-def player_turn(deck, players, scoreboard)
-  player_stats = players[:player]
+def user_turn(deck, players, scoreboard)
+  user_stats = players[:user]
   prompt "Your turn!"
   loop do
     prompt "Would you like to 'hit' or 'stay'?"
@@ -140,14 +140,14 @@ def player_turn(deck, players, scoreboard)
 
     if ['h', 'hit'].include?(choice)
       system "clear"
-      deal_card!(deck, player_stats[:hand])
-      update_total!(player_stats)
+      deal_card!(deck, user_stats[:hand])
+      update_total!(user_stats)
       display_game_info(players, scoreboard)
       prompt "You chose to hit."
       sleep 1
     end
 
-    break if ['s', 'stay'].include?(choice) || busted?(player_stats[:total])
+    break if ['s', 'stay'].include?(choice) || busted?(user_stats[:total])
   end
   reveal_dealer_hidden_card!(players)
 end
@@ -174,16 +174,16 @@ def update_round_number!(scoreboard)
 end
 
 def determine_round_outcome(players)
-  player_total = players[:player][:total]
+  user_total = players[:user][:total]
   dealer_total = players[:dealer][:total]
 
-  if player_total > MAX_HAND_POINTS
-    :player_busted
+  if user_total > MAX_HAND_POINTS
+    :user_busted
   elsif dealer_total > MAX_HAND_POINTS
     :dealer_busted
-  elsif player_total > dealer_total
-    :player
-  elsif dealer_total > player_total
+  elsif user_total > dealer_total
+    :user
+  elsif dealer_total > user_total
     :dealer
   else
     :tie
@@ -192,23 +192,23 @@ end
 
 def update_score!(scoreboard, outcome)
   case outcome
-  when :player_busted, :dealer then scoreboard[:dealer] += 1
-  when :dealer_busted, :player then scoreboard[:player] += 1
+  when :user_busted, :dealer then scoreboard[:dealer] += 1
+  when :dealer_busted, :user then scoreboard[:user] += 1
   when :tie                    then scoreboard[:tie] += 1
   end
 end
 
 def display_round_outcome(players, outcome)
-  player_total = players[:player][:total]
+  user_total = players[:user][:total]
   dealer_total = players[:dealer][:total]
 
   case outcome
-  when :player_busted
+  when :user_busted
     prompt "You bust! Dealer wins."
   when :dealer_busted
     prompt "Dealer bust! You win!"
-  when :player
-    prompt "You win this round with #{player_total} points!"
+  when :user
+    prompt "You win this round with #{user_total} points!"
   when :dealer
     prompt "The Dealer wins this round with #{dealer_total} points!"
   when :tie
@@ -223,7 +223,7 @@ end
 
 def display_scoreboard(scoreboard)
   puts "---------SCORES---------"
-  puts "Player: #{scoreboard[:player]}"
+  puts "Player: #{scoreboard[:user]}"
   puts "Dealer: #{scoreboard[:dealer]}"
   puts "Ties: #{scoreboard[:tie]}"
   puts "---------ROUND #{scoreboard[:round]}---------"
@@ -235,8 +235,8 @@ def display_game_info(players, scoreboard)
 end
 
 def determine_game_winner(scoreboard)
-  if scoreboard[:player] == 5
-    :player
+  if scoreboard[:user] == 5
+    :user
   elsif scoreboard[:dealer] == 5
     :dealer
   end
@@ -247,7 +247,7 @@ def display_game_winner(scoreboard)
   display_blank_line
   puts '*' * 80
   case winner
-  when :player
+  when :user
     prompt "You win the game! Congratulations!"
   when :dealer
     prompt "The Dealer wins the game! Better luck next time."
@@ -286,7 +286,7 @@ def busted?(total)
 end
 
 def game_won?(scoreboard)
-  scores = scoreboard.select { |k, _| k == :player || k == :dealer }
+  scores = scoreboard.select { |k, _| k == :user || k == :dealer }
   scores.any? { |_, v| v == GAME_WINNING_SCORE }
 end
 
@@ -301,8 +301,8 @@ def play_round(players, deck, scoreboard)
   system "clear"
   display_game_info(players, scoreboard)
 
-  player_turn(deck, players, scoreboard)
-  return if busted?(players[:player][:total])
+  user_turn(deck, players, scoreboard)
+  return if busted?(players[:user][:total])
   prompt "You chose to stay."
   sleep 2
 
@@ -319,7 +319,7 @@ end
 loop do
   system "clear"
   display_introduction
-  scoreboard = { player: 0, dealer: 0, tie: 0, round: 1 }
+  scoreboard = { user: 0, dealer: 0, tie: 0, round: 1 }
 
   loop do
     deck = initialize_deck
