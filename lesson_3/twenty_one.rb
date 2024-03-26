@@ -51,10 +51,32 @@ def ask_to_start(play)
   gets.chomp
 end
 
+def ask_for_rules
+  prompt "Would you like to see the rules? ('Y' or 'N'):"
+  loop do
+    choice = gets.chomp.downcase
+    return choice if ['yes', 'y', 'n', 'no'].include?(choice)
+    prompt "Invalid response. Please enter 'Y' or 'N':"
+  end
+end
+
+def display_rules
+  system "clear"
+  prompt "These are some rules. Placeholder!!"
+  ask_to_start(:game)
+end
+
 def display_introduction
   prompt "Welcome to Twenty-One!"
-  prompt "Rules go here. First player to win 5 rounds wins!"
-  ask_to_start(:game)
+  choice = ask_for_rules
+  if ['y', 'yes'].include?(choice)
+    display_rules
+  else
+    system "clear"
+    prompt "Great, you already know how to play!"
+    prompt "Get ready, you'll play until someone wins 5 rounds."
+    sleep 4
+  end
 end
 
 def format_top_card(card, hidden, index)
