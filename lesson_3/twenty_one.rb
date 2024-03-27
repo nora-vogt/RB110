@@ -60,7 +60,7 @@ end
 
 def ask_to_customize
   prompt "Would you like to customize the winning score to play 'Whatever-One'?"
-  prompt "Enter 'Y to customize, or 'N' to continue playing Twenty-One:"
+  prompt "Enter 'Y' to customize, or 'N' to continue playing Twenty-One:"
   loop do
   input = gets.chomp.downcase
     return input if ['yes', 'y', 'n', 'no'].include?(input)
@@ -69,7 +69,7 @@ def ask_to_customize
 end
 
 def within_valid_range?(string)
-  ('31'..'101').to_a.include?(string)
+  ('31'..'91').to_a.include?(string)
 end
 
 def valid_integer?(string)
@@ -89,7 +89,7 @@ def ask_for_winning_score
   prompt "Set your own winning score."
   score = nil
   loop do
-    prompt "Enter a number that ends in '1', between 31 and 101 (ex: 41, 71):"
+    prompt "Enter a two-digit number that ends in '1', between 31 and 91 (ex: 31, 51):"
     score = gets.chomp
     break if valid_winning_score?(score)
     prompt "Invalid response."
