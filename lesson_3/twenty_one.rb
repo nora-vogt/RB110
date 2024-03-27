@@ -2,9 +2,9 @@ require 'pry'
 
 SUITS = ["\u2665", "\u2666", "\u2663", "\u2660"]
 CARDS = ('2'..'10').to_a + ['J', 'Q', 'K', 'A']
-NUMERALS = { 
-  2 => 'Twenty', 3 => 'Thirty', 4 => 'Forty', 
-  5 => 'Fifty', 6 => 'Sixty', 7 => 'Seventy', 
+NUMERALS = {
+  2 => 'Twenty', 3 => 'Thirty', 4 => 'Forty',
+  5 => 'Fifty', 6 => 'Sixty', 7 => 'Seventy',
   8 => 'Eighty', 9 => 'Ninety'
 }
 TEN_POINTS = 10
@@ -66,7 +66,7 @@ end
 
 def format_winning_score(integer)
   first_digit = integer.digits.last
-  NUMERALS[first_digit] + "-One"
+  "#{NUMERALS[first_digit]}-One"
 end
 
 def ask_to_start(play)
@@ -93,14 +93,12 @@ def ask_to_customize
   end
 end
 
-
-
 def ask_for_winning_score
   system "clear"
   prompt "Set your own winning score."
   score = nil
   loop do
-    prompt "Enter a two-digit number that ends in '1', between 31 and 91 (ex: 31, 51):"
+    prompt "Enter a number that ends in '1', between 31 and 91 (ex: 51):"
     score = gets.chomp
     break if valid_winning_score?(score)
     prompt "Invalid response."
@@ -110,7 +108,43 @@ end
 
 def display_rules
   system "clear"
-  prompt "These are some rules. Placeholder!!"
+  puts <<~HEREDOC
+    Twenty-One is a card game where you play against the Dealer. You'll play
+    with a normal 52-card deck, where each card is worth a certain number of
+    points.
+
+    Your goal is to get your hand as close to 21 points as possible, without
+    going over.
+
+    Both you and the Dealer will initially be dealt two cards. You can see your
+    hand, but you'll only be able to see one of the dealer's cards. Your turn is
+    first. You will either 'Hit' (take another card) or 'Stay' (end your turn).
+
+    You can 'Hit' as many times as you like, but if your hand's worth goes over
+    21 points, you bust, and the Dealer wins the round.
+
+    Once you 'Stay', the Dealer starts their turn. They will reveal their
+    hidden card, and 'Hit' trying to get as close to 21 as possible. If the
+    Dealer busts, and you win the round.
+
+    If both players 'Stay', the player with the hand closest to 21 points wins
+    the round.
+
+    Whoever wins the round will gain 1 point. First player to 5 points wins the
+    game!
+
+    You have the option to customize the game and enter your own winning score,
+    playing to get your hand as close you chosen total (for example, 41).
+
+    Card Point Values: 
+      - 2-10 = face value
+      - Jack, Queen, King = 10
+      - Ace = 1 or 11 *
+
+    * The value of Aces are determined each time you draw a new card. An Ace is
+     worth 11 points if it will not put your hand total over 21 points. If 
+     drawing an Ace would make you 'bust', the Ace will be worth 1 point.
+  HEREDOC
   prompt "Press 'Enter' to continue:"
   gets.chomp
 end
@@ -139,7 +173,7 @@ def display_introduction
     set_game_constants
     prompt "Great, you'll stick with Twenty-One!"
   end
-  
+
   prompt "Get ready, you'll play until someone wins 5 rounds."
   sleep 4
 end
