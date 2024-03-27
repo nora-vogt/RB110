@@ -136,13 +136,13 @@ def display_rules
     You have the option to customize the game and enter your own winning score,
     playing to get your hand as close you chosen total (for example, 41).
 
-    Card Point Values: 
+    Card Point Values:
       - 2-10 = face value
       - Jack, Queen, King = 10
       - Ace = 1 or 11 *
 
     * The value of Aces are determined each time you draw a new card. An Ace is
-     worth 11 points if it will not put your hand total over 21 points. If 
+     worth 11 points if it will not put your hand total over 21 points. If
      drawing an Ace would make you 'bust', the Ace will be worth 1 point.
   HEREDOC
   prompt "Press 'Enter' to continue:"
