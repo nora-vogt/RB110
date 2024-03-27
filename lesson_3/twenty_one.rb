@@ -40,6 +40,19 @@ def format_winning_score(integer)
   "#{NUMERALS[first_digit]}-One"
 end
 
+def entered_yes?(input)
+  ['y', 'yes'].include?(input)
+end
+
+def display_custom_game_choice(score)
+  system "clear"
+  if score == 21
+    prompt "No problem, you can stick with Twenty-One!"
+  else
+    prompt "Okay, you'll play #{format_winning_score(score)}!"
+  end
+end
+
 def ask_to_start(play)
   prompt "Press enter to start #{play == :game ? 'the game' : 'next round'}:"
   gets.chomp
@@ -55,6 +68,7 @@ def ask_for_rules
 end
 
 def ask_to_customize
+  system "clear"
   prompt "Would you like to customize the winning score to play 'Whatever-One'?"
   prompt "Enter 'Y' to customize, or 'N' to continue playing Twenty-One:"
   loop do
@@ -129,18 +143,14 @@ end
 def display_introduction
   prompt "Welcome to Twenty-One!"
   rules_choice = ask_for_rules
-  display_rules if ['y', 'yes'].include?(rules_choice)
-  system "clear"
+  display_rules if entered_yes?(rules_choice)
+
   choice = ask_to_customize
 
-  if ['y', 'yes'].include?(choice)
+  if entered_yes?(choice)
     score = ask_for_winning_score
     set_game_constants(score)
-    if score == 21
-      prompt "No problem, you can stick with Twenty-One!"
-    else
-      prompt "Okay, you'll play #{format_winning_score(score)}!"
-    end
+    display_custom_game_choice(score)
   else
     set_game_constants
     prompt "Great, you'll stick with Twenty-One!"
