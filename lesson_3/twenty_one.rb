@@ -19,35 +19,6 @@ def display_blank_line
   puts ""
 end
 
-def initialize_deck
-  CARDS.product(SUITS).shuffle
-end
-
-def deal_card!(deck, hand)
-  hand << deck.shift
-end
-
-def initial_deal!(deck, user, dealer)
-  2.times do
-    deal_card!(deck, user)
-    deal_card!(deck, dealer)
-  end
-end
-
-def initialize_players(deck)
-  user_hand = []
-  dealer_hand = []
-  initial_deal!(deck, user_hand, dealer_hand)
-
-  user_total = calculate_total(user_hand)
-  dealer_total = calculate_total(dealer_hand)
-
-  user_stats = { hand: user_hand, total: user_total }
-  dealer_stats = { hand: dealer_hand, total: dealer_total, hidden_card: true }
-
-  { user: user_stats, dealer: dealer_stats }
-end
-
 def within_valid_range?(string)
   ('21'..'91').to_a.include?(string)
 end
@@ -121,14 +92,15 @@ def display_rules
     first. You will either 'Hit' (take another card) or 'Stay' (end your turn).
 
     You can 'Hit' as many times as you like, but if your hand's worth goes over
-    21 points, you bust, and the Dealer wins the round.
+    21 points, you 'Bust', and the Dealer wins the round.
 
     Once you 'Stay', the Dealer starts their turn. They will reveal their
-    hidden card, and 'Hit' trying to get as close to 21 as possible. If the
-    Dealer busts, and you win the round.
+    hidden card and have the option to 'Hit' or 'Stay'. If the Dealer 'Busts',
+    you win the round.
 
     If both players 'Stay', the player with the hand closest to 21 points wins
-    the round.
+    the round. If both players' hands are worth the same amount of points, the
+    game is a tie, and no one gets a point.
 
     Whoever wins the round will gain 1 point. First player to 5 points wins the
     game!
@@ -142,7 +114,7 @@ def display_rules
       - Ace = 1 or 11 *
 
     * The value of Aces are determined each time you draw a new card. An Ace is
-     worth 11 points if it will not put your hand total over 21 points. If
+     worth 11 points if it will not push your hand total over 21 points. If
      drawing an Ace would make you 'bust', the Ace will be worth 1 point.
   HEREDOC
   prompt "Press 'Enter' to continue:"
@@ -176,6 +148,35 @@ def display_introduction
 
   prompt "Get ready, you'll play until someone wins 5 rounds."
   sleep 4
+end
+
+def initialize_deck
+  CARDS.product(SUITS).shuffle
+end
+
+def initialize_players(deck)
+  user_hand = []
+  dealer_hand = []
+  initial_deal!(deck, user_hand, dealer_hand)
+
+  user_total = calculate_total(user_hand)
+  dealer_total = calculate_total(dealer_hand)
+
+  user_stats = { hand: user_hand, total: user_total }
+  dealer_stats = { hand: dealer_hand, total: dealer_total, hidden_card: true }
+
+  { user: user_stats, dealer: dealer_stats }
+end
+
+def deal_card!(deck, hand)
+  hand << deck.shift
+end
+
+def initial_deal!(deck, user, dealer)
+  2.times do
+    deal_card!(deck, user)
+    deal_card!(deck, dealer)
+  end
 end
 
 def format_top_card(card, hidden, index)
@@ -213,6 +214,14 @@ def generate_display_cards!(player_info, lines)
   end
 end
 
+def display_scoreboard(scoreboard)
+  puts "-----------#{format_winning_score(MAX_HAND_POINTS).upcase}-----------"
+  puts "Player: #{scoreboard[:user]}"
+  puts "Dealer: #{scoreboard[:dealer]}"
+  puts "Ties: #{scoreboard[:tie]}"
+  puts "-----------ROUND #{scoreboard[:round]}-----------"
+end
+
 def display_cards(player_info)
   lines = ["", "", "", "", ""]
   generate_display_cards!(player_info, lines)
@@ -240,8 +249,9 @@ def display_hands(players)
   display_blank_line
 end
 
-def reveal_dealer_hidden_card!(dealer_stats)
-  dealer_stats[:hidden_card] = false
+def display_game_info(players, scoreboard)
+  display_scoreboard(scoreboard)
+  display_hands(players)
 end
 
 def ask_hit_or_stay
@@ -272,6 +282,10 @@ def user_turn(deck, players, scoreboard)
   end
 end
 
+def reveal_dealer_hidden_card!(dealer_stats)
+  dealer_stats[:hidden_card] = false
+end
+
 def dealer_turn(deck, players, scoreboard)
   dealer_stats = players[:dealer]
   loop do
@@ -289,8 +303,42 @@ def dealer_turn(deck, players, scoreboard)
   end
 end
 
-def update_round_number!(scoreboard)
-  scoreboard[:round] += 1
+def play_round(players, deck, scoreboard)
+  system "clear"
+  display_game_info(players, scoreboard)
+
+  user_turn(deck, players, scoreboard)
+  reveal_dealer_hidden_card!(players[:dealer])
+  return if busted?(players[:user][:total])
+  prompt "You chose to stay."
+  sleep 2
+
+  dealer_turn(deck, players, scoreboard)
+  return if busted?(players[:dealer][:total])
+  prompt "Dealer chose to stay."
+  sleep 2
+end
+
+def calculate_total(hand)
+  values = hand.map(&:first)
+  sum = 0
+
+  values.each do |value|
+    sum = if value == 'A'
+            sum + ELEVEN_POINTS
+          elsif ('2'..'10').include?(value)
+            sum + value.to_i
+          else # Jack, Queen, King
+            sum + TEN_POINTS
+          end
+  end
+
+  values.count('A').times { sum -= TEN_POINTS if sum > MAX_HAND_POINTS }
+  sum
+end
+
+def update_total!(player)
+  player[:total] = calculate_total(player[:hand])
 end
 
 def determine_round_outcome(players)
@@ -318,6 +366,10 @@ def update_score!(scoreboard, outcome)
   end
 end
 
+def update_round_number!(scoreboard)
+  scoreboard[:round] += 1
+end
+
 def display_round_outcome(players, outcome)
   user_total = players[:user][:total]
   dealer_total = players[:dealer][:total]
@@ -341,19 +393,6 @@ def display_end_of_round(players, scoreboard, outcome)
   display_round_outcome(players, outcome)
 end
 
-def display_scoreboard(scoreboard)
-  puts "-----------#{format_winning_score(MAX_HAND_POINTS).upcase}-----------"
-  puts "Player: #{scoreboard[:user]}"
-  puts "Dealer: #{scoreboard[:dealer]}"
-  puts "Ties: #{scoreboard[:tie]}"
-  puts "-----------ROUND #{scoreboard[:round]}-----------"
-end
-
-def display_game_info(players, scoreboard)
-  display_scoreboard(scoreboard)
-  display_hands(players)
-end
-
 def determine_game_winner(scoreboard)
   if scoreboard[:user] == 5
     :user
@@ -375,28 +414,6 @@ def display_game_winner(scoreboard)
   puts '*' * 80
 end
 
-def calculate_total(hand)
-  values = hand.map(&:first)
-  sum = 0
-
-  values.each do |value|
-    sum = if value == 'A'
-            sum + ELEVEN_POINTS
-          elsif ('2'..'10').include?(value)
-            sum + value.to_i
-          else # Jack, Queen, King
-            sum + TEN_POINTS
-          end
-  end
-
-  values.count('A').times { sum -= TEN_POINTS if sum > MAX_HAND_POINTS }
-  sum
-end
-
-def update_total!(player)
-  player[:total] = calculate_total(player[:hand])
-end
-
 def dealer_stay?(total)
   (DEALER_MIN_POINTS..MAX_HAND_POINTS).include?(total)
 end
@@ -415,22 +432,6 @@ def play_again?
   prompt "Would you like to play again? ('y' or 'n')"
   answer = gets.chomp.downcase
   ['y', 'yes'].include?(answer)
-end
-
-def play_round(players, deck, scoreboard)
-  system "clear"
-  display_game_info(players, scoreboard)
-
-  user_turn(deck, players, scoreboard)
-  reveal_dealer_hidden_card!(players[:dealer])
-  return if busted?(players[:user][:total])
-  prompt "You chose to stay."
-  sleep 2
-
-  dealer_turn(deck, players, scoreboard)
-  return if busted?(players[:dealer][:total])
-  prompt "Dealer chose to stay."
-  sleep 2
 end
 
 loop do
