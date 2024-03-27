@@ -2,7 +2,11 @@ require 'pry'
 
 SUITS = ["\u2665", "\u2666", "\u2663", "\u2660"]
 CARDS = ('2'..'10').to_a + ['J', 'Q', 'K', 'A']
-
+NUMERALS = { 
+  2 => 'Twenty', 3 => 'Thirty', 4 => 'Forty', 
+  5 => 'Fifty', 6 => 'Sixty', 7 => 'Seventy', 
+  8 => 'Eighty', 9 => 'Ninety'
+}
 TEN_POINTS = 10
 ELEVEN_POINTS = 11
 GAME_WINNING_SCORE = 5
@@ -44,6 +48,27 @@ def initialize_players(deck)
   { user: user_stats, dealer: dealer_stats }
 end
 
+def within_valid_range?(string)
+  ('31'..'91').to_a.include?(string)
+end
+
+def valid_integer?(string)
+  string.to_i.to_s == string
+end
+
+def ends_in_one?(string)
+  string.chars.last == '1'
+end
+
+def valid_winning_score?(string)
+  valid_integer?(string) && ends_in_one?(string) && within_valid_range?(string)
+end
+
+def format_winning_score(integer)
+  first_digit = integer.digits.last
+  NUMERALS[first_digit] + "-One"
+end
+
 def ask_to_start(play)
   prompt "Press enter to start #{play == :game ? 'the game' : 'next round'}:"
   gets.chomp
@@ -68,21 +93,7 @@ def ask_to_customize
   end
 end
 
-def within_valid_range?(string)
-  ('31'..'91').to_a.include?(string)
-end
 
-def valid_integer?(string)
-  string.to_i.to_s == string
-end
-
-def ends_in_one?(string)
-  string.chars.last == '1'
-end
-
-def valid_winning_score?(string)
-  valid_integer?(string) && ends_in_one?(string) && within_valid_range?(string)
-end
 
 def ask_for_winning_score
   system "clear"
@@ -119,7 +130,7 @@ def display_introduction
   if ['y', 'yes'].include?(choice)
     score = ask_for_winning_score
     set_game_constants(score)
-    prompt "Okay, you'll play #{score}!"
+    prompt "Okay, you'll play #{format_winning_score(score)}!"
   else
     set_game_constants
     prompt "Great, you'll stick with Twenty-One!"
@@ -293,11 +304,11 @@ def display_end_of_round(players, scoreboard, outcome)
 end
 
 def display_scoreboard(scoreboard)
-  puts "---------SCORES---------"
+  puts "-----------#{format_winning_score(MAX_HAND_POINTS)}-----------"
   puts "Player: #{scoreboard[:user]}"
   puts "Dealer: #{scoreboard[:dealer]}"
   puts "Ties: #{scoreboard[:tie]}"
-  puts "---------ROUND #{scoreboard[:round]}---------"
+  puts "-----------ROUND #{scoreboard[:round]}-----------"
 end
 
 def display_game_info(players, scoreboard)
@@ -387,7 +398,6 @@ end
 loop do
   system "clear"
   display_introduction
-  binding.pry
   scoreboard = { user: 0, dealer: 0, tie: 0, round: 1 }
 
   loop do
