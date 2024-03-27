@@ -5,8 +5,6 @@ CARDS = ('2'..'10').to_a + ['J', 'Q', 'K', 'A']
 
 TEN_POINTS = 10
 ELEVEN_POINTS = 11
-DEALER_MIN_POINTS = 17
-MAX_HAND_POINTS = 21
 GAME_WINNING_SCORE = 5
 
 def prompt(message)
@@ -60,23 +58,75 @@ def ask_for_rules
   end
 end
 
+def ask_to_customize
+  prompt "Would you like to customize the winning score to play 'Whatever-One'?"
+  prompt "Enter 'Y to customize, or 'N' to continue playing Twenty-One:"
+  loop do
+  input = gets.chomp.downcase
+    return input if ['yes', 'y', 'n', 'no'].include?(input)
+    prompt "Invalid response. Please enter 'Y' or 'N':"
+  end
+end
+
+def within_valid_range?(string)
+  ('31'..'101').to_a.include?(string)
+end
+
+def valid_integer?(string)
+  string.to_i.to_s == string
+end
+
+def ends_in_one?(string)
+  string.chars.last == '1'
+end
+
+def valid_winning_score?(string)
+  valid_integer?(string) && ends_in_one?(string) && within_valid_range?(string)
+end
+
+def ask_for_winning_score
+  system "clear"
+  prompt "Set your own winning score."
+  score = nil
+  loop do
+    prompt "Enter a number that ends in '1', between 31 and 101 (ex: 41, 71):"
+    score = gets.chomp
+    break if valid_winning_score?(score)
+    prompt "Invalid response."
+  end
+  score.to_i
+end
+
 def display_rules
   system "clear"
   prompt "These are some rules. Placeholder!!"
-  ask_to_start(:game)
+  prompt "Press 'Enter' to continue:"
+  gets.chomp
+end
+
+def set_game_constants(max = 21)
+  Object.const_set('DEALER_MIN_POINTS', max - 4)
+  Object.const_set('MAX_HAND_POINTS', max)
 end
 
 def display_introduction
   prompt "Welcome to Twenty-One!"
-  choice = ask_for_rules
+  rules_choice = ask_for_rules
+  display_rules if ['y', 'yes'].include?(rules_choice)
+  system "clear"
+  choice = ask_to_customize
+
   if ['y', 'yes'].include?(choice)
-    display_rules
+    score = ask_for_winning_score
+    set_game_constants(score)
+    prompt "Okay, you'll play #{score}!"
   else
-    system "clear"
-    prompt "Great, you already know how to play!"
-    prompt "Get ready, you'll play until someone wins 5 rounds."
-    sleep 4
+    set_game_constants
+    prompt "Great, you'll stick with Twenty-One!"
   end
+  
+  prompt "Get ready, you'll play until someone wins 5 rounds."
+  sleep 4
 end
 
 def format_top_card(card, hidden, index)
@@ -337,6 +387,7 @@ end
 loop do
   system "clear"
   display_introduction
+  binding.pry
   scoreboard = { user: 0, dealer: 0, tie: 0, round: 1 }
 
   loop do
