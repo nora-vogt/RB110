@@ -49,7 +49,7 @@ def initialize_players(deck)
 end
 
 def within_valid_range?(string)
-  ('31'..'91').to_a.include?(string)
+  ('21'..'91').to_a.include?(string)
 end
 
 def valid_integer?(string)
@@ -87,7 +87,7 @@ def ask_to_customize
   prompt "Would you like to customize the winning score to play 'Whatever-One'?"
   prompt "Enter 'Y' to customize, or 'N' to continue playing Twenty-One:"
   loop do
-  input = gets.chomp.downcase
+    input = gets.chomp.downcase
     return input if ['yes', 'y', 'n', 'no'].include?(input)
     prompt "Invalid response. Please enter 'Y' or 'N':"
   end
@@ -130,7 +130,11 @@ def display_introduction
   if ['y', 'yes'].include?(choice)
     score = ask_for_winning_score
     set_game_constants(score)
-    prompt "Okay, you'll play #{format_winning_score(score)}!"
+    if score == 21
+      prompt "No problem, you can stick with Twenty-One!"
+    else
+      prompt "Okay, you'll play #{format_winning_score(score)}!"
+    end
   else
     set_game_constants
     prompt "Great, you'll stick with Twenty-One!"
@@ -304,7 +308,7 @@ def display_end_of_round(players, scoreboard, outcome)
 end
 
 def display_scoreboard(scoreboard)
-  puts "-----------#{format_winning_score(MAX_HAND_POINTS)}-----------"
+  puts "-----------#{format_winning_score(MAX_HAND_POINTS).upcase}-----------"
   puts "Player: #{scoreboard[:user]}"
   puts "Dealer: #{scoreboard[:dealer]}"
   puts "Ties: #{scoreboard[:tie]}"
