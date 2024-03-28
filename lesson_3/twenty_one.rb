@@ -20,43 +20,24 @@ def display_blank_line
   puts ""
 end
 
-def within_valid_range?(string)
-  ('21'..'91').to_a.include?(string)
-end
+def display_introduction
+  prompt "Welcome to Twenty-One!"
+  rules_choice = ask_for_rules
+  display_rules if entered_yes?(rules_choice)
 
-def valid_integer?(string)
-  string.to_i.to_s == string
-end
+  choice = ask_customize_game
 
-def ends_in_one?(string)
-  string.chars.last == '1'
-end
-
-def valid_winning_score?(string)
-  valid_integer?(string) && ends_in_one?(string) && within_valid_range?(string)
-end
-
-def format_winning_score(integer)
-  first_digit = integer.digits.last
-  "#{NUMERALS[first_digit]}-One"
-end
-
-def entered_yes?(input)
-  ['y', 'yes'].include?(input)
-end
-
-def display_custom_game_choice(score)
-  system "clear"
-  if score == 21
-    prompt "No problem, you can stick with Twenty-One!"
+  if entered_yes?(choice)
+    score = ask_for_winning_score
+    set_game_constants(score)
+    display_custom_game_choice(score)
   else
-    prompt "Okay, you'll play #{format_winning_score(score)}!"
+    set_game_constants
+    prompt "Great, you'll stick with Twenty-One!"
   end
-end
 
-def ask_to_start(play)
-  prompt "Press enter to start #{play == :game ? 'the game' : 'next round'}:"
-  gets.chomp
+  prompt "Get ready, you'll play until someone wins 5 rounds."
+  sleep 4
 end
 
 def ask_for_rules
@@ -66,30 +47,6 @@ def ask_for_rules
     return choice if ['yes', 'y', 'n', 'no'].include?(choice)
     prompt "Invalid response. Please enter 'Y' or 'N':"
   end
-end
-
-def ask_to_customize
-  system "clear"
-  prompt "Would you like to customize the winning score to play 'Whatever-One'?"
-  prompt "Enter 'Y' to customize, or 'N' to continue playing Twenty-One:"
-  loop do
-    input = gets.chomp.downcase
-    return input if ['yes', 'y', 'n', 'no'].include?(input)
-    prompt "Invalid response. Please enter 'Y' or 'N':"
-  end
-end
-
-def ask_for_winning_score
-  system "clear"
-  prompt "Set your own winning score."
-  score = nil
-  loop do
-    prompt "Enter a number that ends in '1', between 31 and 91 (ex: 51):"
-    score = gets.chomp
-    break if valid_winning_score?(score)
-    prompt "Invalid response."
-  end
-  score.to_i
 end
 
 def display_rules
@@ -136,29 +93,76 @@ def display_rules
   gets.chomp
 end
 
+def ask_customize_game
+  system "clear"
+  prompt "Would you like to customize the winning score to play 'Whatever-One'?"
+  prompt "Enter 'Y' to customize, or 'N' to continue playing Twenty-One:"
+  loop do
+    input = gets.chomp.downcase
+    return input if entered_yes?(input) || entered_no?(input)
+    prompt "Invalid response. Please enter 'y' or 'n':"
+  end
+end
+
+def display_custom_game_choice(score)
+  system "clear"
+  if score == 21
+    prompt "No problem, you can stick with Twenty-One!"
+  else
+    prompt "Okay, you'll play #{format_winning_score(score)}!"
+  end
+end
+
+def within_valid_range?(string)
+  ('21'..'91').to_a.include?(string)
+end
+
+def valid_integer?(string)
+  string.to_i.to_s == string
+end
+
+def ends_in_one?(string)
+  string.chars.last == '1'
+end
+
+def valid_winning_score?(string)
+  valid_integer?(string) && ends_in_one?(string) && within_valid_range?(string)
+end
+
+def format_winning_score(integer)
+  first_digit = integer.digits.last
+  "#{NUMERALS[first_digit]}-One"
+end
+
+def entered_yes?(input)
+  ['y', 'yes'].include?(input)
+end
+
+def entered_no?(input)
+  ['n', 'no'].include?(input)
+end
+
+def ask_to_start(play)
+  prompt "Press enter to start #{play == :game ? 'the game' : 'next round'}:"
+  gets.chomp
+end
+
+def ask_for_winning_score
+  system "clear"
+  prompt "Set your own winning score."
+  score = nil
+  loop do
+    prompt "Enter a number that ends in '1', between 31 and 91 (ex: 51):"
+    score = gets.chomp
+    break if valid_winning_score?(score)
+    prompt "Invalid response."
+  end
+  score.to_i
+end
+
 def set_game_constants(max = 21)
   Object.const_set('DEALER_MIN_POINTS', max - 4)
   Object.const_set('MAX_HAND_POINTS', max)
-end
-
-def display_introduction
-  prompt "Welcome to Twenty-One!"
-  rules_choice = ask_for_rules
-  display_rules if entered_yes?(rules_choice)
-
-  choice = ask_to_customize
-
-  if entered_yes?(choice)
-    score = ask_for_winning_score
-    set_game_constants(score)
-    display_custom_game_choice(score)
-  else
-    set_game_constants
-    prompt "Great, you'll stick with Twenty-One!"
-  end
-
-  prompt "Get ready, you'll play until someone wins 5 rounds."
-  sleep 4
 end
 
 def initialize_deck
@@ -190,7 +194,7 @@ def initial_deal!(deck, user, dealer)
   end
 end
 
-def format_top_card(card, hidden, index)
+def format_card_top(card, hidden, index)
   if hidden && index == 0
     "|~    |"
   elsif card[0] == '10'
@@ -200,11 +204,11 @@ def format_top_card(card, hidden, index)
   end
 end
 
-def format_middle_card(card, hidden, index)
+def format_card_middle(card, hidden, index)
   "|  #{hidden && index == 0 ? '~' : card[1]}  |"
 end
 
-def format_bottom_card(card, hidden, index)
+def format_card_bottom(card, hidden, index)
   if hidden && index == 0
     "|____~|"
   elsif card[0] == '10'
@@ -218,10 +222,10 @@ def generate_display_cards!(player_info, lines)
   hidden = player_info[:hidden_card]
   player_info[:hand].each_with_index do |card, index|
     lines[0] << " _____ "
-    lines[1] << format_top_card(card, hidden, index)
-    lines[2] << format_middle_card(card, hidden, index)
-    lines[3] << format_middle_card(card, hidden, index)
-    lines[4] << format_bottom_card(card, hidden, index)
+    lines[1] << format_card_top(card, hidden, index)
+    lines[2] << format_card_middle(card, hidden, index)
+    lines[3] << format_card_middle(card, hidden, index)
+    lines[4] << format_card_bottom(card, hidden, index)
   end
 end
 
