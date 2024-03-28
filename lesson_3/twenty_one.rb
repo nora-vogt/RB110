@@ -12,12 +12,20 @@ TEN_POINTS = 10
 ELEVEN_POINTS = 11
 GAME_WINNING_SCORE = 5
 
-def entered_yes?(input)
+def answered_yes?(input)
   ['y', 'yes'].include?(input)
 end
 
-def entered_no?(input)
+def answered_no?(input)
   ['n', 'no'].include?(input)
+end
+
+def answered_hit?(input)
+  ['h', 'hit'].include?(input)
+end
+
+def answered_stay?(input)
+  ['s', 'stay'].include?(input)
 end
 
 def within_valid_range?(string)
@@ -51,16 +59,16 @@ end
 
 def play_again?
   display_blank_line
-  prompt "Would you like to play again? ('y' or 'n')"
+  prompt "Would you like to play again? (enter 'Y' or 'N')"
   answer = gets.chomp.downcase
-  ['y', 'yes'].include?(answer)
+  answered_yes?(answer)
 end
 
 def ask_for_rules
-  prompt "Would you like to see the rules? ('Y' or 'N'):"
+  prompt "Would you like to see the rules? (enter 'Y' or 'N'):"
   loop do
     choice = gets.chomp.downcase
-    return choice if ['yes', 'y', 'n', 'no'].include?(choice)
+    return choice if answered_yes?(choice) || answered_no?(choice)
     prompt "Invalid response. Please enter 'Y' or 'N':"
   end
 end
@@ -71,8 +79,8 @@ def ask_customize_game
   prompt "Enter 'Y' to customize, or 'N' to continue playing Twenty-One:"
   loop do
     input = gets.chomp.downcase
-    return input if entered_yes?(input) || entered_no?(input)
-    prompt "Invalid response. Please enter 'y' or 'n':"
+    return input if answered_yes?(input) || answered_no?(input)
+    prompt "Invalid response. Please enter 'Y' or 'N':"
   end
 end
 
@@ -83,22 +91,23 @@ end
 
 def ask_for_winning_score
   system "clear"
-  prompt "Set your own winning score."
+  prompt "Set your own winning score!"
+  prompt "Enter a number that ends in '1', between 31 and 91 (ex: 51):"
   score = nil
   loop do
-    prompt "Enter a number that ends in '1', between 31 and 91 (ex: 51):"
     score = gets.chomp
     break if valid_winning_score?(score)
-    prompt "Invalid response."
+    prompt "Invalid response. Enter a number like '41' or '31':"
   end
   score.to_i
 end
 
 def ask_hit_or_stay
+  prompt "Would you like to Hit or Stay? (Enter 'H' or 'S'):"
   loop do
     choice = gets.chomp.downcase
-    return choice if (['h', 'hit', 's', 'stay']).include?(choice)
-    prompt "Invalid response. Please enter 'hit' or 'stay':"
+    return choice if answered_hit?(choice) || answered_stay?(choice)
+    prompt "Invalid response. Please enter 'H' or 'S':"
   end
 end
 
@@ -242,11 +251,11 @@ end
 def display_introduction
   prompt "Welcome to Twenty-One!"
   rules_choice = ask_for_rules
-  display_rules if entered_yes?(rules_choice)
+  display_rules if answered_yes?(rules_choice)
 
   choice = ask_customize_game
 
-  if entered_yes?(choice)
+  if answered_yes?(choice)
     score = ask_for_winning_score
     set_game_score_limits(score)
     display_custom_game_choice(score)
@@ -400,10 +409,9 @@ def user_turn(deck, players, scoreboard)
   user_stats = players[:user]
   prompt "Your turn!"
   loop do
-    prompt "Would you like to 'hit' or 'stay'?"
     choice = ask_hit_or_stay
 
-    if ['h', 'hit'].include?(choice)
+    if answered_hit?(choice)
       system "clear"
       deal_card!(deck, user_stats[:hand])
       update_total!(user_stats)
@@ -412,7 +420,7 @@ def user_turn(deck, players, scoreboard)
       sleep 1
     end
 
-    break if ['s', 'stay'].include?(choice) || busted?(user_stats[:total])
+    break if answered_stay?(choice) || busted?(user_stats[:total])
   end
 end
 
