@@ -7,6 +7,7 @@ NUMERALS = {
   5 => 'Fifty', 6 => 'Sixty', 7 => 'Seventy',
   8 => 'Eighty', 9 => 'Ninety'
 }
+
 TEN_POINTS = 10
 ELEVEN_POINTS = 11
 GAME_WINNING_SCORE = 5
