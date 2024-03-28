@@ -88,7 +88,8 @@ def ask_customize_game
 end
 
 def ask_to_start(play)
-  prompt "Press enter to start #{play == :game ? 'the game' : 'next round'}:"
+  display_blank_line
+  prompt "Press 'Enter' to start #{play == :game ? 'the game' : 'next round'}:"
   gets.chomp
 end
 
@@ -245,7 +246,6 @@ def display_rules_two
     * The Ace's value is determined each time you draw a new card. An Ace is
      worth 11 points if it will not push your hand total over 21 points. If
      drawing an Ace would make you 'bust', the Ace will be worth 1 point.
-
   HEREDOC
 end
 
@@ -253,7 +253,7 @@ def display_all_rules
   display_rules_one
   ask_to_continue
   display_rules_two
-  ask_to_continue
+  ask_to_start(:game)
 end
 
 def display_custom_game_choice(score)
