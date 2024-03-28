@@ -45,11 +45,11 @@ def valid_winning_score?(string)
 end
 
 def dealer_stay?(total)
-  (DEALER_MIN_POINTS..MAX_HAND_POINTS).include?(total)
+  (DEALER_MIN_SCORE..WINNING_SCORE).include?(total)
 end
 
 def busted?(total)
-  total > MAX_HAND_POINTS
+  total > WINNING_SCORE
 end
 
 def game_won?(scoreboard)
@@ -116,9 +116,17 @@ def ask_hit_or_stay
   end
 end
 
-def set_game_score_limits(max = 21)
-  Object.const_set('DEALER_MIN_POINTS', max - 4)
-  Object.const_set('MAX_HAND_POINTS', max)
+def reset_score_limits(constant)
+  if Object.const_defined?(constant)
+    Object.send(:remove_const, constant)
+  end
+end
+
+def set_score_limits(max = 21)
+  reset_score_limits('WINNING_SCORE')
+  reset_score_limits('DEALER_MIN_SCORE')
+  Object.const_set('WINNING_SCORE', max)
+  Object.const_set('DEALER_MIN_SCORE', max - 4)
 end
 
 def format_winning_score(integer)
@@ -268,11 +276,11 @@ def display_introduction
 
   if answered_yes?(customize_choice)
     score = ask_for_winning_score
-    set_game_score_limits(score)
+    set_score_limits(score)
     display_custom_game_choice(score)
   else
     system "clear"
-    set_game_score_limits
+    set_score_limits
     prompt "Great, you'll stick with Twenty-One!"
   end
 
@@ -281,11 +289,11 @@ def display_introduction
 end
 
 def display_scoreboard(scoreboard)
-  puts "-----------#{format_winning_score(MAX_HAND_POINTS).upcase}-----------"
+  puts "-----------#{format_winning_score(WINNING_SCORE).upcase}-----------"
   puts "Player: #{scoreboard[:user]}"
   puts "Dealer: #{scoreboard[:dealer]}"
   puts "Ties: #{scoreboard[:tie]}"
-  puts "-----------ROUND #{scoreboard[:round]}-----------"
+  puts "------------ROUND #{scoreboard[:round]}------------"
 end
 
 def display_cards(player_info)
@@ -326,7 +334,7 @@ def display_round_outcome(players, outcome)
 
   case outcome
   when :user_busted
-    prompt "You bust! Dealer wins."
+    prompt "You bust! Dealer wins this round."
   when :dealer_busted
     prompt "Dealer busts! You win this round!"
   when :user
@@ -388,7 +396,7 @@ def calculate_total(hand)
           end
   end
 
-  values.count('A').times { sum -= TEN_POINTS if sum > MAX_HAND_POINTS }
+  values.count('A').times { sum -= TEN_POINTS if sum > WINNING_SCORE }
   sum
 end
 
@@ -396,9 +404,9 @@ def determine_round_outcome(players)
   user_total = players[:user][:total]
   dealer_total = players[:dealer][:total]
 
-  if user_total > MAX_HAND_POINTS
+  if user_total > WINNING_SCORE
     :user_busted
-  elsif dealer_total > MAX_HAND_POINTS
+  elsif dealer_total > WINNING_SCORE
     :dealer_busted
   elsif user_total > dealer_total
     :user
