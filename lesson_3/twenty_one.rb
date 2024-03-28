@@ -1,5 +1,3 @@
-require 'pry'
-
 SUITS = ["\u2665", "\u2666", "\u2663", "\u2660"]
 CARDS = ('2'..'10').to_a + ['J', 'Q', 'K', 'A']
 NUMERALS = {
@@ -391,7 +389,7 @@ def calculate_total(hand)
             sum + ELEVEN_POINTS
           elsif ('2'..'10').include?(value)
             sum + value.to_i
-          else # Jack, Queen, King
+          else
             sum + TEN_POINTS
           end
   end
@@ -504,16 +502,3 @@ loop do
 end
 
 prompt "Thanks for playing Twenty One!"
-
-=begin
-Bonus #2: The final call to `play_again?` is different than the previous two
-invocations. With this call, `play_again?` returning `true` will continue to
-the next iteration of the game loop. Returning `false` will break out of the
-loop and end the game.
-
-With both of the two prior calls, `play_again?` returning `true`` executes the
-`next` command, which skips to the next iteration of the main game loop
-skipping all subsequent code to restart the game. This is necessary in order to
-end and restart the game "early" on a bust. `play_again?` returning `false`
-performs same as the final invocation, executing `break` and ending the game.
-=end
