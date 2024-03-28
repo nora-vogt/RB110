@@ -253,9 +253,9 @@ def display_introduction
   rules_choice = ask_for_rules
   display_rules if answered_yes?(rules_choice)
 
-  choice = ask_customize_game
+  customize_choice = ask_customize_game
 
-  if answered_yes?(choice)
+  if answered_yes?(customize_choice)
     score = ask_for_winning_score
     set_game_score_limits(score)
     display_custom_game_choice(score)
