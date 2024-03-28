@@ -64,6 +64,11 @@ def play_again?
   answered_yes?(answer)
 end
 
+def ask_to_continue
+  prompt "Press 'Enter' to continue:"
+  gets.chomp
+end
+
 def ask_for_rules
   prompt "Would you like to see the rules? (enter 'Y' or 'N'):"
   loop do
@@ -75,7 +80,7 @@ end
 
 def ask_customize_game
   system "clear"
-  prompt "Would you like to customize the winning score to play 'Whatever-One'?"
+  prompt "Would you like to customize the winning score?"
   prompt "Enter 'Y' to customize, or 'N' to continue playing Twenty-One:"
   loop do
     input = gets.chomp.downcase
@@ -195,27 +200,30 @@ def display_blank_line
   puts ""
 end
 
-def display_rules
+def display_rules_one
   system "clear"
   puts <<~HEREDOC
-    Twenty-One is a card game where you play against the Dealer. You'll play
-    with a normal 52-card deck, where each card is worth a certain number of
-    points.
+    Twenty-One is a card game where you play against the Dealer to get your
+    hand as close to 21 points as possible, without going over. You play with
+    a 52-card deck, where each card is worth a certain number of points.
 
-    Your goal is to get your hand as close to 21 points as possible, without
-    going over.
+    To start, you and the Dealer will be dealt two cards. Your turn is first,
+    and you will only be able to see one of the Dealer's cards. You can either
+    'Hit' (take another card) or 'Stay' (end your turn).
 
-    Both you and the Dealer will initially be dealt two cards. You can see your
-    hand, but you'll only be able to see one of the dealer's cards. Your turn is
-    first. You will either 'Hit' (take another card) or 'Stay' (end your turn).
-
-    You can 'Hit' as many times as you like, but if your hand's worth goes over
+    You can 'Hit' as many times as you like, but if your hand's total goes over
     21 points, you 'Bust', and the Dealer wins the round.
 
     Once you 'Stay', the Dealer starts their turn. They will reveal their
     hidden card and have the option to 'Hit' or 'Stay'. If the Dealer 'Busts',
     you win the round.
 
+  HEREDOC
+end
+
+def display_rules_two
+  system "clear"
+  puts <<~HEREDOC
     If both players 'Stay', the player with the hand closest to 21 points wins
     the round. If both players' hands are worth the same amount of points, the
     game is a tie, and no one gets a point.
@@ -226,17 +234,20 @@ def display_rules
     You have the option to customize the game and enter your own winning score,
     playing to get your hand as close you chosen total (for example, 41).
 
-    Card Point Values:
-      - 2-10 = face value
-      - Jack, Queen, King = 10
-      - Ace = 1 or 11 *
+    Card Points: 2-10 (face value); Jack, Queen, King (10); Ace (1 or 11)*
 
-    * The value of Aces are determined each time you draw a new card. An Ace is
+    * The Ace's value is determined each time you draw a new card. An Ace is
      worth 11 points if it will not push your hand total over 21 points. If
      drawing an Ace would make you 'bust', the Ace will be worth 1 point.
+
   HEREDOC
-  prompt "Press 'Enter' to continue:"
-  gets.chomp
+end
+
+def display_all_rules
+  display_rules_one
+  ask_to_continue
+  display_rules_two
+  ask_to_continue
 end
 
 def display_custom_game_choice(score)
@@ -251,7 +262,7 @@ end
 def display_introduction
   prompt "Welcome to Twenty-One!"
   rules_choice = ask_for_rules
-  display_rules if answered_yes?(rules_choice)
+  display_all_rules if answered_yes?(rules_choice)
 
   customize_choice = ask_customize_game
 
@@ -260,6 +271,7 @@ def display_introduction
     set_game_score_limits(score)
     display_custom_game_choice(score)
   else
+    system "clear"
     set_game_score_limits
     prompt "Great, you'll stick with Twenty-One!"
   end
