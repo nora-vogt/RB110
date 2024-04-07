@@ -105,7 +105,7 @@ end
 
 # LS Solution - Original
 def swap_first_last_characters(word)
-  word[0], word[-1] = word[-1], word[0] # is this String#[]= or just assignment = 
+  word[0], word[-1] = word[-1], word[0]
   word
 end
 

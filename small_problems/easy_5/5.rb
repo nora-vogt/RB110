@@ -87,6 +87,18 @@ def cleanup(string)
   result
 end
 
+# REFACTOR
+def cleanup(string)
+  string.gsub(/[^a-z]+/, ' ')
+end
+
+# / / - denotes the RegEx expression
+# [ ] - a set of characters
+# ^ - not
+# a-z - characters a-z
+# [^a-z] - match any character that is not included in a-z
+# Adding the + to the end of the RegEx means "match 1 or more of the proceeding token". This means that one or multiple instances of a non-alphabetic character will be replaced by a single space. 
+
 # LS Solution - try without gsub
 ALPHABET = ('a'..'z').to_a
 
