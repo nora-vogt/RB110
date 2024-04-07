@@ -118,10 +118,3 @@ p crunch('4444abcabccba') == '4abcabcba'
 p crunch('ggggggggggggggg') == 'g'
 p crunch('a') == 'a'
 p crunch('') == ''
-
-
-
-# Further Exploration
-# I tried this looping `while index < string.length`, and it worked appropriately. `while` wills top iterating when index is string.length - 1, which is the last character in the string. On this last iteration, checking string[index + 1] will return nil, but that doesn't affect our equality comparison. "e" == nil, for example, will return false as expected. 
-
-# We can switch to an `until` loop to iterate until index is equal to string.length, and the code will also work. The until loop will iterate UNTIL the index is string.length - 1, referencing the last character in the string. 
